@@ -1,0 +1,9 @@
+name: climag
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - jupyterlab
+  - planetary-computer
+  - xarray
+  - fsspec

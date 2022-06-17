@@ -4,6 +4,26 @@
 
 - Python 3
 - JupyterLab
+- planetary-computer
+- xarray
+- fsspec
+
+## Python environment
+
+Conda:
+
+```sh
+conda env create
+```
+
+venv:
+
+```sh
+python3 -m venv env
+source env/bin/activate
+python -m pip install --upgrade pip
+python -m pip install jupyterlab planetary-computer xarray fsspec
+```
 
 ## Licence
 
