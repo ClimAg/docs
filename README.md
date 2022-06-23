@@ -23,7 +23,7 @@ venv:
 python3 -m venv env
 source env/bin/activate
 python -m pip install --upgrade pip
-python -m pip install jupyterlab planetary-computer xarray fsspec
+python -m pip install jupyterlab planetary-computer xarray fsspec geopandas rich
 ```
 
 ## Licence

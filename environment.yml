@@ -8,3 +8,5 @@ dependencies:
   - planetary-computer
   - xarray
   - fsspec
+  - geopandas
+  - rich
