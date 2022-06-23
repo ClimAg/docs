@@ -10,10 +10,11 @@
 
 ## Python environment
 
-Conda:
+Conda (specifications are defined in `environment.yml`):
 
 ```sh
 conda env create
+conda activate ClimAg
 ```
 
 venv:

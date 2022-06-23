@@ -1,8 +1,9 @@
-name: climag
+name: ClimAg
 channels:
   - conda-forge
+  - anaconda
 dependencies:
-  - python=3
+  - python
   - jupyterlab
   - planetary-computer
   - xarray
