@@ -10,3 +10,8 @@ dependencies:
   - fsspec
   - geopandas
   - rich
+  - py-cordex
+  - intake
+  - tqdm
+  - dask
+  - regionmask
