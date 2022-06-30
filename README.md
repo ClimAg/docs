@@ -4,9 +4,7 @@
 
 - Python 3
 - JupyterLab
-- planetary-computer
-- xarray
-- fsspec
+- Dask
 
 ## Python environment
 
@@ -23,7 +21,7 @@ venv:
 python3 -m venv env
 source env/bin/activate
 python -m pip install --upgrade pip
-python -m pip install jupyterlab planetary-computer xarray fsspec geopandas rich
+python -m pip install jupyterlab dask
 ```
 
 ## Licence
