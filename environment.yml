@@ -1,17 +1,15 @@
 name: ClimAg
 channels:
   - conda-forge
-  - anaconda
+  - defaults
 dependencies:
-  - python
+  - python=3.10
   - jupyterlab
   - dask
-  # - planetary-computer
-  # - xarray
+  - matplotlib
+  - rioxarray
+  - geopandas
   # - fsspec
-  # - geopandas
   # - rich
-  # - py-cordex
   # - intake
   # - tqdm
-  # - regionmask

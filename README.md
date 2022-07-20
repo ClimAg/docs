@@ -15,6 +15,12 @@ conda env create
 conda activate ClimAg
 ```
 
+To update the environment:
+
+```sh
+conda env update --name ClimAg --file environment.yml
+```
+
 venv:
 
 ```sh
