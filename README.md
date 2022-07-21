@@ -5,6 +5,7 @@
 - Python 3
 - JupyterLab
 - Dask
+- Matplotlib
 
 ## Python environment
 
