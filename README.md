@@ -1,7 +1,6 @@
 # jupyter-notebooks
 
-[ClimAg](https://www.ucc.ie/en/eel/projects/climag/): Multifactorial causes of
-fodder crises in Ireland and risks due to climate change
+Jupyter notebooks for the [ClimAg](https://www.ucc.ie/en/eel/projects/climag/) research project
 
 This research was funded by the Environment Protection Agency (EPA), Ireland
 project "ClimAg: Multifactorial causes of fodder crises in Ireland and risks
