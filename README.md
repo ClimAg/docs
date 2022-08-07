@@ -38,6 +38,14 @@ python -m pip install --upgrade pip
 python -m pip install jupyterlab dask
 ```
 
+## Notebooks
+
+Notebook | Link
+--- | ---
+ireland-boundary-nuts | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary-nuts.ipynb)
+ireland-boundary | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary.ipynb)
+clc-2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/clc-2018.ipynb)
+
 ## Licence
 
 Copyright 2022 N. M. Streethran
