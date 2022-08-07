@@ -13,8 +13,8 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %%
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Segoe UI"
-plt.rcParams["figure.dpi"] = 96
+plt.rcParams["font.family"] = "Source Sans 3"
+plt.rcParams["figure.dpi"] = 150
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -25,8 +25,6 @@ plt.rcParams["axes.titleweight"] = "semibold"
 plt.rcParams["figure.titlesize"] = "13"
 plt.rcParams["axes.titlesize"] = "12"
 plt.rcParams["axes.labelsize"] = "10"
-BASE2 = "#eee8d5"
-BASE3 = "#fdf6e3"
 
 # %%
 # base data download directory
@@ -99,7 +97,7 @@ nuts2 = nuts_ie.merge(nuts_ni, how="outer")
 nuts2
 
 # %%
-base = nuts2.plot(color=BASE3, figsize=(9, 9))
+base = nuts2.plot(color="navajowhite", figsize=(9, 9))
 nuts2.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("NUTS2 Regions of Ireland")
@@ -157,7 +155,7 @@ nuts3 = nuts_ie.merge(nuts_ni, how="outer")
 nuts3
 
 # %%
-base = nuts3.plot(color=BASE3, figsize=(9, 9))
+base = nuts3.plot(color="navajowhite", figsize=(9, 9))
 nuts3.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("NUTS3 Regions of Ireland")
@@ -192,7 +190,7 @@ ie.reset_index(inplace=True)
 ie
 
 # %%
-base = ie.plot(color=BASE3, figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundaries of ROI and NI")
@@ -224,7 +222,7 @@ ie.drop(columns=["CNTR_CODE"], inplace=True)
 ie
 
 # %%
-base = ie.plot(color=BASE3, figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundary of Ireland")

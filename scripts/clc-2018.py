@@ -23,8 +23,7 @@ import xml.etree.ElementTree as ET
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import numpy as np
 import rioxarray as rxr
 from dask.distributed import Client, LocalCluster, Lock
@@ -36,8 +35,8 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %%
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Segoe UI"
-plt.rcParams["figure.dpi"] = 96
+plt.rcParams["font.family"] = "Source Sans 3"
+plt.rcParams["figure.dpi"] = 150
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -48,8 +47,6 @@ plt.rcParams["axes.titleweight"] = "semibold"
 plt.rcParams["figure.titlesize"] = "13"
 plt.rcParams["axes.titlesize"] = "12"
 plt.rcParams["axes.labelsize"] = "10"
-BASE2 = "#eee8d5"
-BASE3 = "#fdf6e3"
 
 # %%
 # define data directories
@@ -237,7 +234,7 @@ mask = uniquevals["percentage"] > 0
 uniquevals_sig = uniquevals[mask]
 
 ax = uniquevals_sig.plot.barh(
-    x="label", y="percentage", legend=False, figsize=(9, 5),
+    x="label", y="percentage", legend=False, figsize=(9, 6),
     color=uniquevals_sig["color"]
 )
 ax.bar_label(ax.containers[0], padding=3)

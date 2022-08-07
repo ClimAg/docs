@@ -12,8 +12,8 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %%
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Segoe UI"
-plt.rcParams["figure.dpi"] = 96
+plt.rcParams["font.family"] = "Source Sans 3"
+plt.rcParams["figure.dpi"] = 150
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -24,8 +24,6 @@ plt.rcParams["axes.titleweight"] = "semibold"
 plt.rcParams["figure.titlesize"] = "13"
 plt.rcParams["axes.titlesize"] = "12"
 plt.rcParams["axes.labelsize"] = "10"
-BASE2 = "#eee8d5"
-BASE3 = "#fdf6e3"
 
 # %%
 # base data download directory
@@ -71,7 +69,7 @@ osi
 osi.crs
 
 # %%
-base = osi.plot(color=BASE3, figsize=(9, 9))
+base = osi.plot(color="navajowhite", figsize=(9, 9))
 osi.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Administrative Areas of the Republic of Ireland")
@@ -124,7 +122,7 @@ osni
 osni.crs
 
 # %%
-base = osni.plot(color=BASE3, figsize=(9, 9))
+base = osni.plot(color="navajowhite", figsize=(9, 9))
 osni.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Administrative Areas of Northern Ireland")
@@ -159,7 +157,7 @@ osi_roi.reset_index(inplace=True)
 osi_roi
 
 # %%
-base = osi_roi.plot(color=BASE3, figsize=(9, 9))
+base = osi_roi.plot(color="navajowhite", figsize=(9, 9))
 osi_roi.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundary of the Republic of Ireland")
@@ -188,7 +186,7 @@ osni_ni.reset_index(inplace=True)
 osni_ni
 
 # %%
-base = osni_ni.plot(color=BASE3, figsize=(9, 9))
+base = osni_ni.plot(color="navajowhite", figsize=(9, 9))
 osni_ni.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundary of Northern Ireland")
@@ -208,7 +206,7 @@ ie = osi_roi.merge(osni_ni, how="outer")
 ie
 
 # %%
-base = ie.plot(color=BASE3, figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundaries of ROI and NI")
@@ -281,7 +279,7 @@ ie_counties
 ie_counties.crs
 
 # %%
-base = ie_counties.plot(color=BASE3, figsize=(9, 9))
+base = ie_counties.plot(color="navajowhite", figsize=(9, 9))
 ie_counties.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Counties of Ireland")
@@ -316,7 +314,7 @@ ie.reset_index(inplace=True)
 ie
 
 # %%
-base = ie.plot(color=BASE3, figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.title("Boundary of Ireland")
