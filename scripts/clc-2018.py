@@ -8,7 +8,7 @@
 import multiprocessing
 import platform
 import os
-import zipfile
+from zipfile import ZipFile, BadZipFile
 from datetime import datetime, timezone
 
 # Windows
@@ -66,14 +66,14 @@ ZIP_FILE = os.path.join(
 
 # %%
 # list of files/folders in the ZIP archive
-zipfile.ZipFile(ZIP_FILE).namelist()
+ZipFile(ZIP_FILE).namelist()
 
 # %%
 # extract the archive
 try:
-    z = zipfile.ZipFile(ZIP_FILE)
+    z = ZipFile(ZIP_FILE)
     z.extractall(DATA_DIR)
-except zipfile.BadZipFile:
+except BadZipFile:
     print("There were issues with the file", ZIP_FILE)
 
 # %%
@@ -83,16 +83,16 @@ ZIP_FILE = os.path.join(
 
 # %%
 # list of TIF files in the new ZIP archive
-for i in zipfile.ZipFile(ZIP_FILE).namelist():
+for i in ZipFile(ZIP_FILE).namelist():
     if i.endswith(".tif"):
         print(i)
 
 # %%
 # extract the ZIP file
 try:
-    z = zipfile.ZipFile(ZIP_FILE)
+    z = ZipFile(ZIP_FILE)
     z.extractall(DATA_DIR)
-except zipfile.BadZipFile:
+except BadZipFile:
     print("There were issues with the file", ZIP_FILE)
 
 # %%
