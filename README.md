@@ -46,7 +46,7 @@ ireland-boundary-nuts | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fd
 ireland-boundary | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary.ipynb)
 clc-2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/clc-2018.ipynb)
 
-### Notebooks for the climate-change-droughts project
+### Notebooks for the [climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project
 
 Notebook | Link
 --- | ---
