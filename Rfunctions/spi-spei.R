@@ -43,10 +43,10 @@ ec_process <- function(datapath, indexcell, var) {
 }
 
 # function to process historical EURO-CORDEX NetCDF files
-hist_process <- function(variable, indexcell) {
+hist_process <- function(datadir, variable, indexcell) {
     # nc file path
     ncfile <- paste(
-        "./data/eurocordex/pastdata/",
+        datadir,
         variable,
         "_EUR-11_NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon_",
         sep = ""
@@ -96,10 +96,10 @@ hist_process <- function(variable, indexcell) {
 }
 
 # function to process future EURO-CORDEX NetCDF files
-future_process <- function(variable, indexcell) {
+future_process <- function(datadir, variable, indexcell) {
     # nc file path
     ncfile <- paste(
-        "./data/eurocordex/futuredata/",
+        datadir,
         variable,
         "_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_DMI-HIRHAM5_v3_mon_",
         sep = ""
@@ -140,9 +140,21 @@ future_process <- function(variable, indexcell) {
 }
 
 # function to calculate SPI
-spi_calc <- function(data, spi_num, distribution = "Gamma", fit = "ub-pwm") {
+spi_calc <- function(
+    data,
+    spi_num,
+    kernel = list(type = "rectangular", shift = 0),
+    distribution = "Gamma",
+    fit = "ub-pwm"
+) {
     # calculate SPI for the data
-    spi <- spi(data$pr, spi_num, distribution = distribution, fit = fit)
+    spi <- spi(
+        data$pr,
+        spi_num,
+        kernel = kernel,
+        distribution = distribution,
+        fit = fit
+    )
 
     # convert the time series to a data table and add it to the main data table
     data$spi <- as.data.table(spi$fitted)
@@ -163,7 +175,12 @@ spi_calc <- function(data, spi_num, distribution = "Gamma", fit = "ub-pwm") {
 
 # function to calculate SPEI
 spei_calc <- function(
-    data, spei_num, lat, distribution = "log-Logistic", fit = "ub-pwm"
+    data,
+    spei_num,
+    lat,
+    kernel = list(type = "rectangular", shift = 0),
+    distribution = "log-Logistic",
+    fit = "ub-pwm"
 ) {
     # potential evapotranspiration
     data$pet <- hargreaves(Tmin = data$tasmin, Tmax = data$tasmax, lat = lat)
@@ -172,7 +189,13 @@ spei_calc <- function(
     data$wbal <- data$pr - data$pet
 
     # calculate SPEI for the data
-    spei <- spei(data$wbal, spei_num, distribution = distribution, fit = fit)
+    spei <- spei(
+        data$wbal,
+        spei_num,
+        kernel = kernel,
+        distribution = distribution,
+        fit = fit
+    )
 
     # convert the time series to a data table and add it to the main data table
     data$spei <- as.data.table(spei$fitted)
