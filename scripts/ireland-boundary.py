@@ -329,8 +329,3 @@ plt.show()
 
 # %%
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_OS")
-
-# %%
-
-
-

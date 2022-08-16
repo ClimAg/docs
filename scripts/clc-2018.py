@@ -223,14 +223,14 @@ uniquevals = uniquevals.sort_values("count", ascending=False)
 uniquevals["percentage"] = (
     uniquevals["count"] / uniquevals["count"].sum() * 100
 )
-uniquevals["percentage"] = uniquevals["percentage"].astype(int)
+uniquevals["percentage"] = uniquevals["percentage"].round(1)
 
 # %%
 uniquevals
 
 # %%
-# plot major land cover types, i.e. percentage > 0
-mask = uniquevals["percentage"] > 0
+# plot major land cover types, i.e. percentage > 1
+mask = uniquevals["percentage"] > 1
 uniquevals_sig = uniquevals[mask]
 
 ax = uniquevals_sig.plot.barh(
@@ -268,11 +268,8 @@ img = plt.figure(figsize=(15, 15))
 img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
 img.set_visible(False)
 
-# ticks = list(np.arange(
-#     min(uniquevals["value"]) + .5,
-#     max(uniquevals["value"]) - .5,
-#     (max(uniquevals["value"]) - min(uniquevals["value"]))/len(uniquevals)
-# ))
+# reproject to lat-lon
+# landcover = landcover.rio.reproject("EPSG:4326")
 
 ticks = list(np.arange(.5, len(uniquevals) + .5, 1))
 cbar = plt.colorbar(ticks=ticks)
@@ -288,29 +285,6 @@ plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
 
-# %%
-# import matplotlib.colors as mcl
-# # normalise colours
-# values = [0]
-# for x in list(uniquevals["value"]):
-#     values.append(x)
-
-# # values = np.array(uniquevals["value"])
-
-# norm = mcl.BoundaryNorm(boundaries=values, ncolors=len(values))
-
-# %%
-# from matplotlib import cm
-# val_before = list(uniquevals["value"][1:])
-# val_before.append(max(uniquevals["value"]))
-
-# colours = cm.get_cmap(col_discrete, len(uniquevals))
-# newcolours = colours(np.linspace(0, 1, len(uniquevals)))
-
-# for n, v, w in list(zip(range(len(uniquevals)), uniquevals["value"], val_before)):
-#     newcolours[w:v, :] = newcolours[n]
-#     colours = ListedColormap(newcolours)
-
 # %% [markdown]
 # ## QGIS
 # 
@@ -321,27 +295,25 @@ plt.show()
 # %%
 # generate statistics for the unique values
 
-params = {
-    "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
-    "OUTPUT_HTML_FILE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.html"),
-    "OUTPUT_TABLE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.geojson")
-}
+# params = {
+#     "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
+#     "OUTPUT_HTML_FILE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.html"),
+#     "OUTPUT_TABLE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.geojson")
+# }
 
-processing.run("native:rasterlayeruniquevaluesreport", params)
+# processing.run("native:rasterlayeruniquevaluesreport", params)
 
 # %%
 # apply the raster's style file to view the legend
 
-params = {
-    "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
-    "STYLE": os.path.join(
-        DATA_DIR,
-        "u2018_clc2018_v2020_20u1_raster100m",
-        "Legend",
-        "clc_legend_qgis_raster.qml"
-    )
-}
+# params = {
+#     "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
+#     "STYLE": os.path.join(
+#         DATA_DIR,
+#         "u2018_clc2018_v2020_20u1_raster100m",
+#         "Legend",
+#         "clc_legend_qgis_raster.qml"
+#     )
+# }
 
-processing.run("native:setlayerstyle", params)
-
-
+# processing.run("native:setlayerstyle", params)
