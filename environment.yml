@@ -9,7 +9,3 @@ dependencies:
   - matplotlib
   - rioxarray
   - geopandas
-  # - fsspec
-  # - rich
-  # - intake
-  # - tqdm
