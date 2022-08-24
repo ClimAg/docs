@@ -16,7 +16,7 @@ number 2018-CCRP-MS.50.
 
 ## Python environment
 
-Conda (specifications are defined in `environment.yml`):
+Create a Conda environment:
 
 ```sh
 conda env create
@@ -29,13 +29,48 @@ To update the environment:
 conda env update --name ClimAg --file environment.yml
 ```
 
-venv:
+`environment.yml`:
+
+```yml
+name: ClimAg
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - dask
+  - matplotlib
+  - rioxarray
+  - geopandas
+```
+
+## R environment
+
+Create a Conda environment and install the Jupyter R kernel:
 
 ```sh
-python3 -m venv env
-source env/bin/activate
-python -m pip install --upgrade pip
-python -m pip install jupyterlab dask
+conda env create --file environment-r.yml
+conda activate r-env
+R -e "IRkernel::installspec()"
+```
+
+`environment-r.yml`:
+
+```yml
+name: r-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - r-base
+  - r-essentials
+  - r-rgdal
+  - r-sf
+  - r-geojsonio
+  - r-rgeos
+  - r-rastervis
+  - jupyterlab
 ```
 
 ## Notebooks
