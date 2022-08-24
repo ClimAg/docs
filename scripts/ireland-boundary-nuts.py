@@ -1,3 +1,8 @@
+# %% [markdown]
+# ## NUTS (Nomenclature of territorial units for statistics)
+#
+# <https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts>
+
 # %%
 # import libraries
 import os
@@ -32,11 +37,6 @@ DATA_DIR = os.path.join("data", "boundary")
 
 # %%
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-
-# %% [markdown]
-# ## NUTS (Nomenclature of territorial units for statistics)
-#
-# <https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts>
 
 # %%
 URL = (
