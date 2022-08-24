@@ -93,6 +93,10 @@ SPI - future - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/
 SPEI - historical - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spei-hist-ca.ipynb)
 SPEI - future - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spei-future-ca.ipynb)
 
+## Reference
+
+- Coordinate reference system for Ireland: [ETRS89 / Irish TM EPSG 2157](https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems)
+
 ## Licence
 
 Copyright 2022 N. M. Streethran

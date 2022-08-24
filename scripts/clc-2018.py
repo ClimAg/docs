@@ -1,15 +1,15 @@
 # %% [markdown]
 # # CORINE land cover 2018 data
-# 
+#
 # <https://land.copernicus.eu/pan-european/corine-land-cover/clc2018>
 
 # %%
 # import libraries
 import multiprocessing
-import platform
 import os
-from zipfile import ZipFile, BadZipFile
+import platform
 from datetime import datetime, timezone
+from zipfile import BadZipFile, ZipFile
 
 # Windows
 if platform.system() == "Windows":
@@ -23,11 +23,11 @@ import xml.etree.ElementTree as ET
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import numpy as np
 import rioxarray as rxr
 from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
+from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -36,7 +36,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
 plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 150
+plt.rcParams["figure.dpi"] = 96
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -268,9 +268,6 @@ img = plt.figure(figsize=(15, 15))
 img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
 img.set_visible(False)
 
-# reproject to lat-lon
-# landcover = landcover.rio.reproject("EPSG:4326")
-
 ticks = list(np.arange(.5, len(uniquevals) + .5, 1))
 cbar = plt.colorbar(ticks=ticks)
 cbar.ax.set_yticklabels(list(uniquevals["label"]))
@@ -285,11 +282,36 @@ plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
 
+# %%
+# reproject to Irish transverse mercator
+landcover = landcover.rio.reproject("EPSG:2157")
+
+# %%
+img = plt.figure(figsize=(15, 15))
+img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
+img.set_visible(False)
+
+ticks = list(np.arange(.5, len(uniquevals) + .5, 1))
+cbar = plt.colorbar(ticks=ticks)
+cbar.ax.set_yticklabels(list(uniquevals["label"]))
+
+landcover.plot(add_colorbar=False, cmap=colours)
+
+plt.title("CLC 2018 - Ireland [EPSG:2157]")
+plt.xlabel("Easting (m)")
+plt.ylabel("Northing (m)")
+
+plt.axis("equal")
+plt.xlim(landcover.rio.bounds()[0], landcover.rio.bounds()[2])
+plt.ylim(landcover.rio.bounds()[1], landcover.rio.bounds()[3])
+
+plt.show()
+
 # %% [markdown]
 # ## QGIS
-# 
+#
 # Unique value counts can also be generated using QGIS.
-# 
+#
 # Run the following code snippets in the QGIS Python console.
 
 # %%

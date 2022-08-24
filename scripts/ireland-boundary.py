@@ -13,7 +13,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
 plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 150
+plt.rcParams["figure.dpi"] = 96
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -34,7 +34,7 @@ GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 
 # %% [markdown]
 # ## Administrative Areas - OSi National Statutory Boundaries - 2019
-# 
+#
 # <https://data.gov.ie/dataset/administrative-areas-osi-national-statutory-boundaries-2019>
 
 # %%
@@ -51,7 +51,9 @@ payload = {
 SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
 
 # %%
-dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
+# # download data if necessary
+# dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
+# print("Last downloaded:", datetime.now(tz=timezone.utc))
 
 # %%
 os.listdir(SUB_DIR)
@@ -87,7 +89,7 @@ osi.to_file(GPKG_BOUNDARY, layer="Admin_Areas_ROI_OSi")
 
 # %% [markdown]
 # ## OSNI Open Data - Largescale Boundaries - County Boundaries
-# 
+#
 # <https://www.opendatani.gov.uk/dataset/osni-open-data-largescale-boundaries-county-boundaries1>
 
 # %%
@@ -104,7 +106,9 @@ payload = {
 SUB_DIR = os.path.join(DATA_DIR, "admin-osni", "raw")
 
 # %%
-dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
+# # download data if necessary
+# dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
+# print("Last downloaded:", datetime.now(tz=timezone.utc))
 
 # %%
 os.listdir(SUB_DIR)
@@ -223,7 +227,7 @@ plt.show()
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_ROI_NI_OS")
 
 # %% [markdown]
-# ## Counties - All-Ireland
+# ## Counties - Island of Ireland
 
 # %%
 osi_counties = osi.dissolve(by="COUNTY")
@@ -296,7 +300,7 @@ plt.show()
 ie_counties.to_file(GPKG_BOUNDARY, layer="Counties_IE_OS")
 
 # %% [markdown]
-# ## All-Ireland boundary
+# ## Island of Ireland boundary
 
 # %%
 ie = ie_counties[["geometry"]].copy()

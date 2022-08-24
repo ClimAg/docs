@@ -1,8 +1,8 @@
 # %%
 # import libraries
 import os
-from datetime import datetime, timezone
 import zipfile
+from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from src import download_data as dd
@@ -14,7 +14,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # configure plot styles
 plt.style.use("seaborn-whitegrid")
 plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 150
+plt.rcParams["figure.dpi"] = 96
 plt.rcParams["axes.grid"] = False
 plt.rcParams["text.color"] = "darkslategrey"
 plt.rcParams["axes.labelcolor"] = "darkslategrey"
@@ -35,7 +35,7 @@ GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 
 # %% [markdown]
 # ## NUTS (Nomenclature of territorial units for statistics)
-# 
+#
 # <https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts>
 
 # %%
@@ -46,7 +46,9 @@ URL = (
 SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
 
 # %%
-dd.download_data(server=URL, ddir=SUB_DIR)
+# # download data if necessary
+# dd.download_data(server=URL, ddir=SUB_DIR)
+# print("Last downloaded:", datetime.now(tz=timezone.utc))
 
 # %%
 os.listdir(SUB_DIR)
@@ -237,3 +239,33 @@ plt.show()
 
 # %%
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
+
+# %% [markdown]
+# # Boundaries in Irish transverse mercator
+#
+# EPSG:2157
+#
+# See <https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems>
+
+# %%
+ie.to_crs(2157, inplace=True)
+
+# %%
+ie
+
+# %%
+base = ie.plot(color="navajowhite", figsize=(9, 9))
+ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
+
+plt.title("Boundary of Ireland")
+plt.xlabel("Easting (m)")
+plt.ylabel("Northing (m)")
+plt.text(
+    550000, 505000,
+    "EPSG:2157\n© EuroGeographics for the administrative boundaries"
+)
+
+plt.show()
+
+# %%
+ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
