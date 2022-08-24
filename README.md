@@ -45,6 +45,8 @@ Notebook | Link
 Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary-nuts.ipynb)
 Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary.ipynb)
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/clc-2018.ipynb)
+Enniscorthy EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/enniscorthy.ipynb)
+Met stations | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/met-stations.ipynb)
 
 ### Notebooks for the [climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project
 
