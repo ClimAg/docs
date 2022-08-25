@@ -1,11 +1,5 @@
 # %% [markdown]
 # # Met stations
-#
-# ## Met Éireann stations
-#
-# - Station details can be found here: <https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv>
-# - <https://www.met.ie/climate/weather-observing-stations>
-# - Check the "Show closed stations" box to obtain data for this replaced station: <https://www.met.ie/climate/available-data/historical-data>
 
 # %%
 import os
@@ -34,6 +28,13 @@ plt.rcParams["axes.titleweight"] = "semibold"
 plt.rcParams["figure.titlesize"] = "13"
 plt.rcParams["axes.titlesize"] = "12"
 plt.rcParams["axes.labelsize"] = "10"
+
+# %% [markdown]
+# ## Met Éireann stations
+#
+# - Station details can be found here: <https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv>
+# - <https://www.met.ie/climate/weather-observing-stations>
+# - Check the "Show closed stations" box to obtain data for this replaced station: <https://www.met.ie/climate/available-data/historical-data>
 
 # %%
 URL = "https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv"
@@ -73,8 +74,17 @@ stations_roi = gpd.GeoDataFrame(
 stations_roi.drop(columns=["wkt", "longitude", "latitude"], inplace=True)
 
 # %%
-# replace null values
-stations_roi = stations_roi.replace("(null)", 9999)
+stations_roi["close year"].unique()
+
+# %%
+stations_roi["open year"].unique()
+
+# %%
+# replace null values so that the data can be filtered
+stations_roi = stations_roi.replace({
+    "close year": {"(null)": 9999},
+    "open year": {"(null)": 0}
+})
 
 # %%
 stations_roi["close year"] = pd.to_numeric(stations_roi["close year"])
@@ -85,6 +95,11 @@ stations_roi["open year"] = pd.to_numeric(stations_roi["open year"])
 stations_roi = stations_roi[
     (stations_roi["close year"] >= 2005) & (stations_roi["open year"] <= 1976)
 ]
+
+# %%
+# replace null values
+stations_roi = stations_roi.replace(9999, None)
+stations_roi = stations_roi.replace(0, None)
 
 # %%
 stations_roi.head()
@@ -120,9 +135,6 @@ stations_ni.shape
 stations_ni.head()
 
 # %%
-list(stations_ni["historic_county"].unique())
-
-# %%
 # list of historic counties in NI
 # https://en.wikipedia.org/wiki/Historic_counties_of_the_United_Kingdom
 counties_ni = [
@@ -154,6 +166,12 @@ stations_ni.drop(
     columns=["wkt", "station_longitude", "station_latitude"],
     inplace=True
 )
+
+# %%
+stations_ni["first_year"].unique()
+
+# %%
+stations_ni["last_year"].unique()
 
 # %%
 # filter stations that have data for the historic reference period

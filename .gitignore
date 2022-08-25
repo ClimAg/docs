@@ -133,3 +133,7 @@ draft/
 data/
 *.access*
 .vscode/
+*.png
+*.jpg
+*.jpeg
+!data/climatic-regions/holden_brereton_2004_regions.png
