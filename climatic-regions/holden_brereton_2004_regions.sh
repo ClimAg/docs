@@ -5,6 +5,13 @@
 # and Forest Meteorology, vol. 122, no. 3, pp. 175–191.
 # DOI: 10.1016/j.agrformet.2003.09.010.
 
+# Steps:
+# - use the screenshot file provided: holden_brereton_2004_regions.png
+# - georeference it using the script below and save it as a GeoTIFF with
+#   the ITM projection (EPSG:2157)
+# - use the georeferenced image to draw features (polygons) of the 7 regions
+# - save the regions as a vector file (GPKG layer)
+
 gdal_translate -of GTiff \
     -gcp 484.656 117.3 665879 939165 \
     -gcp 489.711 782.459 673316 597501 \
