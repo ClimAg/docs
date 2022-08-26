@@ -9,3 +9,6 @@ dependencies:
   - matplotlib
   - rioxarray
   - geopandas
+  - netcdf4
+  - bottleneck
+  - nc-time-axis

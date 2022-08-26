@@ -11,6 +11,7 @@
 #   the ITM projection (EPSG:2157)
 # - use the georeferenced image to draw features (polygons) of the 7 regions
 # - save the regions as a vector file (GPKG layer)
+# - clip the regions using the NUTS boundary layer for the Island of Ireland
 
 gdal_translate -of GTiff \
     -gcp 484.656 117.3 665879 939165 \
