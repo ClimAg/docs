@@ -43,6 +43,12 @@ dependencies:
   - matplotlib
   - rioxarray
   - geopandas
+  - netcdf4
+  - bottleneck
+  - nc-time-axis
+  - py-cordex
+  - python-cdo
+  - regionmask
 ```
 
 ## R environment
@@ -81,6 +87,8 @@ Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran
 Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary.ipynb)
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/clc-2018.ipynb)
 Met stations | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/met-stations.ipynb)
+py-cordex demo | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/py-cordex.ipynb)
+EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex.ipynb)
 
 ### ISCRAES poster
 
