@@ -12,3 +12,6 @@ dependencies:
   - netcdf4
   - bottleneck
   - nc-time-axis
+  - py-cordex
+  - python-cdo
+  - regionmask
