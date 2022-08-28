@@ -21,7 +21,7 @@ source(
 indexcell <- 68801
 
 # directory where the historical nc files are stored
-datadir <- "./data/eurocordex/pastdata/"
+datadir <- "./data/eurocordex/historical/mon/"
 
 # %%
 # process precipitation data

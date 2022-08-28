@@ -27,7 +27,7 @@ Sys.setenv(PROJ_LIB = "/usr/share/proj")
 
 # %%
 # directory where the future nc files are stored
-datadir <- "./data/eurocordex/futuredata/"
+datadir <- "./data/eurocordex/rcp85/mon/"
 
 # %% [markdown]
 # ## Finding the closest icell
@@ -35,7 +35,7 @@ datadir <- "./data/eurocordex/futuredata/"
 # %%
 # read one of the EURO-CORDEX data files
 ncfile <- paste(
-    "./data/eurocordex/futuredata/",
+    "./data/eurocordex/rcp85/mon/",
     "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_DMI-HIRHAM5_v3_mon_204101-205012.nc",
     sep = ""
 )
@@ -211,7 +211,7 @@ write.table(
 
 # %%
 # directory where the historical nc files are stored
-datadir <- "./data/eurocordex/pastdata/"
+datadir <- "./data/eurocordex/historical/mon/"
 
 # %%
 # process precipitation data

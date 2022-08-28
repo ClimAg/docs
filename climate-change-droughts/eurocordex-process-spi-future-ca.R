@@ -21,7 +21,7 @@ source(
 indexcell <- 68801
 
 # directory where the future nc files are stored
-datadir <- "./data/eurocordex/futuredata/"
+datadir <- "./data/eurocordex/rcp85/mon/"
 
 # %%
 # process precipitation data

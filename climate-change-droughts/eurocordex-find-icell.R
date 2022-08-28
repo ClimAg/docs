@@ -29,7 +29,7 @@ Sys.setenv(PROJ_LIB = "/usr/share/proj")
 # %%
 # read one of the EURO-CORDEX data files
 ncfile <- paste(
-    "./data/eurocordex/pastdata/",
+    "./data/eurocordex/historical/mon/",
     "pr_EUR-11_NCC-NorESM1-M_historical_r1i1p1_",
     "DMI-HIRHAM5_v3_mon_197101-198012.nc",
     sep = ""
