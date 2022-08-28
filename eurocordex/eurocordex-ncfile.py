@@ -31,7 +31,8 @@ DATA_DIR_BASE = os.path.join("data", "eurocordex")
 # %%
 FILE_PATH = os.path.join(
     DATA_DIR_BASE,
-    "pastdata",
+    "historical",
+    "mon",
     "tasmin_EUR-11_NCC-NorESM1-M_historical_r1i1p1_" +
     "DMI-HIRHAM5_v3_mon_200101-200512.nc"
 )

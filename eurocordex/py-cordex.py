@@ -86,7 +86,7 @@ def plot(
     ax = plt.axes(projection=transform)
     ax.gridlines(
         draw_labels=True,
-        linewidth=0.5,
+        linewidth=.5,
         color="gray",
         xlocs=range(-180, 180, 10),
         ylocs=range(-90, 90, 5),

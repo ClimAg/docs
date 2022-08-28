@@ -8,7 +8,7 @@
 
 # %%
 # import libraries
-from datetime import datetime, timezones
+from datetime import datetime, timezone
 import matplotlib.pyplot as plt
 import intake
 
@@ -41,7 +41,14 @@ list(dkrz_cat)
 print(dkrz_cat._entries)
 
 # %%
+# view CORDEX metadata
+dkrz_cat._entries["dkrz_cordex_disk"]._open_args
+
+# %%
 dkrz_cordex = dkrz_cat.dkrz_cordex_disk
+
+# %%
+dkrz_cordex.esmcol_data["description"]
 
 # %%
 dkrz_cordex
@@ -50,46 +57,170 @@ dkrz_cordex
 dkrz_cordex.df.head()
 
 # %%
-dkrz_cordex.esmcol_data["description"]
-
-# %%
 dkrz_cordex.esmcol_data["catalog_file"]
 
 # %%
 list(dkrz_cordex.df.columns)
 
 # %%
-# can also be viewed from the top level catalogue
-dkrz_cat._entries["dkrz_cordex_disk"]._open_args
+list(dkrz_cordex.df["CORDEX_domain"].unique())
 
 # %%
-list(dkrz_cordex.df["CORDEX_domain"].unique())
+list(dkrz_cordex.df["institute_id"].unique())
+
+# %%
+list(dkrz_cordex.df["driving_model_id"].unique())
 
 # %%
 list(dkrz_cordex.df["experiment_id"].unique())
 
 # %%
+list(dkrz_cordex.df["member"].unique())
+
+# %%
+list(dkrz_cordex.df["model_id"].unique())
+
+# %%
+list(dkrz_cordex.df["rcm_version_id"].unique())
+
+# %%
 list(dkrz_cordex.df["frequency"].unique())
+
+# %%
+list(dkrz_cordex.df["variable_id"].unique())
+
+# %%
+list(dkrz_cordex.df["time_range"].unique())
+
+# %%
+timerange = [
+    "19760101-19801231",
+    "19810101-19851231",
+    "19860101-19901231",
+    "19910101-19951231",
+    "19960101-20001231",
+    "20010101-20051231",
+    "20410101-20451231",
+    "20460101-20501231",
+    "20510101-20551231",
+    "20560101-20601231",
+    "20610101-20651231",
+    "20660101-20701231"
+]
+
+# %%
+variables = [
+    "evspsblpot", "hurs", "huss", "mrso", "pr", "ps",
+    "rlds", "rsds", "rlus", "rsus", "sund",
+    "tas", "tasmax", "tasmin"
+]
 
 # %%
 # filter for EUR-11, historical and rcp85 experiments only, at daily res
 query = dict(
-    CORDEX_domain=["EUR-11", "EUR-11i"],
+    CORDEX_domain="EUR-11",
+    driving_model_id="NCC-NorESM1-M",
     experiment_id=["historical", "rcp85"],
-    frequency=["day"]
+    member="r1i1p1",
+    model_id="DMI-HIRHAM5",
+    rcm_version_id="v3",
+    frequency="day",
+    variable_id=variables,
+    time_range=timerange
 )
 
 # %%
-dkrz_eur11 = dkrz_cordex.search(**query)
+cordex_eur11 = dkrz_cordex.search(**query)
 
 # %%
-dkrz_eur11.df.head()
+cordex_eur11
 
 # %%
-list(dkrz_eur11.df["institute_id"].unique())
+cordex_eur11.df
 
 # %%
-list(dkrz_eur11.df["model_id"].unique())
+# replace URI to path to downloaded data
+cordex_eur11.df["uri"] = (
+    "data" + os.sep +
+    "eurocordex" + os.sep +
+    cordex_eur11.df["experiment_id"] + os.sep +
+    "day" + os.sep +
+    cordex_eur11.df["uri"].str.split("/").str[-1]
+)
 
 # %%
-list(dkrz_eur11.df["driving_model_id"].unique())
+cordex_eur11.df
+
+# %%
+cordex_eur11.df.to_csv(os.path.join(
+    "data", "eurocordex", "cordex_eur11_catalogue.csv"
+), index=False)
+
+# %%
+# extract data subset
+query = dict(
+    experiment_id="rcp85",
+    variable_id="pr"
+)
+
+# %%
+cordex_eur11_rcp85_pr = cordex_eur11.search(**query)
+
+# %%
+cordex_eur11_rcp85_pr
+
+# %%
+cordex_eur11_rcp85_pr.df
+
+# %%
+pr = cordex_eur11_rcp85_pr.to_dataset_dict(
+    cdf_kwargs=dict(chunks=dict(time=1))
+)
+
+# %%
+pr
+
+# %%
+pr = pr.popitem()[1]
+
+# %%
+pr
+
+# %%
+pr = pr.isel(time=50)
+
+# %%
+plt.figure(figsize=(10, 10))
+pr["pr"].plot(cmap="Spectral_r")
+plt.axis("equal")
+plt.show()
+
+# %%
+# extract data subset
+query = dict(
+    experiment_id="historical",
+    variable_id="pr"
+)
+
+# %%
+cordex_eur11_rcp85_pr = cordex_eur11.search(**query)
+
+# %%
+pr = cordex_eur11_rcp85_pr.to_dataset_dict(
+    cdf_kwargs=dict(chunks=dict(time=1))
+)
+
+# %%
+pr = pr.popitem()[1]
+
+# %%
+pr
+
+# %%
+pr = pr.isel(time=50)
+
+# %%
+plt.figure(figsize=(10, 10))
+pr["pr"].plot(cmap="Spectral_r")
+plt.axis("equal")
+plt.show()
