@@ -10,7 +10,11 @@ setwd("../../")
 
 # %%
 # import requirements and functions
-source("./jupyter-notebooks/Rfunctions/spi-spei.R")
+source(
+    "./jupyter-notebooks/scripts/spi-spei.R",
+    echo = TRUE,
+    max.deparse.length = 2000
+)
 
 # %%
 # Cork Airport icell
