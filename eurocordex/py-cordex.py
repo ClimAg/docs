@@ -3,6 +3,8 @@
 #
 # - <https://py-cordex.readthedocs.io/en/stable/domains.html>
 # - <https://py-cordex.readthedocs.io/en/stable/prudence.html>
+# - <https://data-infrastructure-services.gitlab-pages.dkrz.de/tutorials-and-use-cases/>
+# - <http://prudence.dmi.dk/>
 
 # %%
 # import libraries
@@ -12,6 +14,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cf
 import cordex as cx
 import matplotlib.pyplot as plt
+import intake
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -105,6 +108,9 @@ def plot(
 
 # %%
 plot(eur11.topo, pole)
+
+# %% [markdown]
+# ## PRUDENCE regions
 
 # %%
 cx.regions.prudence.df

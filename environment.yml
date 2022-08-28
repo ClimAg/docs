@@ -15,3 +15,5 @@ dependencies:
   - py-cordex
   - python-cdo
   - regionmask
+  - intake-esm
+  - aiohttp
