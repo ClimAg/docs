@@ -2,6 +2,8 @@
 # import libraries
 import os
 from datetime import datetime, timezone
+import cartopy.crs as ccrs
+import cordex as cx
 import matplotlib.pyplot as plt
 import nc_time_axis
 import xarray as xr
@@ -64,7 +66,48 @@ data_50 = data.isel(time=50)
 data_50
 
 # %%
-plt.figure(figsize=(10, 10))
-data_50["tasmin"].plot(cmap="Spectral_r")
-plt.axis("equal")
-plt.show()
+eur = cx.cordex_domain("EUR-44", dummy="topo")
+
+# %%
+pole = (
+    eur.rotated_latitude_longitude.grid_north_pole_longitude,
+    eur.rotated_latitude_longitude.grid_north_pole_latitude,
+)
+
+# %%
+def plot(
+    da,
+    pole,
+    cmap="terrain",
+    vmin=None,
+    vmax=None,
+    title=None,
+    grid_color="grey",
+    transform=ccrs.RotatedPole(pole_latitude=pole[1], pole_longitude=pole[0])
+):
+    """plot a domain using the right projection with cartopy"""
+
+    plt.figure(figsize=(20, 10))
+    ax = plt.axes(projection=transform)
+    ax.gridlines(
+        draw_labels=True,
+        linewidth=.5,
+        color=grid_color,
+        xlocs=range(-180, 180, 10),
+        ylocs=range(-90, 90, 5),
+    )
+    da.plot(
+        ax=ax,
+        cmap=cmap,
+        transform=transform,
+        vmin=vmin,
+        vmax=vmax,
+        x="rlon",
+        y="rlat",
+    )
+    ax.coastlines(resolution="50m", color="black", linewidth=1)
+    if title is not None:
+        ax.set_title(title)
+
+# %%
+plot(data_50["tasmin"], pole, cmap="Spectral_r")

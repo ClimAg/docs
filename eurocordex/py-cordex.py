@@ -73,12 +73,12 @@ pole
 def plot(
     da,
     pole,
+    cmap="terrain",
     vmin=None,
     vmax=None,
-    borders=True,
     title=None,
-    transform=ccrs.RotatedPole(pole_latitude=pole[1], pole_longitude=pole[0]),
-    projection=ccrs.PlateCarree()
+    grid_color="grey",
+    transform=ccrs.RotatedPole(pole_latitude=pole[1], pole_longitude=pole[0])
 ):
     """plot a domain using the right projection with cartopy"""
 
@@ -87,13 +87,13 @@ def plot(
     ax.gridlines(
         draw_labels=True,
         linewidth=.5,
-        color="gray",
+        color=grid_color,
         xlocs=range(-180, 180, 10),
         ylocs=range(-90, 90, 5),
     )
     da.plot(
         ax=ax,
-        cmap="terrain",
+        cmap=cmap,
         transform=transform,
         vmin=vmin,
         vmax=vmax,
@@ -101,8 +101,6 @@ def plot(
         y="rlat",
     )
     ax.coastlines(resolution="50m", color="black", linewidth=1)
-    if borders:
-        ax.add_feature(cf.BORDERS)
     if title is not None:
         ax.set_title(title)
 
