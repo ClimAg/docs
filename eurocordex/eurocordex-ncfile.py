@@ -46,16 +46,39 @@ data = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 data
 
 # %%
-data["lat"]
+# Cork Airport met station coords
+lon = -8.48611
+lat = 51.84722
 
 # %%
-data_ca = data.isel(rlat=51, rlon=-8)
+# convert lat/lon to rotated pole coordinates
+cds = ccrs.RotatedGeodetic(
+    pole_latitude=cx.domain_info("EUR-11")["pollat"],
+    pole_longitude=cx.domain_info("EUR-11")["pollon"]
+).transform_point(x=lon, y=lat, src_crs=ccrs.Geodetic())
+
+# %%
+data_ca = data.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 
 # %%
 data_ca
 
 # %%
-data_ca.plot.scatter("time", "tasmin", aspect=3, size=4)
+plt.figure(figsize=(12, 4))
+plt.plot(data_ca["time"], data_ca["tasmin"] - 273.15, marker="o")
+plt.xlabel(data_ca["time"].attrs["standard_name"])
+plt.ylabel(data_ca["tasmin"].attrs["long_name"] + " [°C]")
+plt.title(
+    data_ca.attrs["project_id"] + ", " +
+    data_ca.attrs["CORDEX_domain"] + ", " +
+    data_ca.attrs["driving_model_id"] + ", " +
+    data_ca.attrs["driving_model_ensemble_member"] + ", " +
+    data_ca.attrs["driving_experiment_name"] + ", " +
+    data_ca.attrs["model_id"] + ", " +
+    data_ca.attrs["rcm_version_id"] + ", " +
+    data_ca.attrs["frequency"] +
+    ", (" + str(lon) + ", " + str(lat) + ")"
+)
 plt.tight_layout()
 plt.show()
 
@@ -66,26 +89,21 @@ data_50 = data.isel(time=50)
 data_50
 
 # %%
-eur = cx.cordex_domain("EUR-44", dummy="topo")
-
-# %%
-pole = (
-    eur.rotated_latitude_longitude.grid_north_pole_longitude,
-    eur.rotated_latitude_longitude.grid_north_pole_latitude,
-)
-
-# %%
-def plot(
-    da,
-    pole,
+def data_plot(
+    data,
     cmap="terrain",
     vmin=None,
     vmax=None,
     title=None,
-    grid_color="grey",
-    transform=ccrs.RotatedPole(pole_latitude=pole[1], pole_longitude=pole[0])
+    grid_color="lightslategrey",
+    border_color="darkslategrey",
+    border_width=.5,
+    cbar_label=None,
+    transform=ccrs.RotatedPole(
+        pole_latitude=cx.domain_info("EUR-11")["pollat"],
+        pole_longitude=cx.domain_info("EUR-11")["pollon"]
+    )
 ):
-    """plot a domain using the right projection with cartopy"""
 
     plt.figure(figsize=(20, 10))
     ax = plt.axes(projection=transform)
@@ -96,7 +114,7 @@ def plot(
         xlocs=range(-180, 180, 10),
         ylocs=range(-90, 90, 5),
     )
-    da.plot(
+    data.plot(
         ax=ax,
         cmap=cmap,
         transform=transform,
@@ -104,10 +122,31 @@ def plot(
         vmax=vmax,
         x="rlon",
         y="rlat",
+        cbar_kwargs={"label": cbar_label}
     )
-    ax.coastlines(resolution="50m", color="black", linewidth=1)
+    ax.coastlines(resolution="50m", color=border_color, linewidth=border_width)
     if title is not None:
         ax.set_title(title)
 
 # %%
-plot(data_50["tasmin"], pole, cmap="Spectral_r")
+plot_title = (
+    data_ca.attrs["project_id"] + ", " +
+    data_ca.attrs["CORDEX_domain"] + ", " +
+    data_ca.attrs["driving_model_id"] + ", " +
+    data_ca.attrs["driving_model_ensemble_member"] + ", " +
+    data_ca.attrs["driving_experiment_name"] + ", " +
+    data_ca.attrs["model_id"] + ", " +
+    data_ca.attrs["rcm_version_id"] + ", " +
+    data_ca.attrs["frequency"] + ", " +
+    str(data_50["time"].coords)[38:57]
+)
+
+data_plot(
+    data_50["tasmin"] - 273.15,
+    cmap="Spectral_r",
+    cbar_label=data_50["tasmin"].attrs["long_name"] + " [°C]",
+    title=plot_title
+)
+# Cork Airport marker
+# plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
+plt.show()

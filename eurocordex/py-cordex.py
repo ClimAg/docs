@@ -11,10 +11,9 @@
 import os
 from datetime import datetime, timezone
 import cartopy.crs as ccrs
-import cartopy.feature as cf
 import cordex as cx
-import matplotlib.pyplot as plt
 import intake
+import matplotlib.pyplot as plt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -61,26 +60,21 @@ eur11.topo.plot(x="lon", y="lat", cmap="terrain")
 plt.show()
 
 # %%
-pole = (
-    eur11.rotated_latitude_longitude.grid_north_pole_longitude,
-    eur11.rotated_latitude_longitude.grid_north_pole_latitude,
-)
-
-# %%
-pole
-
-# %%
-def plot(
-    da,
-    pole,
+def data_plot(
+    data,
     cmap="terrain",
     vmin=None,
     vmax=None,
     title=None,
-    grid_color="grey",
-    transform=ccrs.RotatedPole(pole_latitude=pole[1], pole_longitude=pole[0])
+    grid_color="lightslategrey",
+    border_color="darkslategrey",
+    border_width=.5,
+    cbar_label=None,
+    transform=ccrs.RotatedPole(
+        pole_latitude=cx.domain_info("EUR-11")["pollat"],
+        pole_longitude=cx.domain_info("EUR-11")["pollon"]
+    )
 ):
-    """plot a domain using the right projection with cartopy"""
 
     plt.figure(figsize=(20, 10))
     ax = plt.axes(projection=transform)
@@ -91,7 +85,7 @@ def plot(
         xlocs=range(-180, 180, 10),
         ylocs=range(-90, 90, 5),
     )
-    da.plot(
+    data.plot(
         ax=ax,
         cmap=cmap,
         transform=transform,
@@ -99,13 +93,19 @@ def plot(
         vmax=vmax,
         x="rlon",
         y="rlat",
+        cbar_kwargs={"label": cbar_label}
     )
-    ax.coastlines(resolution="50m", color="black", linewidth=1)
+    ax.coastlines(resolution="50m", color=border_color, linewidth=border_width)
     if title is not None:
         ax.set_title(title)
 
 # %%
-plot(eur11.topo, pole)
+data_plot(
+    eur11.topo,
+    cbar_label="Elevation [" + eur11.topo.attrs["units"] + "]",
+    border_color="black",
+    border_width=.75
+)
 
 # %% [markdown]
 # ## PRUDENCE regions
@@ -137,11 +137,11 @@ bi_topo = eur11.topo.where(
 )
 
 # %%
-plot(
+data_plot(
     bi_topo,
-    pole=pole,
-    transform=ccrs.RotatedPole(*pole),
-    projection=ccrs.RotatedPole(*pole),
     vmin=-300,
     vmax=1500,
+    border_color="black",
+    cbar_label="Elevation [" + eur11.topo.attrs["units"] + "]",
+    border_width=.75
 )

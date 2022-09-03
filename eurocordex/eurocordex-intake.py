@@ -9,8 +9,10 @@
 # %%
 # import libraries
 from datetime import datetime, timezone
-import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cordex as cx
 import intake
+import matplotlib.pyplot as plt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -190,10 +192,53 @@ pr
 pr = pr.isel(time=50)
 
 # %%
-plt.figure(figsize=(10, 10))
-pr["pr"].plot(cmap="Spectral_r")
-plt.axis("equal")
-plt.show()
+def data_plot(
+    data,
+    cmap="terrain",
+    vmin=None,
+    vmax=None,
+    title=None,
+    grid_color="lightslategrey",
+    border_color="darkslategrey",
+    border_width=.5,
+    cbar_label=None,
+    transform=ccrs.RotatedPole(
+        pole_latitude=cx.domain_info("EUR-11")["pollat"],
+        pole_longitude=cx.domain_info("EUR-11")["pollon"]
+    )
+):
+
+    plt.figure(figsize=(20, 10))
+    ax = plt.axes(projection=transform)
+    ax.gridlines(
+        draw_labels=True,
+        linewidth=.5,
+        color=grid_color,
+        xlocs=range(-180, 180, 10),
+        ylocs=range(-90, 90, 5),
+    )
+    data.plot(
+        ax=ax,
+        cmap=cmap,
+        transform=transform,
+        vmin=vmin,
+        vmax=vmax,
+        x="rlon",
+        y="rlat",
+        cbar_kwargs={"label": cbar_label}
+    )
+    ax.coastlines(resolution="50m", color=border_color, linewidth=border_width)
+    if title is not None:
+        ax.set_title(title)
+
+# %%
+data_plot(
+    pr["pr"],
+    cmap="Blues",
+    cbar_label=(
+        pr["pr"].attrs["long_name"] + " [" + pr["pr"].attrs["units"] + "]"
+    )
+)
 
 # %%
 # extract data subset
@@ -220,7 +265,10 @@ pr
 pr = pr.isel(time=50)
 
 # %%
-plt.figure(figsize=(10, 10))
-pr["pr"].plot(cmap="Spectral_r")
-plt.axis("equal")
-plt.show()
+data_plot(
+    pr["pr"],
+    cmap="Blues",
+    cbar_label=(
+        pr["pr"].attrs["long_name"] + " [" + pr["pr"].attrs["units"] + "]"
+    )
+)
