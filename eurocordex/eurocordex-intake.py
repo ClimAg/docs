@@ -16,8 +16,7 @@ from datetime import datetime, timezone
 import cartopy.crs as ccrs
 import intake
 import matplotlib.pyplot as plt
-import pandas as pd
-import requests
+# import requests
 import xarray as xr
 
 # %%
@@ -87,16 +86,95 @@ plt.rcParams["axes.titlesize"] = "12"
 plt.rcParams["axes.labelsize"] = "10"
 
 # %%
-cordex_eur11
+def data_plot(
+    data,
+    cmap="terrain",
+    vmin=None,
+    vmax=None,
+    grid_color="lightslategrey",
+    border_color="darkslategrey",
+    border_width=.5,
+    border_res="50m",
+    cbar_label=None,
+    transform=None,
+    grid_xlocs=range(-180, 180, 10),
+    grid_ylocs=range(-90, 90, 5),
+    plot_title=None,
+    plot_figsize=(20, 10)
+):
+    plt.figure(figsize=plot_figsize)
+    ax = plt.axes(projection=transform)
+    ax.gridlines(
+        draw_labels=True,
+        linewidth=.5,
+        color=grid_color,
+        xlocs=grid_xlocs,
+        ylocs=grid_ylocs
+    )
+    data.plot(
+        ax=ax,
+        cmap=cmap,
+        transform=transform,
+        vmin=vmin,
+        vmax=vmax,
+        x="rlon",
+        y="rlat",
+        cbar_kwargs={"label": cbar_label}
+    )
+    ax.coastlines(
+        resolution=border_res, color=border_color, linewidth=border_width
+    )
+    if plot_title is not None:
+        ax.set_title(plot_title)
+
+# %%
+def cordex_plot_title(data):
+    if data.attrs["frequency"] == "mon":
+        date_format = "%b %Y"
+    elif data.attrs["frequency"] == "day":
+        date_format = "%-d %b %Y"
+    else:
+        date_format = "%Y-%m-%d %H:%M:%S"
+    plot_title = (
+        data.attrs["project_id"] + ", " +
+        data.attrs["CORDEX_domain"] + ", " +
+        data.attrs["driving_model_id"] + ", " +
+        data.attrs["driving_model_ensemble_member"] + ", " +
+        data.attrs["driving_experiment_name"] + ", " +
+        data.attrs["model_id"] + ", " +
+        data.attrs["rcm_version_id"] + ", " +
+        data.attrs["frequency"] + ", " +
+        datetime.strftime(
+            datetime.fromisoformat(str(data["time"].values)), date_format
+        )
+    )
+    return plot_title
+
+# %%
+def rotated_pole_transform(data):
+    pole_latitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][0]["value"]
+    )
+    pole_longitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][1]["value"]
+    )
+    transform = ccrs.RotatedPole(
+        pole_latitude=pole_latitude, pole_longitude=pole_longitude
+    )
+    return transform
+
+# %% [markdown]
+# ## intake catalogue
 
 # %%
 dkrz_cat = intake.open_catalog(["https://dkrz.de/s/intake"])
 
 # %%
 dkrz_cordex = dkrz_cat.dkrz_cordex_disk
-
-# %% [markdown]
-# ## intake catalogue
 
 # %%
 timerange = [
@@ -125,13 +203,6 @@ variables = [
 # ## Create local catalogue
 
 # %%
-
-
-
-# %% [markdown]
-# ## intake functionality
-
-# %%
 JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
 
 # %%
@@ -147,39 +218,46 @@ JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
 #             catfile.write(chunk)
 
 # %%
-print(dkrz_cat._entries)
+# filter for EUR-11, historical and rcp85 experiments only, at daily res
+# keep data for the relevant variables and time ranges
+query = dict(
+    CORDEX_domain="EUR-11",
+    experiment_id=["historical", "rcp85"],
+    frequency="day",
+    variable_id=variables,
+    time_range=timerange
+)
 
 # %%
-# view CORDEX metadata
-dkrz_cat._entries["dkrz_cordex_disk"]._open_args
+cordex_eur11 = dkrz_cordex.search(**query)
 
 # %%
-dkrz_cordex.esmcol_data["description"]
+cordex_eur11
 
 # %%
-dkrz_cordex
+cordex_eur11.df.shape
 
 # %%
-dkrz_cordex.df.head()
+# replace URI to path to downloaded data
+cordex_eur11.df["uri"] = (
+    DATA_DIR_BASE + os.sep +
+    cordex_eur11.df["experiment_id"] + os.sep +
+    "day" + os.sep +
+    cordex_eur11.df["uri"].str.split("/").str[-1]
+)
 
 # %%
-dkrz_cordex.esmcol_data["catalog_file"]
+cordex_eur11.df
 
 # %%
-list(dkrz_cordex.df.columns)
-
-# %%
-list(dkrz_cordex.df["CORDEX_domain"].unique())
-
-# %%
-list(dkrz_cordex.df["institute_id"].unique())
+CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_catalogue.csv")
 
 # %%
 cordex_eur11.df.to_csv(CSV_FILE_PATH, index=False)
 
 # %%
 # modify the JSON catalogue
-json_file = open(JSON_FILE_PATH)
+json_file = open(JSON_FILE_PATH, encoding="utf-8")
 eurocordex_eur11 = json.load(json_file)
 json_file.close()
 
@@ -309,6 +387,43 @@ plt.title(
 plt.tight_layout()
 plt.show()
 
+# %% [markdown]
+# ## intake functionality
+
+# %%
+list(dkrz_cat)
+
+# %%
+print(dkrz_cat._entries)
+
+# %%
+# view CORDEX metadata
+dkrz_cat._entries["dkrz_cordex_disk"]._open_args
+
+# %%
+dkrz_cordex.esmcol_data["description"]
+
+# %%
+dkrz_cordex
+
+# %%
+dkrz_cordex.df.head()
+
+# %%
+dkrz_cordex.esmcol_data["catalog_file"]
+
+# %%
+list(dkrz_cordex.df.columns)
+
+# %%
+list(dkrz_cordex.df["CORDEX_domain"].unique())
+
+# %%
+list(dkrz_cordex.df["institute_id"].unique())
+
+# %%
+list(dkrz_cordex.df["driving_model_id"].unique())
+
 # %%
 list(dkrz_cordex.df["experiment_id"].unique())
 
@@ -382,91 +497,6 @@ pr
 pr = pr.isel(time=50)
 
 # %%
-def data_plot(
-    data,
-    cmap="terrain",
-    vmin=None,
-    vmax=None,
-    grid_color="lightslategrey",
-    border_color="darkslategrey",
-    border_width=.5,
-    border_res="50m",
-    cbar_label=None,
-    transform=None,
-    grid_xlocs=range(-180, 180, 10),
-    grid_ylocs=range(-90, 90, 5),
-    plot_title=None,
-    plot_figsize=(20, 10)
-):
-    plt.figure(figsize=plot_figsize)
-    ax = plt.axes(projection=transform)
-    ax.gridlines(
-        draw_labels=True,
-        linewidth=.5,
-        color=grid_color,
-        xlocs=grid_xlocs,
-        ylocs=grid_ylocs
-    )
-    data.plot(
-        ax=ax,
-        cmap=cmap,
-        transform=transform,
-        vmin=vmin,
-        vmax=vmax,
-        x="rlon",
-        y="rlat",
-        cbar_kwargs={"label": cbar_label}
-    )
-    ax.coastlines(
-        resolution=border_res, color=border_color, linewidth=border_width
-    )
-    if plot_title is not None:
-        ax.set_title(plot_title)
-
-# %% [markdown]
-# 
-
-# %%
-def cordex_plot_title(data):
-    if data.attrs["frequency"] == "mon":
-        date_format = "%b %Y"
-    elif data.attrs["frequency"] == "day":
-        date_format = "%-d %b %Y"
-    else:
-        date_format = "%Y-%m-%d %H:%M:%S"
-    plot_title = (
-        data.attrs["project_id"] + ", " +
-        data.attrs["CORDEX_domain"] + ", " +
-        data.attrs["driving_model_id"] + ", " +
-        data.attrs["driving_model_ensemble_member"] + ", " +
-        data.attrs["driving_experiment_name"] + ", " +
-        data.attrs["model_id"] + ", " +
-        data.attrs["rcm_version_id"] + ", " +
-        data.attrs["frequency"] + ", " +
-        datetime.strftime(
-            datetime.fromisoformat(str(data["time"].values)), date_format
-        )
-    )
-    return plot_title
-
-# %%
-def rotated_pole_transform(data):
-    pole_latitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][0]["value"]
-    )
-    pole_longitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][1]["value"]
-    )
-    transform = ccrs.RotatedPole(
-        pole_latitude=pole_latitude, pole_longitude=pole_longitude
-    )
-    return transform
-
-# %%
 FILE_PATH = os.path.join(
     DATA_DIR_BASE,
     "rcp85",
@@ -486,43 +516,3 @@ data_plot(
     transform=rotated_pole_transform(data_ec)
 )
 plt.show()
-
-# %%
-# # r = requests.get(dkrz_cordex.esmcol_data["catalog_file"], stream=True)
-# # CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.csv.gz")
-# # if r.status_code == 200:
-# #     with open(CSV_FILE_PATH, "wb") as catfile:
-# #         for chunk in r.iter_content(chunk_size=1048676):
-# #             catfile.write(chunk)
-
-# %%
-# # dkrz_cordex_data = pd.read_csv(CSV_FILE_PATH, low_memory=False)
-
-# %%
-# filter for EUR-11, historical and rcp85 experiments only, at daily res
-# keep data for the relevant variables and time ranges
-query = dict(
-    CORDEX_domain="EUR-11",
-    experiment_id=["historical", "rcp85"],
-    frequency="day",
-    variable_id=variables,
-    time_range=timerange
-)
-
-# %%
-cordex_eur11 = dkrz_cordex.search(**query)
-
-# %%
-# replace URI to path to downloaded data
-cordex_eur11.df["uri"] = (
-    DATA_DIR_BASE + os.sep +
-    cordex_eur11.df["experiment_id"] + os.sep +
-    "day" + os.sep +
-    cordex_eur11.df["uri"].str.split("/").str[-1]
-)
-
-# %%
-cordex_eur11.df
-
-# %%
-CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_catalogue.csv")
