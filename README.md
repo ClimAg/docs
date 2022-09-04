@@ -89,6 +89,7 @@ Notebook | Link
 --- | ---
 Loading EURO-CORDEX data from an NC file | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ncfile.ipynb)
 Loading EURO-CORDEX data using intake-esm | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake.ipynb)
+intake-esm functionality | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake-dkrz.ipynb)
 
 #### [climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)
 
