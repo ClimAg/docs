@@ -69,11 +69,14 @@ def data_plot(
     grid_color="lightslategrey",
     border_color="darkslategrey",
     border_width=.5,
+    border_res="50m",
     cbar_label=None,
     transform=ccrs.RotatedPole(
         pole_latitude=cx.domain_info("EUR-11")["pollat"],
         pole_longitude=cx.domain_info("EUR-11")["pollon"]
-    )
+    ),
+    grid_xlocs=range(-180, 180, 10),
+    grid_ylocs=range(-90, 90, 5)
 ):
 
     plt.figure(figsize=(20, 10))
@@ -82,8 +85,8 @@ def data_plot(
         draw_labels=True,
         linewidth=.5,
         color=grid_color,
-        xlocs=range(-180, 180, 10),
-        ylocs=range(-90, 90, 5),
+        xlocs=grid_xlocs,
+        ylocs=grid_ylocs
     )
     data.plot(
         ax=ax,
@@ -95,7 +98,9 @@ def data_plot(
         y="rlat",
         cbar_kwargs={"label": cbar_label}
     )
-    ax.coastlines(resolution="50m", color=border_color, linewidth=border_width)
+    ax.coastlines(
+        resolution=border_res, color=border_color, linewidth=border_width
+    )
     if title is not None:
         ax.set_title(title)
 
