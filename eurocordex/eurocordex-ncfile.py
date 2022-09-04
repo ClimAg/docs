@@ -1,3 +1,6 @@
+# %% [markdown]
+# # EURO-CORDEX data from NC files
+
 # %%
 # import libraries
 import os
@@ -51,6 +54,11 @@ def rotated_pole_point(data, lon, lat):
 # Cork Airport met station coords
 LON = -8.48611
 LAT = 51.84722
+
+# %%
+# Ireland boundary
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
 
 # %%
 def data_plot(
@@ -134,11 +142,6 @@ def rotated_pole_transform(data):
     )
     return transform
 
-# %%
-# Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
-
 # %% [markdown]
 # ## tasmin
 
@@ -167,9 +170,11 @@ data_ca
 
 # %%
 plt.figure(figsize=(12, 4))
-plt.plot(data_ca["time"], data_ca["tasmin"] - 273.15, marker="o")
+plt.plot(
+    data_ca["time"], data_ca[list(data_ca.keys())[0]] - 273.15, marker="o"
+)
 plt.xlabel(data_ca["time"].attrs["standard_name"])
-plt.ylabel(data_ca["tasmin"].attrs["long_name"] + " [°C]")
+plt.ylabel(data_ca[list(data_ca.keys())[0]].attrs["long_name"] + " [°C]")
 plt.title(
     data_ca.attrs["project_id"] + ", " +
     data_ca.attrs["CORDEX_domain"] + ", " +
@@ -193,9 +198,9 @@ data_50
 
 # %%
 data_plot(
-    data_50["tasmin"] - 273.15,
+    data_50[list(data_50.keys())[0]] - 273.15,
     cmap="Spectral_r",
-    cbar_label=data_50["tasmin"].attrs["long_name"] + " [°C]",
+    cbar_label=data_50[list(data_50.keys())[0]].attrs["long_name"] + " [°C]",
     plot_title=cordex_plot_title(data_50),
     transform=rotated_pole_transform(data_50)
 )
@@ -204,14 +209,14 @@ plt.show()
 # %%
 # clip to Ireland's bounding box with a 10 km buffer
 data_ie = data_50.rio.clip(
-    ie.envelope.to_crs(2157).buffer(10000).to_crs(data_50.rio.crs)
+    ie.envelope.buffer(10000).to_crs(data_50.rio.crs)
 )
 
 # %%
 data_plot(
-    data_ie["tasmin"] - 273.15,
+    data_ie[list(data_ie.keys())[0]] - 273.15,
     cmap="Spectral_r",
-    cbar_label=data_ie["tasmin"].attrs["long_name"] + " [°C]",
+    cbar_label=data_ie[list(data_ie.keys())[0]].attrs["long_name"] + " [°C]",
     plot_title=cordex_plot_title(data_ie),
     transform=rotated_pole_transform(data_ie),
     border_width=.75,
@@ -244,9 +249,11 @@ data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 
 # %%
 plt.figure(figsize=(12, 4))
-plt.plot(data_ca["time"], data_ca["tasmax"] - 273.15, marker="o")
+plt.plot(
+    data_ca["time"], data_ca[list(data_ca.keys())[0]] - 273.15, marker="o"
+)
 plt.xlabel(data_ca["time"].attrs["standard_name"])
-plt.ylabel(data_ca["tasmax"].attrs["long_name"] + " [°C]")
+plt.ylabel(data_ca[list(data_ca.keys())[0]].attrs["long_name"] + " [°C]")
 plt.title(
     data_ca.attrs["project_id"] + ", " +
     data_ca.attrs["CORDEX_domain"] + ", " +
@@ -266,9 +273,9 @@ data_50 = data_ec.isel(time=50)
 
 # %%
 data_plot(
-    data_50["tasmax"] - 273.15,
+    data_50[list(data_50.keys())[0]] - 273.15,
     cmap="Spectral_r",
-    cbar_label=data_50["tasmax"].attrs["long_name"] + " [°C]",
+    cbar_label=data_50[list(data_50.keys())[0]].attrs["long_name"] + " [°C]",
     plot_title=cordex_plot_title(data_50),
     transform=rotated_pole_transform(data_50)
 )
@@ -276,14 +283,14 @@ plt.show()
 
 # %%
 data_ie = data_50.rio.clip(
-    ie.envelope.to_crs(2157).buffer(10000).to_crs(data_50.rio.crs)
+    ie.envelope.buffer(10000).to_crs(data_50.rio.crs)
 )
 
 # %%
 data_plot(
-    data_ie["tasmax"] - 273.15,
+    data_ie[list(data_ie.keys())[0]] - 273.15,
     cmap="Spectral_r",
-    cbar_label=data_ie["tasmax"].attrs["long_name"] + " [°C]",
+    cbar_label=data_ie[list(data_ie.keys())[0]].attrs["long_name"] + " [°C]",
     plot_title=cordex_plot_title(data_ie),
     transform=rotated_pole_transform(data_ie),
     border_width=.75,
@@ -314,9 +321,13 @@ data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 
 # %%
 plt.figure(figsize=(12, 4))
-plt.plot(data_ca["time"], data_ca["pr"] * 60 * 60 * 24, marker="o")
+plt.plot(
+    data_ca["time"],
+    data_ca[list(data_ca.keys())[0]] * 60 * 60 * 24,
+    marker="o"
+)
 plt.xlabel(data_ca["time"].attrs["standard_name"])
-plt.ylabel(data_ca["pr"].attrs["long_name"] + " [mm/day]")
+plt.ylabel(data_ca[list(data_ca.keys())[0]].attrs["long_name"] + " [mm/day]")
 plt.title(
     data_ca.attrs["project_id"] + ", " +
     data_ca.attrs["CORDEX_domain"] + ", " +
@@ -336,9 +347,11 @@ data_50 = data_ec.isel(time=50)
 
 # %%
 data_plot(
-    data_50["pr"] * 60 * 60 * 24,
+    data_50[list(data_50.keys())[0]] * 60 * 60 * 24,
     cmap="viridis_r",
-    cbar_label=data_50["pr"].attrs["long_name"] + " [mm/day]",
+    cbar_label=(
+        data_50[list(data_50.keys())[0]].attrs["long_name"] + " [mm/day]"
+    ),
     plot_title=cordex_plot_title(data_50),
     transform=rotated_pole_transform(data_50)
 )
@@ -346,14 +359,16 @@ plt.show()
 
 # %%
 data_ie = data_50.rio.clip(
-    ie.envelope.to_crs(2157).buffer(10000).to_crs(data_50.rio.crs)
+    ie.envelope.buffer(10000).to_crs(data_50.rio.crs)
 )
 
 # %%
 data_plot(
-    data_ie["pr"] * 60 * 60 * 24,
+    data_ie[list(data_ie.keys())[0]] * 60 * 60 * 24,
     cmap="viridis_r",
-    cbar_label=data_50["pr"].attrs["long_name"] + " [mm/day]",
+    cbar_label=(
+        data_ie[list(data_ie.keys())[0]].attrs["long_name"] + " [mm/day]"
+    ),
     plot_title=cordex_plot_title(data_ie),
     transform=rotated_pole_transform(data_ie),
     border_width=.75,

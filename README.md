@@ -7,13 +7,6 @@ project "ClimAg: Multifactorial causes of fodder crises in Ireland and risks
 due to climate change" under the Climate Change Research Programme grant
 number 2018-CCRP-MS.50.
 
-## Requirements
-
-- Python 3
-- JupyterLab
-- Dask
-- Matplotlib
-
 ## Python environment
 
 Create a Conda environment:
@@ -94,11 +87,10 @@ Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0
 
 Notebook | Link
 --- | ---
-py-cordex demo | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/py-cordex.ipynb)
-Loading EURO-CORDEX data from NC file | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ncfile.ipynb)
+Loading EURO-CORDEX data from an NC file | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ncfile.ipynb)
 Loading EURO-CORDEX data using intake-esm | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake.ipynb)
 
-### [climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)
+#### [climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)
 
 Notebook | Link
 --- | ---
@@ -108,7 +100,7 @@ SPI - future - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/
 SPEI - historical - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spei-hist-ca.ipynb)
 SPEI - future - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spei-future-ca.ipynb)
 
-### ISCRAES poster (R)
+#### ISCRAES poster (R)
 
 Notebook | Link
 --- | ---

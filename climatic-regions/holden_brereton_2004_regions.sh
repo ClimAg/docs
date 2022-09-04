@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # georeference screenshot of the 7-cluster agroclimatic regions map from
 # Holden and Brereton (2004)
 # Holden, N. M. and Brereton, A. J. (2004). ‘Definition of agroclimatic
