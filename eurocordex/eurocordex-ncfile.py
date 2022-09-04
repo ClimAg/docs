@@ -30,21 +30,6 @@ plt.rcParams["axes.labelsize"] = "10"
 DATA_DIR_BASE = os.path.join("data", "eurocordex")
 
 # %%
-FILE_PATH = os.path.join(
-    DATA_DIR_BASE,
-    "historical",
-    "mon",
-    "tasmin_EUR-11_NCC-NorESM1-M_historical_r1i1p1_" +
-    "DMI-HIRHAM5_v3_mon_200101-200512.nc"
-)
-
-# %%
-data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
-
-# %%
-data_ec
-
-# %%
 # convert lat/lon to rotated pole coordinates
 def rotated_pole_point(data, lon, lat):
     pole_latitude = (
@@ -60,46 +45,12 @@ def rotated_pole_point(data, lon, lat):
     rp_cds = ccrs.RotatedGeodetic(
         pole_latitude=pole_latitude, pole_longitude=pole_longitude,
     ).transform_point(x=lon, y=lat, src_crs=ccrs.Geodetic())
-    return rp_cds
+    return rp_cds[0], rp_cds[1]
 
 # %%
 # Cork Airport met station coords
-lon = -8.48611
-lat = 51.84722
-
-# %%
-# extract time series for Cork Airport
-cds = rotated_pole_point(data_ec, lon=lon, lat=lat)
-data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
-
-# %%
-data_ca
-
-# %%
-plt.figure(figsize=(12, 4))
-plt.plot(data_ca["time"], data_ca["tasmin"] - 273.15, marker="o")
-plt.xlabel(data_ca["time"].attrs["standard_name"])
-plt.ylabel(data_ca["tasmin"].attrs["long_name"] + " [°C]")
-plt.title(
-    data_ca.attrs["project_id"] + ", " +
-    data_ca.attrs["CORDEX_domain"] + ", " +
-    data_ca.attrs["driving_model_id"] + ", " +
-    data_ca.attrs["driving_model_ensemble_member"] + ", " +
-    data_ca.attrs["driving_experiment_name"] + ", " +
-    data_ca.attrs["model_id"] + ", " +
-    data_ca.attrs["rcm_version_id"] + ", " +
-    data_ca.attrs["frequency"] +
-    ", (" + str(lon) + ", " + str(lat) + ")"
-)
-plt.tight_layout()
-plt.show()
-
-# %%
-# extract data for a given time
-data_50 = data_ec.isel(time=50)
-
-# %%
-data_50
+LON = -8.48611
+LAT = 51.84722
 
 # %%
 def data_plot(
@@ -145,6 +96,12 @@ def data_plot(
 
 # %%
 def cordex_plot_title(data):
+    if data.attrs["frequency"] == "mon":
+        date_format = "%b %Y"
+    elif data.attrs["frequency"] == "day":
+        date_format = "%-d %b %Y"
+    else:
+        date_format = "%Y-%m-%d %H:%M:%S"
     plot_title = (
         data.attrs["project_id"] + ", " +
         data.attrs["CORDEX_domain"] + ", " +
@@ -155,7 +112,7 @@ def cordex_plot_title(data):
         data.attrs["rcm_version_id"] + ", " +
         data.attrs["frequency"] + ", " +
         datetime.strftime(
-            datetime.fromisoformat(str(data["time"].values)), "%b %Y"
+            datetime.fromisoformat(str(data["time"].values)), date_format
         )
     )
     return plot_title
@@ -178,6 +135,63 @@ def rotated_pole_transform(data):
     return transform
 
 # %%
+# Ireland boundary
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
+
+# %% [markdown]
+# ## tasmin
+
+# %%
+FILE_PATH = os.path.join(
+    DATA_DIR_BASE,
+    "historical",
+    "mon",
+    "tasmin_EUR-11_NCC-NorESM1-M_historical_r1i1p1_" +
+    "DMI-HIRHAM5_v3_mon_200101-200512.nc"
+)
+
+# %%
+data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
+
+# %%
+data_ec
+
+# %%
+# extract time series for Cork Airport
+cds = rotated_pole_point(data_ec, lon=LON, lat=LAT)
+data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+
+# %%
+data_ca
+
+# %%
+plt.figure(figsize=(12, 4))
+plt.plot(data_ca["time"], data_ca["tasmin"] - 273.15, marker="o")
+plt.xlabel(data_ca["time"].attrs["standard_name"])
+plt.ylabel(data_ca["tasmin"].attrs["long_name"] + " [°C]")
+plt.title(
+    data_ca.attrs["project_id"] + ", " +
+    data_ca.attrs["CORDEX_domain"] + ", " +
+    data_ca.attrs["driving_model_id"] + ", " +
+    data_ca.attrs["driving_model_ensemble_member"] + ", " +
+    data_ca.attrs["driving_experiment_name"] + ", " +
+    data_ca.attrs["model_id"] + ", " +
+    data_ca.attrs["rcm_version_id"] + ", " +
+    data_ca.attrs["frequency"] +
+    ", (" + str(LON) + ", " + str(LAT) + ")"
+)
+plt.tight_layout()
+plt.show()
+
+# %%
+# extract data for a given time
+data_50 = data_ec.isel(time=50)
+
+# %%
+data_50
+
+# %%
 data_plot(
     data_50["tasmin"] - 273.15,
     cmap="Spectral_r",
@@ -186,11 +200,6 @@ data_plot(
     transform=rotated_pole_transform(data_50)
 )
 plt.show()
-
-# %%
-# Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
 
 # %%
 # clip to Ireland's bounding box with a 10 km buffer
@@ -214,4 +223,142 @@ data_plot(
 # Cork Airport marker
 # plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
 
+plt.show()
+
+# %% [markdown]
+# ## tasmax
+
+# %%
+FILE_PATH = os.path.join(
+    DATA_DIR_BASE,
+    "historical",
+    "mon",
+    "tasmax_EUR-11_NCC-NorESM1-M_historical_r1i1p1_" +
+    "DMI-HIRHAM5_v3_mon_200101-200512.nc"
+)
+
+data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
+
+cds = rotated_pole_point(data_ec, lon=LON, lat=LAT)
+data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+
+# %%
+plt.figure(figsize=(12, 4))
+plt.plot(data_ca["time"], data_ca["tasmax"] - 273.15, marker="o")
+plt.xlabel(data_ca["time"].attrs["standard_name"])
+plt.ylabel(data_ca["tasmax"].attrs["long_name"] + " [°C]")
+plt.title(
+    data_ca.attrs["project_id"] + ", " +
+    data_ca.attrs["CORDEX_domain"] + ", " +
+    data_ca.attrs["driving_model_id"] + ", " +
+    data_ca.attrs["driving_model_ensemble_member"] + ", " +
+    data_ca.attrs["driving_experiment_name"] + ", " +
+    data_ca.attrs["model_id"] + ", " +
+    data_ca.attrs["rcm_version_id"] + ", " +
+    data_ca.attrs["frequency"] +
+    ", (" + str(LON) + ", " + str(LAT) + ")"
+)
+plt.tight_layout()
+plt.show()
+
+# %%
+data_50 = data_ec.isel(time=50)
+
+# %%
+data_plot(
+    data_50["tasmax"] - 273.15,
+    cmap="Spectral_r",
+    cbar_label=data_50["tasmax"].attrs["long_name"] + " [°C]",
+    plot_title=cordex_plot_title(data_50),
+    transform=rotated_pole_transform(data_50)
+)
+plt.show()
+
+# %%
+data_ie = data_50.rio.clip(
+    ie.envelope.to_crs(2157).buffer(10000).to_crs(data_50.rio.crs)
+)
+
+# %%
+data_plot(
+    data_ie["tasmax"] - 273.15,
+    cmap="Spectral_r",
+    cbar_label=data_ie["tasmax"].attrs["long_name"] + " [°C]",
+    plot_title=cordex_plot_title(data_ie),
+    transform=rotated_pole_transform(data_ie),
+    border_width=.75,
+    border_res="10m",
+    grid_xlocs=range(-180, 180, 2),
+    grid_ylocs=range(-90, 90, 1)
+)
+plt.show()
+
+# %% [markdown]
+# ## pr
+
+# %%
+FILE_PATH = os.path.join(
+    DATA_DIR_BASE,
+    "rcp85",
+    "mon",
+    "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_" +
+    "DMI-HIRHAM5_v3_mon_204101-205012.nc"
+)
+
+data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
+
+cds = rotated_pole_point(data_ec, lon=LON, lat=LAT)
+
+# %%
+data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+
+# %%
+plt.figure(figsize=(12, 4))
+plt.plot(data_ca["time"], data_ca["pr"] * 60 * 60 * 24, marker="o")
+plt.xlabel(data_ca["time"].attrs["standard_name"])
+plt.ylabel(data_ca["pr"].attrs["long_name"] + " [mm/day]")
+plt.title(
+    data_ca.attrs["project_id"] + ", " +
+    data_ca.attrs["CORDEX_domain"] + ", " +
+    data_ca.attrs["driving_model_id"] + ", " +
+    data_ca.attrs["driving_model_ensemble_member"] + ", " +
+    data_ca.attrs["driving_experiment_name"] + ", " +
+    data_ca.attrs["model_id"] + ", " +
+    data_ca.attrs["rcm_version_id"] + ", " +
+    data_ca.attrs["frequency"] +
+    ", (" + str(LON) + ", " + str(LAT) + ")"
+)
+plt.tight_layout()
+plt.show()
+
+# %%
+data_50 = data_ec.isel(time=50)
+
+# %%
+data_plot(
+    data_50["pr"] * 60 * 60 * 24,
+    cmap="viridis_r",
+    cbar_label=data_50["pr"].attrs["long_name"] + " [mm/day]",
+    plot_title=cordex_plot_title(data_50),
+    transform=rotated_pole_transform(data_50)
+)
+plt.show()
+
+# %%
+data_ie = data_50.rio.clip(
+    ie.envelope.to_crs(2157).buffer(10000).to_crs(data_50.rio.crs)
+)
+
+# %%
+data_plot(
+    data_ie["pr"] * 60 * 60 * 24,
+    cmap="viridis_r",
+    cbar_label=data_50["pr"].attrs["long_name"] + " [mm/day]",
+    plot_title=cordex_plot_title(data_ie),
+    transform=rotated_pole_transform(data_ie),
+    border_width=.75,
+    border_res="10m",
+    grid_xlocs=range(-180, 180, 2),
+    grid_ylocs=range(-90, 90, 1)
+)
 plt.show()
