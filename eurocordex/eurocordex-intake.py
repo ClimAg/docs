@@ -14,6 +14,7 @@ import json
 import os
 from datetime import datetime, timezone
 import cartopy.crs as ccrs
+import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 # import requests
@@ -65,6 +66,11 @@ LAT = 51.84722
 
 # %%
 cds = rotated_pole_point(data_ec, lon=LON, lat=LAT)
+
+# %%
+# Ireland boundary
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
 
 # %% [markdown]
 # ## Plot configurations
@@ -264,7 +270,7 @@ json_file.close()
 # %%
 GITHUB_CSV_LINK = (
     "https://media.githubusercontent.com/media/ClimAg/data/main/eurocordex/" +
-    "eurocordex_eur11_catalogue.csv?token=AHOG4CXFUAWFBZDPQEOBTOTDCUOD6"
+    "eurocordex_eur11_catalogue.csv"
 )
 
 cordex_eur11_cat["catalog_file"] = GITHUB_CSV_LINK
@@ -294,13 +300,14 @@ with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
 # ## Testing the local catalogue
 
 # %%
-GITHUB_JSON_LINK = (
-    "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/" +
-    "eurocordex_eur11_local.json?" +
-    "token=GHSAT0AAAAAABX3KZBG4HW6U5NNDL7PXT4UYYVDIFQ"
-)
+# JSON_FILE_PATH = (
+#     "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/" +
+#     "eurocordex_eur11_local.json"
+# )
+JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_local.json")
 
-cordex_eur11_cat = intake.open_esm_datastore(GITHUB_JSON_LINK)
+# %%
+cordex_eur11_cat = intake.open_esm_datastore(JSON_FILE_PATH)
 
 # %%
 list(cordex_eur11_cat)[0:5]
@@ -341,7 +348,8 @@ pr = cordex_eur11_pr.to_dataset_dict(cdf_kwargs=dict(chunks=dict(time=1)))
 pr = pr.popitem()[1]
 
 # %%
-pr
+# manually assign CRS
+pr.rio.write_crs(data_ec.rio.crs, inplace=True)
 
 # %% [markdown]
 # ### Time subset
@@ -351,11 +359,14 @@ pr_50 = pr.isel(time=50)
 
 # %%
 data_plot(
-    pr_50[list(pr_50.keys())[0]] * 60 * 60 * 24,
+    pr_50[pr_50.attrs["intake_esm_varname"][0]] * 60 * 60 * 24,
     cmap="Blues",
-    cbar_label=pr_50[list(pr_50.keys())[0]].attrs["long_name"] + " [mm/day]",
+    cbar_label=(
+        pr_50[pr_50.attrs["intake_esm_varname"][0]].attrs["long_name"] +
+        " [mm/day]"
+    ),
     plot_title=cordex_plot_title(pr_50),
-    transform=rotated_pole_transform(data_ec)
+    transform=rotated_pole_transform(pr_50)
 )
 plt.show()
 
@@ -369,10 +380,13 @@ pr_ca = pr.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 plt.figure(figsize=(12, 4))
 plt.plot(
     pr_ca["time"],
-    pr_ca[list(pr_ca.keys())[0]].values[0] * 60 * 60 * 24
+    pr_ca[pr_50.attrs["intake_esm_varname"][0]].values[0] * 60 * 60 * 24
 )
 plt.xlabel(pr_ca["time"].attrs["standard_name"])
-plt.ylabel(pr_ca[list(pr_ca.keys())[0]].attrs["long_name"] + " [mm/day]")
+plt.ylabel(
+    pr_ca[pr_50.attrs["intake_esm_varname"][0]].attrs["long_name"] +
+    " [mm/day]"
+)
 plt.title(
     pr_ca.attrs["project_id"] + ", " +
     pr_ca.attrs["CORDEX_domain"] + ", " +
@@ -385,4 +399,32 @@ plt.title(
     ", (" + str(LON) + ", " + str(LAT) + ")"
 )
 plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Ireland subset
+
+# %%
+# clip to Ireland's bounding box with a 10 km buffer
+pr_ie = pr_50.rio.clip(ie.envelope.buffer(10000).to_crs(pr_50.rio.crs))
+
+# %%
+data_plot(
+    pr_ie[pr_ie.attrs["intake_esm_varname"][0]]  * 60 * 60 * 24,
+    cmap="viridis_r",
+    cbar_label=(
+        pr_ie[pr_ie.attrs["intake_esm_varname"][0]].attrs["long_name"] +
+        " [°C]"
+    ),
+    plot_title=cordex_plot_title(pr_ie),
+    transform=rotated_pole_transform(pr_ie),
+    border_width=.75,
+    border_res="10m",
+    grid_xlocs=range(-180, 180, 2),
+    grid_ylocs=range(-90, 90, 1)
+)
+
+# # Cork Airport marker
+# plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
+
 plt.show()
