@@ -7,7 +7,7 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from src import download_data as dd
+# from src import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -41,20 +41,21 @@ GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 # <https://data.gov.ie/dataset/administrative-areas-osi-national-statutory-boundaries-2019>
 
 # %%
-URL = (
-    "https://data-osi.opendata.arcgis.com/datasets/" +
-    "d81188d16e804bde81548e982e80c53e_0.geojson"
-)
-payload = {
-    "outSR": {
-        "latestWkid": "2157",
-        "wkid": "2157"
-    }
-}
 SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
 
 # %%
 # # download data if necessary
+# URL = (
+#     "https://data-osi.opendata.arcgis.com/datasets/" +
+#     "d81188d16e804bde81548e982e80c53e_0.geojson"
+# )
+# payload = {
+#     "outSR": {
+#         "latestWkid": "2157",
+#         "wkid": "2157"
+#     }
+# }
+
 # dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
 # print("Last downloaded:", datetime.now(tz=timezone.utc))
 
@@ -96,20 +97,21 @@ osi.to_file(GPKG_BOUNDARY, layer="Admin_Areas_ROI_OSi")
 # <https://www.opendatani.gov.uk/dataset/osni-open-data-largescale-boundaries-county-boundaries1>
 
 # %%
-URL = (
-    "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::" +
-    "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
-)
-payload = {
-    "outSR": {
-        "latestWkid": "29902",
-        "wkid": "29900"
-    }
-}
 SUB_DIR = os.path.join(DATA_DIR, "admin-osni", "raw")
 
 # %%
 # # download data if necessary
+# URL = (
+#     "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::" +
+#     "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
+# )
+# payload = {
+#     "outSR": {
+#         "latestWkid": "29902",
+#         "wkid": "29900"
+#     }
+# }
+
 # dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
 # print("Last downloaded:", datetime.now(tz=timezone.utc))
 
@@ -211,6 +213,9 @@ ie = osi_roi.merge(osni_ni, how="outer")
 
 # %%
 ie
+
+# %%
+ie.total_bounds.round(2)
 
 # %%
 base = ie.plot(color="navajowhite", figsize=(9, 9))

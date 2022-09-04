@@ -10,7 +10,7 @@ import zipfile
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from src import download_data as dd
+# from src import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -39,14 +39,15 @@ DATA_DIR = os.path.join("data", "boundary")
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 
 # %%
-URL = (
-    "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/" +
-    "ref-nuts-2021-01m.geojson.zip"
-)
 SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
 
 # %%
 # # download data if necessary
+# URL = (
+#     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/" +
+#     "ref-nuts-2021-01m.geojson.zip"
+# )
+
 # dd.download_data(server=URL, ddir=SUB_DIR)
 # print("Last downloaded:", datetime.now(tz=timezone.utc))
 
@@ -97,6 +98,9 @@ nuts2 = nuts_ie.merge(nuts_ni, how="outer")
 
 # %%
 nuts2
+
+# %%
+nuts2.total_bounds.round(2)
 
 # %%
 base = nuts2.plot(color="navajowhite", figsize=(9, 9))

@@ -258,7 +258,7 @@ cordex_eur11.df.to_csv(CSV_FILE_PATH, index=False)
 # %%
 # modify the JSON catalogue
 json_file = open(JSON_FILE_PATH, encoding="utf-8")
-eurocordex_eur11 = json.load(json_file)
+cordex_eur11_cat = json.load(json_file)
 json_file.close()
 
 # %%
@@ -267,13 +267,13 @@ GITHUB_CSV_LINK = (
     "eurocordex_eur11_catalogue.csv?token=AHOG4CXFUAWFBZDPQEOBTOTDCUOD6"
 )
 
-eurocordex_eur11["catalog_file"] = GITHUB_CSV_LINK
+cordex_eur11_cat["catalog_file"] = GITHUB_CSV_LINK
 
 # %%
-eurocordex_eur11["id"] = "eurocordex_eur11"
+cordex_eur11_cat["id"] = "eurocordex_eur11"
 
 # %%
-eurocordex_eur11["description"] = (
+cordex_eur11_cat["description"] = (
     "This is an ESM collection for EURO-CORDEX data accessible on GitHub " +
     "LFS. Data has been generated using the DKRZ intake-esm stores. " +
     "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, " +
@@ -288,7 +288,7 @@ JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_local.json")
 
 # %%
 with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
-    json.dump(eurocordex_eur11, json_file, ensure_ascii=False, indent=4)
+    json.dump(cordex_eur11_cat, json_file, ensure_ascii=False, indent=4)
 
 # %% [markdown]
 # ## Testing the local catalogue
@@ -300,19 +300,19 @@ GITHUB_JSON_LINK = (
     "token=GHSAT0AAAAAABX3KZBG4HW6U5NNDL7PXT4UYYVDIFQ"
 )
 
-local_cat = intake.open_esm_datastore(GITHUB_JSON_LINK)
+cordex_eur11_cat = intake.open_esm_datastore(GITHUB_JSON_LINK)
 
 # %%
-list(local_cat)[0:5]
+list(cordex_eur11_cat)[0:5]
 
 # %%
-local_cat
+cordex_eur11_cat
 
 # %%
-local_cat.df.shape
+cordex_eur11_cat.df.shape
 
 # %%
-local_cat.df.head()
+cordex_eur11_cat.df.head()
 
 # %%
 # filter data subset
@@ -326,7 +326,7 @@ query = dict(
 )
 
 # %%
-cordex_eur11_pr = local_cat.search(**query)
+cordex_eur11_pr = cordex_eur11_cat.search(**query)
 
 # %%
 cordex_eur11_pr
@@ -385,134 +385,4 @@ plt.title(
     ", (" + str(LON) + ", " + str(LAT) + ")"
 )
 plt.tight_layout()
-plt.show()
-
-# %% [markdown]
-# ## intake functionality
-
-# %%
-list(dkrz_cat)
-
-# %%
-print(dkrz_cat._entries)
-
-# %%
-# view CORDEX metadata
-dkrz_cat._entries["dkrz_cordex_disk"]._open_args
-
-# %%
-dkrz_cordex.esmcol_data["description"]
-
-# %%
-dkrz_cordex
-
-# %%
-dkrz_cordex.df.head()
-
-# %%
-dkrz_cordex.esmcol_data["catalog_file"]
-
-# %%
-list(dkrz_cordex.df.columns)
-
-# %%
-list(dkrz_cordex.df["CORDEX_domain"].unique())
-
-# %%
-list(dkrz_cordex.df["institute_id"].unique())
-
-# %%
-list(dkrz_cordex.df["driving_model_id"].unique())
-
-# %%
-list(dkrz_cordex.df["experiment_id"].unique())
-
-# %%
-list(dkrz_cordex.df["member"].unique())
-
-# %%
-list(dkrz_cordex.df["model_id"].unique())
-
-# %%
-list(dkrz_cordex.df["rcm_version_id"].unique())
-
-# %%
-list(dkrz_cordex.df["frequency"].unique())
-
-# %%
-list(dkrz_cordex.df["variable_id"].unique())
-
-# %%
-list(dkrz_cordex.df["time_range"].unique())
-
-# %%
-# filter for EUR-11, historical and rcp85 experiments only, at daily res
-query = dict(
-    CORDEX_domain="EUR-11",
-    driving_model_id="NCC-NorESM1-M",
-    experiment_id="rcp85",
-    member="r1i1p1",
-    model_id="DMI-HIRHAM5",
-    rcm_version_id="v3",
-    frequency="day",
-    variable_id="pr",
-    time_range=timerange
-)
-
-# %%
-cordex_eur11 = dkrz_cordex.search(**query)
-
-# %%
-cordex_eur11
-
-# %%
-cordex_eur11.df
-
-# %%
-# replace URI to path to downloaded data
-cordex_eur11.df["uri"] = (
-    "data" + os.sep +
-    "eurocordex" + os.sep +
-    cordex_eur11.df["experiment_id"] + os.sep +
-    "day" + os.sep +
-    cordex_eur11.df["uri"].str.split("/").str[-1]
-)
-
-# %%
-cordex_eur11.df
-
-# %%
-pr = cordex_eur11.to_dataset_dict(cdf_kwargs=dict(chunks=dict(time=1)))
-
-# %%
-pr
-
-# %%
-pr = pr.popitem()[1]
-
-# %%
-pr
-
-# %%
-pr = pr.isel(time=50)
-
-# %%
-FILE_PATH = os.path.join(
-    DATA_DIR_BASE,
-    "rcp85",
-    "mon",
-    "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_" +
-    "DMI-HIRHAM5_v3_mon_204101-205012.nc"
-)
-
-data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
-
-# %%
-data_plot(
-    pr[list(pr.keys())[0]] * 60 * 60 * 24,
-    cmap="Blues",
-    cbar_label=pr[list(pr.keys())[0]].attrs["long_name"] + " [mm/day]",
-    plot_title=cordex_plot_title(pr),
-    transform=rotated_pole_transform(data_ec)
-)
 plt.show()
