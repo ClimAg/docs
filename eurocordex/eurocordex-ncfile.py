@@ -3,10 +3,8 @@
 import os
 from datetime import datetime, timezone
 import cartopy.crs as ccrs
-import cordex as cx
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import nc_time_axis
 import xarray as xr
 
 # %%
@@ -41,10 +39,28 @@ FILE_PATH = os.path.join(
 )
 
 # %%
-data = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
+data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 
 # %%
-data
+data_ec
+
+# %%
+# convert lat/lon to rotated pole coordinates
+def rotated_pole_point(data, lon, lat):
+    pole_latitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][0]["value"]
+    )
+    pole_longitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][1]["value"]
+    )
+    rp_cds = ccrs.RotatedGeodetic(
+        pole_latitude=pole_latitude, pole_longitude=pole_longitude,
+    ).transform_point(x=lon, y=lat, src_crs=ccrs.Geodetic())
+    return rp_cds
 
 # %%
 # Cork Airport met station coords
@@ -52,14 +68,9 @@ lon = -8.48611
 lat = 51.84722
 
 # %%
-# convert lat/lon to rotated pole coordinates
-cds = ccrs.RotatedGeodetic(
-    pole_latitude=cx.domain_info("EUR-11")["pollat"],
-    pole_longitude=cx.domain_info("EUR-11")["pollon"]
-).transform_point(x=lon, y=lat, src_crs=ccrs.Geodetic())
-
-# %%
-data_ca = data.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+# extract time series for Cork Airport
+cds = rotated_pole_point(data_ec, lon=lon, lat=lat)
+data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 
 # %%
 data_ca
@@ -84,7 +95,8 @@ plt.tight_layout()
 plt.show()
 
 # %%
-data_50 = data.isel(time=50)
+# extract data for a given time
+data_50 = data_ec.isel(time=50)
 
 # %%
 data_50
@@ -95,21 +107,18 @@ def data_plot(
     cmap="terrain",
     vmin=None,
     vmax=None,
-    title=None,
     grid_color="lightslategrey",
     border_color="darkslategrey",
     border_width=.5,
     border_res="50m",
     cbar_label=None,
-    transform=ccrs.RotatedPole(
-        pole_latitude=cx.domain_info("EUR-11")["pollat"],
-        pole_longitude=cx.domain_info("EUR-11")["pollon"]
-    ),
+    transform=None,
     grid_xlocs=range(-180, 180, 10),
-    grid_ylocs=range(-90, 90, 5)
+    grid_ylocs=range(-90, 90, 5),
+    plot_title=None,
+    plot_figsize=(20, 10)
 ):
-
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=plot_figsize)
     ax = plt.axes(projection=transform)
     ax.gridlines(
         draw_labels=True,
@@ -131,32 +140,51 @@ def data_plot(
     ax.coastlines(
         resolution=border_res, color=border_color, linewidth=border_width
     )
-    if title is not None:
-        ax.set_title(title)
+    if plot_title is not None:
+        ax.set_title(plot_title)
 
 # %%
-plot_title = (
-    data_50.attrs["project_id"] + ", " +
-    data_50.attrs["CORDEX_domain"] + ", " +
-    data_50.attrs["driving_model_id"] + ", " +
-    data_50.attrs["driving_model_ensemble_member"] + ", " +
-    data_50.attrs["driving_experiment_name"] + ", " +
-    data_50.attrs["model_id"] + ", " +
-    data_50.attrs["rcm_version_id"] + ", " +
-    data_50.attrs["frequency"] + ", " +
-    str(data_50["time"].coords)[38:57]
-)
+def cordex_plot_title(data):
+    plot_title = (
+        data.attrs["project_id"] + ", " +
+        data.attrs["CORDEX_domain"] + ", " +
+        data.attrs["driving_model_id"] + ", " +
+        data.attrs["driving_model_ensemble_member"] + ", " +
+        data.attrs["driving_experiment_name"] + ", " +
+        data.attrs["model_id"] + ", " +
+        data.attrs["rcm_version_id"] + ", " +
+        data.attrs["frequency"] + ", " +
+        datetime.strftime(
+            datetime.fromisoformat(str(data["time"].values)), "%b %Y"
+        )
+    )
+    return plot_title
 
+# %%
+def rotated_pole_transform(data):
+    pole_latitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][0]["value"]
+    )
+    pole_longitude = (
+        data.rio.crs.to_dict(
+            projjson=True
+        )["conversion"]["parameters"][1]["value"]
+    )
+    transform = ccrs.RotatedPole(
+        pole_latitude=pole_latitude, pole_longitude=pole_longitude
+    )
+    return transform
+
+# %%
 data_plot(
     data_50["tasmin"] - 273.15,
     cmap="Spectral_r",
     cbar_label=data_50["tasmin"].attrs["long_name"] + " [°C]",
-    title=plot_title
+    plot_title=cordex_plot_title(data_50),
+    transform=rotated_pole_transform(data_50)
 )
-
-# Cork Airport marker
-# plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
-
 plt.show()
 
 # %%
@@ -171,23 +199,12 @@ data_ie = data_50.rio.clip(
 )
 
 # %%
-plot_title = (
-    data_ie.attrs["project_id"] + ", " +
-    data_ie.attrs["CORDEX_domain"] + ", " +
-    data_ie.attrs["driving_model_id"] + ", " +
-    data_ie.attrs["driving_model_ensemble_member"] + ", " +
-    data_ie.attrs["driving_experiment_name"] + ", " +
-    data_ie.attrs["model_id"] + ", " +
-    data_ie.attrs["rcm_version_id"] + ", " +
-    data_ie.attrs["frequency"] + ", " +
-    str(data_ie["time"].coords)[38:57]
-)
-
 data_plot(
     data_ie["tasmin"] - 273.15,
     cmap="Spectral_r",
-    cbar_label=data_50["tasmin"].attrs["long_name"] + " [°C]",
-    title=plot_title,
+    cbar_label=data_ie["tasmin"].attrs["long_name"] + " [°C]",
+    plot_title=cordex_plot_title(data_ie),
+    transform=rotated_pole_transform(data_ie),
     border_width=.75,
     border_res="10m",
     grid_xlocs=range(-180, 180, 2),
