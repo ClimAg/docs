@@ -157,15 +157,6 @@ def rotated_pole_transform(data):
     )
     return transform
 
-# %% [markdown]
-# ## intake catalogue
-
-# %%
-dkrz_cat = intake.open_catalog(["https://dkrz.de/s/intake"])
-
-# %%
-dkrz_cordex = dkrz_cat.dkrz_cordex_disk
-
 # %%
 timerange = [
     "19760101-19801231",
@@ -191,6 +182,12 @@ variables = [
 
 # %% [markdown]
 # ## Create local catalogue
+
+# %%
+dkrz_cat = intake.open_catalog(["https://dkrz.de/s/intake"])
+
+# %%
+dkrz_cordex = dkrz_cat.dkrz_cordex_disk
 
 # %%
 JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
@@ -268,8 +265,7 @@ cordex_eur11_cat["description"] = (
     "LFS. Data has been generated using the DKRZ intake-esm stores. " +
     "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, " +
     "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and " +
-    "the following variables: 'evspsblpot', 'hurs', 'huss', 'mrso', 'pr', " +
-    "'ps', 'rlds', 'rsds', 'rlus', 'rsus', 'sund', 'tas', 'tasmax', 'tasmin'"
+    "the following variables: " + str(variables)
 )
 
 # %%
