@@ -18,7 +18,6 @@ import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 # import requests
-import xarray as xr
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -28,18 +27,6 @@ DATA_DIR_BASE = os.path.join("data", "eurocordex")
 
 # %%
 os.makedirs(DATA_DIR_BASE, exist_ok=True)
-
-# %%
-# load a dataset to extract metadata
-FILE_PATH = os.path.join(
-    DATA_DIR_BASE,
-    "rcp85",
-    "mon",
-    "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_" +
-    "DMI-HIRHAM5_v3_mon_204101-205012.nc"
-)
-
-data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 
 # %%
 # convert lat/lon to rotated pole coordinates
@@ -63,9 +50,6 @@ def rotated_pole_point(data, lon, lat):
 # Cork Airport met station coords
 LON = -8.48611
 LAT = 51.84722
-
-# %%
-cds = rotated_pole_point(data_ec, lon=LON, lat=LAT)
 
 # %%
 # Ireland boundary
@@ -263,9 +247,9 @@ cordex_eur11.df.to_csv(CSV_FILE_PATH, index=False)
 
 # %%
 # modify the JSON catalogue
-json_file = open(JSON_FILE_PATH, encoding="utf-8")
-cordex_eur11_cat = json.load(json_file)
-json_file.close()
+with open(JSON_FILE_PATH, encoding="utf-8") as json_file:
+    cordex_eur11_cat = json.load(json_file)
+    json_file.close()
 
 # %%
 GITHUB_CSV_LINK = (
@@ -296,6 +280,15 @@ JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_local.json")
 with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
     json.dump(cordex_eur11_cat, json_file, ensure_ascii=False, indent=4)
 
+# %%
+# create a copy that reads the CSV file from disk
+cordex_eur11_cat["catalog_file"] = CSV_FILE_PATH
+JSON_FILE_PATH = os.path.join(
+    DATA_DIR_BASE, "eurocordex_eur11_local_disk.json"
+)
+with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
+    json.dump(cordex_eur11_cat, json_file, ensure_ascii=False, indent=4)
+
 # %% [markdown]
 # ## Testing the local catalogue
 
@@ -304,7 +297,9 @@ with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
 #     "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/" +
 #     "eurocordex_eur11_local.json"
 # )
-JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_local.json")
+JSON_FILE_PATH = os.path.join(
+    DATA_DIR_BASE, "eurocordex_eur11_local_disk.json"
+)
 
 # %%
 cordex_eur11_cat = intake.open_esm_datastore(JSON_FILE_PATH)
@@ -320,6 +315,9 @@ cordex_eur11_cat.df.shape
 
 # %%
 cordex_eur11_cat.df.head()
+
+# %% [markdown]
+# ### Read a subset (precipitation)
 
 # %%
 # filter data subset
@@ -342,14 +340,18 @@ cordex_eur11_pr
 cordex_eur11_pr.df
 
 # %%
-pr = cordex_eur11_pr.to_dataset_dict(cdf_kwargs=dict(chunks=dict(time=1)))
+pr = cordex_eur11_pr.to_dataset_dict(
+    cdf_kwargs=dict(chunks=True, decode_coords="all")
+)
 
 # %%
 pr = pr.popitem()[1]
 
 # %%
-# manually assign CRS
-pr.rio.write_crs(data_ec.rio.crs, inplace=True)
+pr
+
+# %%
+cds = rotated_pole_point(pr, lon=LON, lat=LAT)
 
 # %% [markdown]
 # ### Time subset
@@ -414,7 +416,7 @@ data_plot(
     cmap="viridis_r",
     cbar_label=(
         pr_ie[pr_ie.attrs["intake_esm_varname"][0]].attrs["long_name"] +
-        " [°C]"
+        " [mm/day]"
     ),
     plot_title=cordex_plot_title(pr_ie),
     transform=rotated_pole_transform(pr_ie),
@@ -428,3 +430,24 @@ data_plot(
 # plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
 
 plt.show()
+
+# %% [markdown]
+# ### Save subset as an NC file
+
+# %%
+# clip to Ireland's bounding box with a 10 km buffer
+pr_ie = pr.rio.clip(ie.envelope.buffer(10000).to_crs(pr.rio.crs))
+
+# %%
+pr_ie
+
+# %%
+FILE_NAME = (
+    pr_ie.attrs["intake_esm_dataset_key"] + "." +
+    pr_ie.attrs["driving_model_ensemble_member"] + "." +
+    pr_ie.attrs["rcm_version_id"] + "." +
+    pr_ie.attrs["intake_esm_varname"][0] + ".nc"
+)
+
+# %%
+pr_ie.to_netcdf(os.path.join(DATA_DIR_BASE, FILE_NAME))
