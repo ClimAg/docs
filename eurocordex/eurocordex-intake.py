@@ -175,9 +175,8 @@ timerange = [
 
 # %%
 variables = [
-    "evspsblpot", "hurs", "huss", "mrso", "pr", "ps",
-    "rlds", "rsds", "rlus", "rsus", "sund",
-    "tas", "tasmax", "tasmin"
+    "evspsblpot", "hurs", "huss", "mrso", "pr", "ps", "rlds", "rsds", "rlus",
+    "rsus", "sund", "tas", "tasmax", "tasmin"
 ]
 
 # %% [markdown]
@@ -250,7 +249,7 @@ with open(JSON_FILE_PATH, encoding="utf-8") as json_file:
 
 # %%
 GITHUB_CSV_LINK = (
-    "https://media.githubusercontent.com/media/ClimAg/data/main/eurocordex/" +
+    "https://media.githubusercontent.com/media/ClimAg/data/main/eurocordex/"
     "eurocordex_eur11_catalogue.csv"
 )
 
@@ -261,11 +260,11 @@ cordex_eur11_cat["id"] = "eurocordex_eur11"
 
 # %%
 cordex_eur11_cat["description"] = (
-    "This is an ESM collection for EURO-CORDEX data accessible on GitHub " +
-    "LFS. Data has been generated using the DKRZ intake-esm stores. " +
-    "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, " +
-    "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and " +
-    "the following variables: " + str(variables)
+    "This is an ESM collection for EURO-CORDEX data accessible on GitHub "
+    "LFS. Data has been generated using the DKRZ intake-esm stores. "
+    "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, "
+    "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and "
+    "the following variables: " + ', '.join(variables)
 )
 
 # %%
@@ -290,7 +289,7 @@ with open(JSON_FILE_PATH, "w", encoding="utf-8") as json_file:
 
 # %%
 # JSON_FILE_PATH = (
-#     "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/" +
+#     "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/"
 #     "eurocordex_eur11_local.json"
 # )
 JSON_FILE_PATH = os.path.join(

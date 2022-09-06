@@ -46,7 +46,7 @@ SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
 # %%
 # # download data if necessary
 # URL = (
-#     "https://data-osi.opendata.arcgis.com/datasets/" +
+#     "https://data-osi.opendata.arcgis.com/datasets/"
 #     "d81188d16e804bde81548e982e80c53e_0.geojson"
 # )
 # payload = {
@@ -102,7 +102,7 @@ SUB_DIR = os.path.join(DATA_DIR, "admin-osni", "raw")
 # %%
 # # download data if necessary
 # URL = (
-#     "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::" +
+#     "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::"
 #     "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
 # )
 # payload = {

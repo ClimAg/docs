@@ -44,7 +44,7 @@ SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
 # %%
 # # download data if necessary
 # URL = (
-#     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/" +
+#     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
 #     "ref-nuts-2021-01m.geojson.zip"
 # )
 
@@ -65,7 +65,7 @@ zipfile.ZipFile(DATA_FILE).namelist()
 
 # %%
 nuts = gpd.read_file(
-    "zip://" + DATA_FILE + "!" + "NUTS_RG_01M_2021_4326_LEVL_2.geojson"
+    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_2.geojson"
 )
 
 # %%
@@ -127,7 +127,7 @@ nuts2.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS2")
 
 # %%
 nuts = gpd.read_file(
-    "zip://" + DATA_FILE + "!" + "NUTS_RG_01M_2021_4326_LEVL_3.geojson"
+    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_3.geojson"
 )
 
 # %%
