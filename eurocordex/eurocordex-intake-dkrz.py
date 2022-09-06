@@ -15,7 +15,6 @@ from datetime import datetime, timezone
 import cartopy.crs as ccrs
 import intake
 import matplotlib.pyplot as plt
-# import requests
 import xarray as xr
 
 # %%

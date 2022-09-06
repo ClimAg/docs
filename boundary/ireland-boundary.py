@@ -7,7 +7,7 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-# from src import download_data as dd
+from climag import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -33,7 +33,7 @@ plt.rcParams["axes.labelsize"] = "10"
 DATA_DIR = os.path.join("data", "boundary")
 
 # %%
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
 
 # %% [markdown]
 # ## Administrative Areas - OSi National Statutory Boundaries - 2019
@@ -44,26 +44,28 @@ GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
 
 # %%
-# # download data if necessary
-# URL = (
-#     "https://data-osi.opendata.arcgis.com/datasets/"
-#     "d81188d16e804bde81548e982e80c53e_0.geojson"
-# )
-# payload = {
-#     "outSR": {
-#         "latestWkid": "2157",
-#         "wkid": "2157"
-#     }
-# }
+# download data if necessary
+URL = (
+    "https://data-osi.opendata.arcgis.com/datasets/"
+    "d81188d16e804bde81548e982e80c53e_0.geojson"
+)
+payload = {
+    "outSR": {
+        "latestWkid": "2157",
+        "wkid": "2157"
+    }
+}
 
-# dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
-# print("Last downloaded:", datetime.now(tz=timezone.utc))
+dd.download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 
 # %%
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "data.geojson")
+DATA_FILE = os.path.join(
+    SUB_DIR,
+    "Administrative_Areas_-_OSi_National_Statutory_Boundaries_-_2019.geojson"
+)
 
 # %%
 osi = gpd.read_file(DATA_FILE)
@@ -82,7 +84,7 @@ plt.title("Administrative Areas of the Republic of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8, 51.275,
+    -7.75, 51.275,
     "© Ordnance Survey Ireland"
 )
 
@@ -100,26 +102,28 @@ osi.to_file(GPKG_BOUNDARY, layer="Admin_Areas_ROI_OSi")
 SUB_DIR = os.path.join(DATA_DIR, "admin-osni", "raw")
 
 # %%
-# # download data if necessary
-# URL = (
-#     "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::"
-#     "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
-# )
-# payload = {
-#     "outSR": {
-#         "latestWkid": "29902",
-#         "wkid": "29900"
-#     }
-# }
+# download data if necessary
+URL = (
+    "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::"
+    "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
+)
+payload = {
+    "outSR": {
+        "latestWkid": "29902",
+        "wkid": "29900"
+    }
+}
 
-# dd.download_data(server=URL, ddir=SUB_DIR, params=payload)
-# print("Last downloaded:", datetime.now(tz=timezone.utc))
+dd.download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 
 # %%
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "data.geojson")
+DATA_FILE = os.path.join(
+    SUB_DIR,
+    "OSNI_Open_Data_-_Largescale_Boundaries_-_County_Boundaries_.geojson"
+)
 
 # %%
 osni = gpd.read_file(DATA_FILE)
@@ -138,7 +142,7 @@ plt.title("Administrative Areas of Northern Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -6.5, 53.975,
+    -6.35, 53.975,
     "© Ordnance Survey Northern Ireland"
 )
 
@@ -173,7 +177,7 @@ plt.title("Boundary of the Republic of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8, 51.275,
+    -7.75, 51.275,
     "© Ordnance Survey Ireland"
 )
 
@@ -202,7 +206,7 @@ plt.title("Boundary of Northern Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -6.5, 53.975,
+    -6.35, 53.975,
     "© Ordnance Survey Northern Ireland"
 )
 
@@ -225,7 +229,7 @@ plt.title("Boundaries of ROI and NI")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8.25, 51.275,
+    -7.75, 51.275,
     "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
 )
 
@@ -298,7 +302,7 @@ plt.title("Counties of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8.25, 51.275,
+    -7.75, 51.275,
     "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
 )
 
@@ -333,7 +337,7 @@ plt.title("Boundary of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8.25, 51.275,
+    -7.75, 51.275,
     "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
 )
 

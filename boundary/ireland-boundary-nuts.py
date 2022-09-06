@@ -10,7 +10,7 @@ import zipfile
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-# from src import download_data as dd
+from climag import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -36,26 +36,27 @@ plt.rcParams["axes.labelsize"] = "10"
 DATA_DIR = os.path.join("data", "boundary")
 
 # %%
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+# file name for the GeoPackage where the ooundary vector layers will be saved
+GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
 
 # %%
+# sub directory for the downloaded data
 SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
 
 # %%
-# # download data if necessary
-# URL = (
-#     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
-#     "ref-nuts-2021-01m.geojson.zip"
-# )
+# download data if necessary
+URL = (
+    "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
+    "ref-nuts-2021-01m.geojson.zip"
+)
 
-# dd.download_data(server=URL, ddir=SUB_DIR)
-# print("Last downloaded:", datetime.now(tz=timezone.utc))
+dd.download_data(server=URL, dl_dir=SUB_DIR)
 
 # %%
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "data.zip")
+DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-01m.geojson.zip")
 
 # %%
 zipfile.ZipFile(DATA_FILE).namelist()
@@ -110,7 +111,7 @@ plt.title("NUTS2 Regions of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -9.5, 51.275,
+    -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
 
@@ -168,7 +169,7 @@ plt.title("NUTS3 Regions of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -9.5, 51.275,
+    -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
 
@@ -203,7 +204,7 @@ plt.title("Boundaries of ROI and NI")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -9.5, 51.275,
+    -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
 
@@ -235,7 +236,7 @@ plt.title("Boundary of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -9.5, 51.275,
+    -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
 

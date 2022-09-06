@@ -17,7 +17,7 @@ import cartopy.crs as ccrs
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-# import requests
+from climag import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -189,19 +189,17 @@ dkrz_cat = intake.open_catalog(["https://dkrz.de/s/intake"])
 dkrz_cordex = dkrz_cat.dkrz_cordex_disk
 
 # %%
-JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
+server = dkrz_cat._entries["dkrz_cordex_disk"]._open_args["esmcol_obj"]
 
 # %%
-# # download JSON catalogue from DKRZ's GitLab
-# r = requests.get(
-#     dkrz_cat._entries["dkrz_cordex_disk"]._open_args["esmcol_obj"],
-#     stream=True
-# )
+server
 
-# if r.status_code == 200:
-#     with open(JSON_FILE_PATH, "wb") as catfile:
-#         for chunk in r.iter_content(chunk_size=1048676):
-#             catfile.write(chunk)
+# %%
+# download JSON catalogue from DKRZ's GitLab
+dd.download_data(server=server, dl_dir=DATA_DIR_BASE)
+
+# %%
+JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
 
 # %%
 # filter for EUR-11, historical and rcp85 experiments only, at daily res

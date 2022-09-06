@@ -5,10 +5,9 @@
 import os
 from datetime import datetime, timezone
 import geopandas as gpd
-import pandas as pd
 import matplotlib.pyplot as plt
-import requests
-from src import download_data as dd
+import pandas as pd
+from climag import download_data as dd
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -41,9 +40,11 @@ URL = "https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv"
 SUB_DIR = os.path.join("data", "met", "meteireann")
 
 # %%
-# # download data if required
-# dd.download_data(server=URL, ddir=SUB_DIR)
-# print("Last downloaded:", datetime.now(tz=timezone.utc))
+# download data if necessary
+dd.download_data(server=URL, dl_dir=SUB_DIR)
+
+# %%
+os.listdir(SUB_DIR)
 
 # %%
 stations_roi = pd.read_csv(os.path.join(SUB_DIR, "StationDetails.csv"))
