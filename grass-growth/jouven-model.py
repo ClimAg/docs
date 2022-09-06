@@ -58,8 +58,8 @@ def jouven():
         SENgr = Kgr * BMgr * math.fabs(Tmean)
 
     # abscission
-    ABSdv =
-    ABSdr =
+    ABSdv = Kldv * BMdv * Tmean * fAGEdv
+    ABSdr = Kldr * BMdr * Tmean * fAGEdr
 
     # biomass losses through respiration during senescence
     SIGgv =
@@ -97,3 +97,6 @@ def jouven():
     dAGEdr_dt = (
         (BMdr - ABSdr)/(BMdr - ABSdr + (1 - SIGgr) * SENgr) * AGEdr_in - AGEdr
     )
+
+    BDgv =
+    resBMgv = .05 * 10 * BDgv
