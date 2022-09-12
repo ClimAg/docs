@@ -17,3 +17,4 @@ dependencies:
   - regionmask
   - intake-esm
   - aiohttp
+  - ecgtools

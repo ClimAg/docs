@@ -17,7 +17,7 @@ import cartopy.crs as ccrs
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-from climag import download_data as dd
+from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -196,7 +196,7 @@ server
 
 # %%
 # download JSON catalogue from DKRZ's GitLab
-dd.download_data(server=server, dl_dir=DATA_DIR_BASE)
+download_data(server=server, dl_dir=DATA_DIR_BASE)
 
 # %%
 JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
@@ -262,7 +262,7 @@ cordex_eur11_cat["description"] = (
     "LFS. Data has been generated using the DKRZ intake-esm stores. "
     "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, "
     "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and "
-    "the following variables: " + ', '.join(variables)
+    "the following variables: " + ", ".join(variables)
 )
 
 # %%
@@ -405,7 +405,7 @@ pr_ie = pr_50.rio.clip(ie.envelope.buffer(10000).to_crs(pr_50.rio.crs))
 
 # %%
 data_plot(
-    pr_ie[pr_ie.attrs["intake_esm_varname"][0]]  * 60 * 60 * 24,
+    pr_ie[pr_ie.attrs["intake_esm_varname"][0]] * 60 * 60 * 24,
     cmap="viridis_r",
     cbar_label=(
         pr_ie[pr_ie.attrs["intake_esm_varname"][0]].attrs["long_name"] +
