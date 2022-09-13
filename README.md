@@ -31,19 +31,16 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - jupyterlab
   - dask
   - matplotlib
   - rioxarray
   - geopandas
-  - netcdf4
-  - bottleneck
-  - nc-time-axis
-  - py-cordex
-  - python-cdo
-  - regionmask
   - intake-esm
-  - aiohttp
+  - cartopy
+  - nc-time-axis
+  - jupyterlab
+  - flake8
+  - pylint
 ```
 
 ## R environment
@@ -86,6 +83,8 @@ Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0
 Loading EURO-CORDEX data from an NC file | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ncfile.ipynb)
 Loading EURO-CORDEX data using intake-esm | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake.ipynb)
 intake-esm functionality | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake-dkrz.ipynb)
+***Grass growth model***
+ModVege | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/modvege.ipynb)
 ***[climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)***
 Find closest EURO-CORDEX icell to study area | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-find-icell.ipynb)
 SPI - historical - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spi-hist-ca.ipynb)
