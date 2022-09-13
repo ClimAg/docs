@@ -13,10 +13,10 @@
 import json
 import os
 from datetime import datetime, timezone
-import cartopy.crs as ccrs
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
+import climag.plot_configs as cplt
 from climag.download_data import download_data
 
 # %%
@@ -29,24 +29,6 @@ DATA_DIR_BASE = os.path.join("data", "eurocordex")
 os.makedirs(DATA_DIR_BASE, exist_ok=True)
 
 # %%
-# convert lat/lon to rotated pole coordinates
-def rotated_pole_point(data, lon, lat):
-    pole_latitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][0]["value"]
-    )
-    pole_longitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][1]["value"]
-    )
-    rp_cds = ccrs.RotatedGeodetic(
-        pole_latitude=pole_latitude, pole_longitude=pole_longitude,
-    ).transform_point(x=lon, y=lat, src_crs=ccrs.Geodetic())
-    return rp_cds[0], rp_cds[1]
-
-# %%
 # Cork Airport met station coords
 LON = -8.48611
 LAT = 51.84722
@@ -55,107 +37,6 @@ LAT = 51.84722
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
-
-# %% [markdown]
-# ## Plot configurations
-
-# %%
-# configure plot styles
-plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 96
-plt.rcParams["axes.grid"] = False
-plt.rcParams["text.color"] = "darkslategrey"
-plt.rcParams["axes.labelcolor"] = "darkslategrey"
-plt.rcParams["xtick.labelcolor"] = "darkslategrey"
-plt.rcParams["ytick.labelcolor"] = "darkslategrey"
-plt.rcParams["figure.titleweight"] = "semibold"
-plt.rcParams["axes.titleweight"] = "semibold"
-plt.rcParams["figure.titlesize"] = "13"
-plt.rcParams["axes.titlesize"] = "12"
-plt.rcParams["axes.labelsize"] = "10"
-
-# %%
-def data_plot(
-    data,
-    cmap="terrain",
-    vmin=None,
-    vmax=None,
-    grid_color="lightslategrey",
-    border_color="darkslategrey",
-    border_width=.5,
-    border_res="50m",
-    cbar_label=None,
-    transform=None,
-    grid_xlocs=range(-180, 180, 10),
-    grid_ylocs=range(-90, 90, 5),
-    plot_title=None,
-    plot_figsize=(20, 10)
-):
-    plt.figure(figsize=plot_figsize)
-    ax = plt.axes(projection=transform)
-    ax.gridlines(
-        draw_labels=True,
-        linewidth=.5,
-        color=grid_color,
-        xlocs=grid_xlocs,
-        ylocs=grid_ylocs
-    )
-    data.plot(
-        ax=ax,
-        cmap=cmap,
-        transform=transform,
-        vmin=vmin,
-        vmax=vmax,
-        x="rlon",
-        y="rlat",
-        cbar_kwargs={"label": cbar_label}
-    )
-    ax.coastlines(
-        resolution=border_res, color=border_color, linewidth=border_width
-    )
-    if plot_title is not None:
-        ax.set_title(plot_title)
-
-# %%
-def cordex_plot_title(data):
-    if data.attrs["frequency"] == "mon":
-        date_format = "%b %Y"
-    elif data.attrs["frequency"] == "day":
-        date_format = "%-d %b %Y"
-    else:
-        date_format = "%Y-%m-%d %H:%M:%S"
-    plot_title = (
-        data.attrs["project_id"] + ", " +
-        data.attrs["CORDEX_domain"] + ", " +
-        data.attrs["driving_model_id"] + ", " +
-        data.attrs["driving_model_ensemble_member"] + ", " +
-        data.attrs["driving_experiment_name"] + ", " +
-        data.attrs["model_id"] + ", " +
-        data.attrs["rcm_version_id"] + ", " +
-        data.attrs["frequency"] + ", " +
-        datetime.strftime(
-            datetime.fromisoformat(str(data["time"].values)), date_format
-        )
-    )
-    return plot_title
-
-# %%
-def rotated_pole_transform(data):
-    pole_latitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][0]["value"]
-    )
-    pole_longitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][1]["value"]
-    )
-    transform = ccrs.RotatedPole(
-        pole_latitude=pole_latitude, pole_longitude=pole_longitude
-    )
-    return transform
 
 # %%
 timerange = [
@@ -344,7 +225,7 @@ pr = pr.popitem()[1]
 pr
 
 # %%
-cds = rotated_pole_point(pr, lon=LON, lat=LAT)
+cds = cplt.rotated_pole_point(pr, lon=LON, lat=LAT)
 
 # %% [markdown]
 # ### Time subset
@@ -353,16 +234,38 @@ cds = rotated_pole_point(pr, lon=LON, lat=LAT)
 pr_50 = pr.isel(time=50)
 
 # %%
-data_plot(
-    pr_50[pr_50.attrs["intake_esm_varname"][0]] * 60 * 60 * 24,
-    cmap="Blues",
-    cbar_label=(
-        pr_50[pr_50.attrs["intake_esm_varname"][0]].attrs["long_name"] +
-        " [mm/day]"
-    ),
-    plot_title=cordex_plot_title(pr_50),
-    transform=rotated_pole_transform(pr_50)
+plot_transform = cplt.rotated_pole_transform(pr_50)
+data_var = pr_50[pr_50.attrs["intake_esm_varname"][0]]  # extract variable name
+plot_data = data_var * 60 * 60 * 24  # convert to mm/day
+cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
+
+plt.figure(figsize=(20, 10))
+ax = plt.axes(projection=plot_transform)
+
+# specify gridline spacing and labels
+ax.gridlines(
+    draw_labels=True,
+    xlocs=range(-180, 180, 10),
+    ylocs=range(-90, 90, 5),
+    color="lightslategrey",
+    linewidth=.5
 )
+
+# plot data for the variable
+plot_data.plot(
+    ax=ax,
+    cmap="Blues",
+    transform=plot_transform,
+    x="rlon",
+    y="rlat",
+    cbar_kwargs={"label": cbar_label}
+)
+
+# add boundaries
+ax.coastlines(resolution="50m", color="darkslategrey", linewidth=.5)
+
+ax.set_title(cplt.cordex_plot_title(pr_50))  # set plot title
+
 plt.show()
 
 # %% [markdown]
@@ -375,24 +278,14 @@ pr_ca = pr.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
 plt.figure(figsize=(12, 4))
 plt.plot(
     pr_ca["time"],
-    pr_ca[pr_50.attrs["intake_esm_varname"][0]].values[0] * 60 * 60 * 24
+    pr_ca[pr_ca.attrs["intake_esm_varname"][0]].values[0] * 60 * 60 * 24
 )
 plt.xlabel(pr_ca["time"].attrs["standard_name"])
 plt.ylabel(
-    pr_ca[pr_50.attrs["intake_esm_varname"][0]].attrs["long_name"] +
+    pr_ca[pr_ca.attrs["intake_esm_varname"][0]].attrs["long_name"] +
     " [mm/day]"
 )
-plt.title(
-    pr_ca.attrs["project_id"] + ", " +
-    pr_ca.attrs["CORDEX_domain"] + ", " +
-    pr_ca.attrs["driving_model_id"] + ", " +
-    pr_ca.attrs["driving_model_ensemble_member"] + ", " +
-    pr_ca.attrs["driving_experiment_name"] + ", " +
-    pr_ca.attrs["model_id"] + ", " +
-    pr_ca.attrs["rcm_version_id"] + ", " +
-    pr_ca.attrs["frequency"] +
-    ", (" + str(LON) + ", " + str(LAT) + ")"
-)
+plt.title(cplt.cordex_plot_title(pr_ca, lon=LON, lat=LAT))
 plt.tight_layout()
 plt.show()
 
@@ -404,23 +297,37 @@ plt.show()
 pr_ie = pr_50.rio.clip(ie.envelope.buffer(10000).to_crs(pr_50.rio.crs))
 
 # %%
-data_plot(
-    pr_ie[pr_ie.attrs["intake_esm_varname"][0]] * 60 * 60 * 24,
-    cmap="viridis_r",
-    cbar_label=(
-        pr_ie[pr_ie.attrs["intake_esm_varname"][0]].attrs["long_name"] +
-        " [mm/day]"
-    ),
-    plot_title=cordex_plot_title(pr_ie),
-    transform=rotated_pole_transform(pr_ie),
-    border_width=.75,
-    border_res="10m",
-    grid_xlocs=range(-180, 180, 2),
-    grid_ylocs=range(-90, 90, 1)
+plot_transform = cplt.rotated_pole_transform(pr_ie)
+data_var = pr_ie[pr_ie.attrs["intake_esm_varname"][0]]  # extract variable name
+plot_data = data_var * 60 * 60 * 24  # convert to mm/day
+cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
+
+plt.figure(figsize=(20, 10))
+ax = plt.axes(projection=plot_transform)
+
+# specify gridline spacing and labels
+ax.gridlines(
+    draw_labels=True,
+    xlocs=range(-180, 180, 2),
+    ylocs=range(-90, 90, 1),
+    color="lightslategrey",
+    linewidth=.5
 )
 
-# # Cork Airport marker
-# plt.scatter(cds[0], cds[1], s=100, c="darkslategrey", marker="*")
+# plot data for the variable
+plot_data.plot(
+    ax=ax,
+    cmap="viridis_r",
+    transform=plot_transform,
+    x="rlon",
+    y="rlat",
+    cbar_kwargs={"label": cbar_label}
+)
+
+# add boundaries
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
+
+ax.set_title(cplt.cordex_plot_title(pr_ie))  # set plot title
 
 plt.show()
 

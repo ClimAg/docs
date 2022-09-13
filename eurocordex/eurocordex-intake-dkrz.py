@@ -12,10 +12,10 @@
 # import libraries
 import os
 from datetime import datetime, timezone
-import cartopy.crs as ccrs
 import intake
 import matplotlib.pyplot as plt
 import xarray as xr
+import climag.plot_configs as cplt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -37,107 +37,6 @@ FILE_PATH = os.path.join(
 )
 
 data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
-
-# %% [markdown]
-# ## Plot configurations
-
-# %%
-# configure plot styles
-plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 96
-plt.rcParams["axes.grid"] = False
-plt.rcParams["text.color"] = "darkslategrey"
-plt.rcParams["axes.labelcolor"] = "darkslategrey"
-plt.rcParams["xtick.labelcolor"] = "darkslategrey"
-plt.rcParams["ytick.labelcolor"] = "darkslategrey"
-plt.rcParams["figure.titleweight"] = "semibold"
-plt.rcParams["axes.titleweight"] = "semibold"
-plt.rcParams["figure.titlesize"] = "13"
-plt.rcParams["axes.titlesize"] = "12"
-plt.rcParams["axes.labelsize"] = "10"
-
-# %%
-def data_plot(
-    data,
-    cmap="terrain",
-    vmin=None,
-    vmax=None,
-    grid_color="lightslategrey",
-    border_color="darkslategrey",
-    border_width=.5,
-    border_res="50m",
-    cbar_label=None,
-    transform=None,
-    grid_xlocs=range(-180, 180, 10),
-    grid_ylocs=range(-90, 90, 5),
-    plot_title=None,
-    plot_figsize=(20, 10)
-):
-    plt.figure(figsize=plot_figsize)
-    ax = plt.axes(projection=transform)
-    ax.gridlines(
-        draw_labels=True,
-        linewidth=.5,
-        color=grid_color,
-        xlocs=grid_xlocs,
-        ylocs=grid_ylocs
-    )
-    data.plot(
-        ax=ax,
-        cmap=cmap,
-        transform=transform,
-        vmin=vmin,
-        vmax=vmax,
-        x="rlon",
-        y="rlat",
-        cbar_kwargs={"label": cbar_label}
-    )
-    ax.coastlines(
-        resolution=border_res, color=border_color, linewidth=border_width
-    )
-    if plot_title is not None:
-        ax.set_title(plot_title)
-
-# %%
-def cordex_plot_title(data):
-    if data.attrs["frequency"] == "mon":
-        date_format = "%b %Y"
-    elif data.attrs["frequency"] == "day":
-        date_format = "%-d %b %Y"
-    else:
-        date_format = "%Y-%m-%d %H:%M:%S"
-    plot_title = (
-        data.attrs["project_id"] + ", " +
-        data.attrs["CORDEX_domain"] + ", " +
-        data.attrs["driving_model_id"] + ", " +
-        data.attrs["driving_model_ensemble_member"] + ", " +
-        data.attrs["driving_experiment_name"] + ", " +
-        data.attrs["model_id"] + ", " +
-        data.attrs["rcm_version_id"] + ", " +
-        data.attrs["frequency"] + ", " +
-        datetime.strftime(
-            datetime.fromisoformat(str(data["time"].values)), date_format
-        )
-    )
-    return plot_title
-
-# %%
-def rotated_pole_transform(data):
-    pole_latitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][0]["value"]
-    )
-    pole_longitude = (
-        data.rio.crs.to_dict(
-            projjson=True
-        )["conversion"]["parameters"][1]["value"]
-    )
-    transform = ccrs.RotatedPole(
-        pole_latitude=pole_latitude, pole_longitude=pole_longitude
-    )
-    return transform
 
 # %% [markdown]
 # ## DKRZ intake catalogue
@@ -289,11 +188,36 @@ FILE_PATH = os.path.join(
 data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 
 # %%
-data_plot(
-    pr[list(pr.keys())[0]] * 60 * 60 * 24,
-    cmap="Blues",
-    cbar_label=pr[list(pr.keys())[0]].attrs["long_name"] + " [mm/day]",
-    plot_title=cordex_plot_title(pr),
-    transform=rotated_pole_transform(data_ec)
+plot_transform = cplt.rotated_pole_transform(pr)
+data_var = pr[list(pr.keys())[0]]  # extract variable name
+plot_data = data_var * 60 * 60 * 24  # convert to mm/day
+cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
+
+plt.figure(figsize=(20, 10))
+ax = plt.axes(projection=plot_transform)
+
+# specify gridline spacing and labels
+ax.gridlines(
+    draw_labels=True,
+    xlocs=range(-180, 180, 10),
+    ylocs=range(-90, 90, 5),
+    color="lightslategrey",
+    linewidth=.5
 )
+
+# plot data for the variable
+plot_data.plot(
+    ax=ax,
+    cmap="GnBu",
+    transform=plot_transform,
+    x="rlon",
+    y="rlat",
+    cbar_kwargs={"label": cbar_label}
+)
+
+# add boundaries
+ax.coastlines(resolution="50m", color="darkslategrey", linewidth=.5)
+
+ax.set_title(cplt.cordex_plot_title(pr))  # set plot title
+
 plt.show()

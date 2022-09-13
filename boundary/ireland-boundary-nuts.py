@@ -170,10 +170,12 @@ nuts3.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS3")
 # ## Boundaries
 
 # %%
-ie = nuts3.dissolve(by="CNTR_CODE")
+ie = gpd.read_file(
+    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_1.geojson"
+)
 
 # %%
-ie = ie[["geometry"]]
+ie = ie[ie["NUTS_ID"].str.contains("UKN|IE")]
 
 # %%
 ie.reset_index(inplace=True)
@@ -196,7 +198,13 @@ plt.text(
 plt.show()
 
 # %%
+ie.drop(columns="FID", inplace=True)
+
+# %%
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_ROI_NI_NUTS")
+
+# %%
+ie = ie[["geometry"]]
 
 # %%
 ie["NAME"] = "Ireland"
@@ -206,9 +214,6 @@ ie = ie.dissolve(by="NAME")
 
 # %%
 ie.reset_index(inplace=True)
-
-# %%
-ie.drop(columns=["CNTR_CODE"], inplace=True)
 
 # %%
 ie
@@ -261,53 +266,3 @@ plt.show()
 
 # %%
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
-
-# %% [markdown]
-# ## Download 10 m resolution data for plotting
-
-# %%
-# download data if necessary
-URL = (
-    "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
-    "ref-nuts-2021-10m.geojson.zip"
-)
-
-download_data(server=URL, dl_dir=SUB_DIR)
-
-# %%
-DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-10m.geojson.zip")
-
-# %%
-nuts = gpd.read_file(
-    "zip://" + DATA_FILE + "!NUTS_RG_10M_2021_4326_LEVL_1.geojson"
-)
-
-# %%
-nuts = nuts[nuts["NUTS_ID"].str.contains("UKN|IE")]
-
-# %%
-nuts
-
-# %%
-nuts = nuts.dissolve(by="LEVL_CODE")
-
-# %%
-nuts.reset_index(inplace=True)
-
-# %%
-nuts = nuts[["geometry"]]
-
-# %%
-nuts["NAME"] = "Ireland (10 m resolution; derived from NUTS boundaries)"
-
-# %%
-nuts
-
-# %%
-nuts.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_10m")
-
-# %%
-nuts.to_crs(2157, inplace=True)
-
-# %%
-nuts.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_10m_ITM")
