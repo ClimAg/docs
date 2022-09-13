@@ -29,24 +29,10 @@ from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
-# %%
-print("Last updated:", datetime.now(tz=timezone.utc))
+import climag.plot_configs
 
 # %%
-# configure plot styles
-plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 96
-plt.rcParams["axes.grid"] = False
-plt.rcParams["text.color"] = "darkslategrey"
-plt.rcParams["axes.labelcolor"] = "darkslategrey"
-plt.rcParams["xtick.labelcolor"] = "darkslategrey"
-plt.rcParams["ytick.labelcolor"] = "darkslategrey"
-plt.rcParams["figure.titleweight"] = "semibold"
-plt.rcParams["axes.titleweight"] = "semibold"
-plt.rcParams["figure.titlesize"] = "13"
-plt.rcParams["axes.titlesize"] = "12"
-plt.rcParams["axes.labelsize"] = "10"
+print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 # define data directories

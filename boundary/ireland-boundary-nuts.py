@@ -10,26 +10,11 @@ import zipfile
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from climag import download_data as dd
+import climag.plot_configs
+from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
-
-# %%
-# configure plot styles
-plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 96
-plt.rcParams["axes.grid"] = False
-plt.rcParams["text.color"] = "darkslategrey"
-plt.rcParams["axes.labelcolor"] = "darkslategrey"
-plt.rcParams["xtick.labelcolor"] = "darkslategrey"
-plt.rcParams["ytick.labelcolor"] = "darkslategrey"
-plt.rcParams["figure.titleweight"] = "semibold"
-plt.rcParams["axes.titleweight"] = "semibold"
-plt.rcParams["figure.titlesize"] = "13"
-plt.rcParams["axes.titlesize"] = "12"
-plt.rcParams["axes.labelsize"] = "10"
 
 # %%
 # base data download directory
@@ -50,7 +35,7 @@ URL = (
     "ref-nuts-2021-01m.geojson.zip"
 )
 
-dd.download_data(server=URL, dl_dir=SUB_DIR)
+download_data(server=URL, dl_dir=SUB_DIR)
 
 # %%
 os.listdir(SUB_DIR)
@@ -246,7 +231,9 @@ plt.show()
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
 
 # %% [markdown]
-# # Boundaries in Irish transverse mercator
+# ## Boundaries in Irish transverse mercator
+#
+# Useful for plotting
 #
 # EPSG:2157
 #
@@ -274,3 +261,53 @@ plt.show()
 
 # %%
 ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
+
+# %% [markdown]
+# ## Download 10 m resolution data for plotting
+
+# %%
+# download data if necessary
+URL = (
+    "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
+    "ref-nuts-2021-10m.geojson.zip"
+)
+
+download_data(server=URL, dl_dir=SUB_DIR)
+
+# %%
+DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-10m.geojson.zip")
+
+# %%
+nuts = gpd.read_file(
+    "zip://" + DATA_FILE + "!NUTS_RG_10M_2021_4326_LEVL_1.geojson"
+)
+
+# %%
+nuts = nuts[nuts["NUTS_ID"].str.contains("UKN|IE")]
+
+# %%
+nuts
+
+# %%
+nuts = nuts.dissolve(by="LEVL_CODE")
+
+# %%
+nuts.reset_index(inplace=True)
+
+# %%
+nuts = nuts[["geometry"]]
+
+# %%
+nuts["NAME"] = "Ireland (10 m resolution; derived from NUTS boundaries)"
+
+# %%
+nuts
+
+# %%
+nuts.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_10m")
+
+# %%
+nuts.to_crs(2157, inplace=True)
+
+# %%
+nuts.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_10m_ITM")

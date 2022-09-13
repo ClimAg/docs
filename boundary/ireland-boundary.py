@@ -7,26 +7,11 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from climag import download_data as dd
+import climag.plot_configs
+from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
-
-# %%
-# configure plot styles
-plt.style.use("seaborn-whitegrid")
-plt.rcParams["font.family"] = "Source Sans 3"
-plt.rcParams["figure.dpi"] = 96
-plt.rcParams["axes.grid"] = False
-plt.rcParams["text.color"] = "darkslategrey"
-plt.rcParams["axes.labelcolor"] = "darkslategrey"
-plt.rcParams["xtick.labelcolor"] = "darkslategrey"
-plt.rcParams["ytick.labelcolor"] = "darkslategrey"
-plt.rcParams["figure.titleweight"] = "semibold"
-plt.rcParams["axes.titleweight"] = "semibold"
-plt.rcParams["figure.titlesize"] = "13"
-plt.rcParams["axes.titlesize"] = "12"
-plt.rcParams["axes.labelsize"] = "10"
 
 # %%
 # base data download directory
@@ -56,7 +41,7 @@ payload = {
     }
 }
 
-dd.download_data(server=URL, dl_dir=SUB_DIR, params=payload)
+download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 
 # %%
 os.listdir(SUB_DIR)
@@ -114,7 +99,7 @@ payload = {
     }
 }
 
-dd.download_data(server=URL, dl_dir=SUB_DIR, params=payload)
+download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 
 # %%
 os.listdir(SUB_DIR)
