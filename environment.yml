@@ -14,3 +14,4 @@ dependencies:
   - jupyterlab
   - flake8
   - pylint
+  - pytest
