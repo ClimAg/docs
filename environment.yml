@@ -4,16 +4,13 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - jupyterlab
   - dask
   - matplotlib
   - rioxarray
   - geopandas
-  - netcdf4
-  - bottleneck
-  - nc-time-axis
-  - py-cordex
-  - python-cdo
-  - regionmask
   - intake-esm
-  - aiohttp
+  - cartopy
+  - nc-time-axis
+  - jupyterlab
+  - flake8
+  - pylint
