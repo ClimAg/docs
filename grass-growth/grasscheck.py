@@ -20,15 +20,6 @@ DATA_DIR = os.path.join("data", "grasscheck", "grasscheck.csv")
 grass_ni = pd.read_csv(DATA_DIR, parse_dates=["week"], dayfirst=True)
 
 # %%
-grass_ni.shape
-
-# %%
-grass_ni.head()
-
-# %%
-grass_ni.tail()
-
-# %%
 # use weekly time series starting on Monday to fill missing rows
 grass_ts = pd.DataFrame(
     pd.date_range(
@@ -89,4 +80,4 @@ for y in years:
     )
     plt.xlabel("Time")
     plt.ylabel("Grass growth (kg DM/ha/d)")
-plt.show()
+    plt.show()

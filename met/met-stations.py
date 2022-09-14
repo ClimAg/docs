@@ -22,7 +22,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 URL = "https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv"
-SUB_DIR = os.path.join("data", "met", "meteireann")
+SUB_DIR = os.path.join("data", "met", "raw", "meteireann")
 
 # %%
 # download data if necessary
@@ -101,7 +101,7 @@ stations_roi.shape
 # Met Office (2019): Met Office MIDAS Open: UK Land Surface Stations Data (1853-current). Centre for Environmental Data Analysis. <https://catalogue.ceda.ac.uk/uuid/dbd451271eb04662beade68da43546e1>
 
 # %%
-SUB_DIR = os.path.join("data", "met", "metoffice")
+SUB_DIR = os.path.join("data", "met", "raw", "metoffice")
 
 # %%
 stations_ni = pd.read_csv(
