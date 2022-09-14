@@ -2,7 +2,7 @@
 
 Jupyter notebooks for the [ClimAg](https://www.ucc.ie/en/eel/projects/climag/) research project
 
-This research was funded by the Environment Protection Agency (EPA), Ireland
+This research was funded by the Environmental Protection Agency (EPA), Ireland
 project "ClimAg: Multifactorial causes of fodder crises in Ireland and risks
 due to climate change" under the Climate Change Research Programme grant
 number 2018-CCRP-MS.50.

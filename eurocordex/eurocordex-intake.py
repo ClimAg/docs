@@ -128,7 +128,7 @@ with open(JSON_FILE_PATH, encoding="utf-8") as json_file:
 
 # %%
 GITHUB_CSV_LINK = (
-    "https://media.githubusercontent.com/media/ClimAg/data/main/eurocordex/"
+    "https://raw.githubusercontent.com/ClimAg/data/main/eurocordex/"
     "eurocordex_eur11_catalogue.csv"
 )
 
