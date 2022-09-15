@@ -21,7 +21,7 @@ source(
 indexcell <- 68801
 
 # directory where the historical nc files are stored
-datadir <- "./data/eurocordex/historical/mon/"
+datadir <- "./data/eurocordex/DMI/historical/mon/"
 
 # %%
 # process precipitation data
@@ -38,7 +38,7 @@ dcast(pr, year~month, value.var = c("pr"))
 
 # %% [markdown]
 # ### Arguments
-# 
+#
 # - kernel: unshifted rectangular kernel
 # - distribution: gamma
 # - fit: unbiased probability weighted moments
@@ -61,7 +61,7 @@ spi_plot(data = spi, plot_title = plot_title)
 
 # %% [markdown]
 # ### Arguments
-# 
+#
 # - kernel: unshifted rectangular kernel
 # - distribution: PearsonIII (non-default)
 # - fit: unbiased probability weighted moments
@@ -80,7 +80,7 @@ spi_plot(data = spi, plot_title = plot_title)
 
 # %% [markdown]
 # ### Arguments
-# 
+#
 # - kernel: unshifted rectangular kernel
 # - distribution: log-Logistic (non-default)
 # - fit: unbiased probability weighted moments
@@ -156,16 +156,16 @@ spi_plot(data = spi, plot_title = plot_title)
 
 # %% [markdown]
 # ## Validation
-# 
+#
 # Monthly historical Cork Airport data from Met Éireann: <https://www.met.ie/climate/available-data/historical-data>
-# 
+#
 # Direct download link:
-# 
+#
 # - Data from 1961 to present: <https://cli.fusio.net/cli/climate_data/webdata/mly3904.zip>
 
 # %%
 # read data
-pr <- readLines("./data/meteireann/corkairport/mly3904/mly3904.csv")
+pr <- readLines("./data/met/raw/meteireann/corkairport/mly3904/mly3904.csv")
 # https://stackoverflow.com/a/15860268
 pr <- pr[-1:-19]
 pr <- read.csv(

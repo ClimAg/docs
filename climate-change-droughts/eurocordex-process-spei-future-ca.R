@@ -24,7 +24,7 @@ indexcell <- 68801
 lat <- 51.84722
 
 # directory where the future nc files are stored
-datadir <- "./data/eurocordex/rcp85/mon/"
+datadir <- "./data/eurocordex/DMI/rcp85/mon/"
 
 # %%
 # process precipitation data

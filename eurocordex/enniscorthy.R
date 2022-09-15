@@ -1,6 +1,6 @@
 # %% [markdown]
 # # Enniscorthy EURO-CORDEX data
-# 
+#
 # Enniscorthy is in Co. Wexford (-6.75, 52.75)
 
 # %%
@@ -27,7 +27,7 @@ Sys.setenv(PROJ_LIB = "/usr/share/proj")
 
 # %%
 # directory where the future nc files are stored
-datadir <- "./data/eurocordex/rcp85/mon/"
+datadir <- "./data/eurocordex/DMI/rcp85/mon/"
 
 # %% [markdown]
 # ## Finding the closest icell
@@ -35,7 +35,7 @@ datadir <- "./data/eurocordex/rcp85/mon/"
 # %%
 # read one of the EURO-CORDEX data files
 ncfile <- paste(
-    "./data/eurocordex/rcp85/mon/",
+    "./data/eurocordex/DMI/rcp85/mon/",
     "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_DMI-HIRHAM5_v3_mon_204101-205012.nc",
     sep = ""
 )
@@ -196,7 +196,7 @@ dcast(pr, year~month, value.var = c("pr"))
 write.table(
     pr,
     file = paste(
-        "./data/eurocordex/",
+        "./data/eurocordex/DMI/",
         "enniscorthy_pr_EUR-11_",
         "NCC-NorESM1-M_rcp85_r1i1p1_DMI-HIRHAM5_v3_mon.csv",
         sep = ""
@@ -211,7 +211,7 @@ write.table(
 
 # %%
 # directory where the historical nc files are stored
-datadir <- "./data/eurocordex/historical/mon/"
+datadir <- "./data/eurocordex/DMI/historical/mon/"
 
 # %%
 # process precipitation data
@@ -230,7 +230,7 @@ dcast(pr, year~month, value.var = c("pr"))
 write.table(
     pr,
     file = paste(
-        "./data/eurocordex/",
+        "./data/eurocordex/DMI/",
         "enniscorthy_pr_EUR-11_",
         "NCC-NorESM1-M_historical_r1i1p1_DMI-HIRHAM5_v3_mon.csv",
         sep = ""

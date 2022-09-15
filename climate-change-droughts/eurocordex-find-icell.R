@@ -1,6 +1,6 @@
 # %% [markdown]
 # # Finding the closest EURO-CORDEX data cell to a Met Éireann met station
-# 
+#
 # - Station details can be found here: <https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv>
 #   - Cork Airport: (-8.48611, 51.84722)
 #   - Fermoy (Moore Park): (-8.26389, 52.16389)
@@ -29,7 +29,7 @@ Sys.setenv(PROJ_LIB = "/usr/share/proj")
 # %%
 # read one of the EURO-CORDEX data files
 ncfile <- paste(
-    "./data/eurocordex/historical/mon/",
+    "./data/eurocordex/DMI/historical/mon/",
     "pr_EUR-11_NCC-NorESM1-M_historical_r1i1p1_",
     "DMI-HIRHAM5_v3_mon_197101-198012.nc",
     sep = ""
