@@ -41,6 +41,8 @@ dependencies:
   - jupyterlab
   - flake8
   - pylint
+  - pytest
+  - aiohttp
 ```
 
 ## R environment
@@ -85,7 +87,8 @@ Loading EURO-CORDEX data using intake-esm | [nbviewer](https://nbviewer.org/gist
 intake-esm functionality | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-intake-dkrz.ipynb)
 ***Grass growth***
 ModVege grass growth model (Jouven et al. 2006) | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/modvege.ipynb)
-GrassCheck Northern Ireland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/grasscheck.ipynb)
+GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/grasscheck.ipynb)
+PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/pasturebase.ipynb)
 ***[climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)***
 Find closest EURO-CORDEX icell to study area | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-find-icell.ipynb)
 SPI - historical - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spi-hist-ca.ipynb)
