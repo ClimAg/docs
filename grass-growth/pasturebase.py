@@ -51,12 +51,6 @@ grass_ie["Timestamp"] = grass_ie.apply(
 )
 
 # %%
-grass_ie.to_csv(
-    os.path.join("data", "grass-growth", "pasturebase", "pasturebase.csv"),
-    index=False
-)
-
-# %%
 # create time series using counties as individual columns
 grass_ts = grass_ie.drop(columns=["Counties_CountyID", "Year", "WeekNo"])
 
@@ -99,9 +93,7 @@ grass_ts.shape
 
 # %%
 grass_ts.to_csv(
-    os.path.join(
-        "data", "grass-growth", "pasturebase", "pasturebase_pivot.csv"
-    )
+    os.path.join("data", "grass-growth", "pasturebase", "pasturebase.csv")
 )
 
 # %%

@@ -16,3 +16,4 @@ dependencies:
   - pylint
   - pytest
   - aiohttp
+  - odfpy
