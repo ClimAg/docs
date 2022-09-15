@@ -2,6 +2,14 @@
 # # GrassCheck NI
 #
 # <https://agrisearch.org/grasscheck>
+#
+# Huson, K. M., Lively, F. O., Aubry, A., Takahashi, T., Gordon, A. and McDonnell, D. A. (2020).
+# 'GrassCheck: monitoring grass growth and maximizing grass utilisation on UK farms',
+# in Virkajärvi, P. et al. (eds), *Meeting the future demands for grassland production*,
+# Grassland Science in Europe, Helsinki, Finland, European Grassland Federation,
+# vol. 25, pp. 716–718. [Online]. Available at
+# <https://www.europeangrassland.org/fileadmin/documents/Infos/Printed_Matter/Proceedings/EGF2020.pdf>
+# (Accessed 13 September 2022).
 
 # %%
 import os
@@ -14,10 +22,16 @@ import climag.plot_configs
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DIR = os.path.join("data", "grasscheck", "grasscheck.csv")
+DATA_DIR = os.path.join("data", "grass-growth", "grasscheck", "grasscheck.ods")
 
 # %%
-grass_ni = pd.read_csv(DATA_DIR, parse_dates=["week"], dayfirst=True)
+grass_ni = pd.read_excel(DATA_DIR, parse_dates=["week"])
+
+# %%
+grass_ni.head()
+
+# %%
+grass_ni.shape
 
 # %%
 # use weekly time series starting on Monday to fill missing rows
@@ -32,6 +46,17 @@ grass_ts = pd.DataFrame(
 
 # %%
 grass_ts = pd.merge(grass_ts, grass_ni, how="outer")
+
+# %%
+grass_ts.head()
+
+# %%
+grass_ts.shape
+
+# %%
+DATA_DIR = os.path.join(
+    "data", "grass-growth", "grasscheck", "grasscheck.csv"
+)
 
 # %%
 # save time series

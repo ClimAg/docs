@@ -1,7 +1,22 @@
+# %% [markdown]
+# # PastureBase Ireland
+#
+# <https://pasturebase.teagasc.ie>
+#
+# Hanrahan, L., Geoghegan, A., O'Donovan, M., Griffith, V., Ruelle, E.,
+# Wallace, M. and Shalloo, L. (2017). 'PastureBase Ireland: A grassland
+# decision support system and national database',
+# *Computers and Electronics in Agriculture*, vol. 136, pp. 193–201.
+# DOI: [10.1016/j.compag.2017.01.029][Hanrahan].
+#
+# [Hanrahan]: https://doi.org/10.1016/j.compag.2017.01.029
+
 # %%
 import os
 from datetime import datetime, timezone
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import climag.plot_configs
 
@@ -9,7 +24,9 @@ import climag.plot_configs
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DIR = os.path.join("data", "pasturebase", "GrowthRateAveragebyWeek.csv")
+DATA_DIR = os.path.join(
+    "data", "grass-growth", "pasturebase", "GrowthRateAveragebyWeek.csv"
+)
 
 # %%
 grass_ie = pd.read_csv(DATA_DIR)
@@ -35,7 +52,8 @@ grass_ie["Timestamp"] = grass_ie.apply(
 
 # %%
 grass_ie.to_csv(
-    os.path.join("data", "pasturebase", "pasturebase.csv"), index=False
+    os.path.join("data", "grass-growth", "pasturebase", "pasturebase.csv"),
+    index=False
 )
 
 # %%
@@ -81,11 +99,26 @@ grass_ts.shape
 
 # %%
 grass_ts.to_csv(
-    os.path.join("data", "pasturebase", "pasturebase_pivot.csv"), index=False
+    os.path.join(
+        "data", "grass-growth", "pasturebase", "pasturebase_pivot.csv"
+    )
 )
 
 # %%
-grass_ts.plot(figsize=(16, 6), linewidth=1, cmap="tab20")
+# new colour map
+# https://stackoverflow.com/a/31052741
+# sample the colormaps that you want to use. Use 15 from each so we get 30
+# colors in total
+colors1 = plt.cm.tab20b(np.linspace(0., 1, 15))
+colors2 = plt.cm.tab20c(np.linspace(0, 1, 15))
+
+# combine them and build a new colormap
+colors = np.vstack((colors1, colors2))
+
+# %%
+grass_ts.plot(
+    figsize=(16, 6), linewidth=1, cmap=mcolors.ListedColormap(colors)
+)
 plt.title("Grass growth in Ireland based on PastureBase Ireland data")
 plt.xlabel("Time")
 plt.ylabel("Grass growth (kg DM/ha/d)")
@@ -107,7 +140,9 @@ years = list(grass_ts.index.year.unique())
 for y in years:
     if y > 2012:
         grass_ts.loc[str(y)].plot(
-            figsize=(12, 4), linewidth=1.25, cmap="tab20"
+            figsize=(12, 4),
+            linewidth=1.25,
+            cmap=mcolors.ListedColormap(colors)
         )
         plt.title(
             "Grass growth per county in " + str(y) +
