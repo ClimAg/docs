@@ -15,13 +15,12 @@ from datetime import datetime, timezone
 import intake
 import matplotlib.pyplot as plt
 import xarray as xr
-import climag.plot_configs as cplt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DIR_BASE = os.path.join("data", "eurocordex")
+DATA_DIR_BASE = os.path.join("data", "eurocordex", "DMI")
 
 # %%
 os.makedirs(DATA_DIR_BASE, exist_ok=True)
@@ -65,8 +64,7 @@ timerange = [
 
 # %%
 variables = [
-    "evspsblpot", "hurs", "huss", "mrso", "pr", "ps",
-    "rlds", "rsds", "rlus", "rsus", "sund",
+    "evspsblpot", "mrso", "pr", "rlds", "rlus", "rsds", "rsus", "sund",
     "tas", "tasmax", "tasmin"
 ]
 
@@ -153,8 +151,9 @@ cordex_eur11.df
 cordex_eur11.df["uri"] = (
     "data" + os.sep +
     "eurocordex" + os.sep +
+    cordex_eur11.df["institute_id"] + os.sep +
     cordex_eur11.df["experiment_id"] + os.sep +
-    "day" + os.sep +
+    cordex_eur11.df["frequency"] + os.sep +
     cordex_eur11.df["uri"].str.split("/").str[-1]
 )
 
@@ -177,47 +176,4 @@ pr
 pr = pr.isel(time=50)
 
 # %%
-FILE_PATH = os.path.join(
-    DATA_DIR_BASE,
-    "rcp85",
-    "mon",
-    "pr_EUR-11_NCC-NorESM1-M_rcp85_r1i1p1_" +
-    "DMI-HIRHAM5_v3_mon_204101-205012.nc"
-)
-
-data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
-
-# %%
-plot_transform = cplt.rotated_pole_transform(pr)
-data_var = pr[list(pr.keys())[0]]  # extract variable name
-plot_data = data_var * 60 * 60 * 24  # convert to mm/day
-cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
-
-plt.figure(figsize=(20, 10))
-ax = plt.axes(projection=plot_transform)
-
-# specify gridline spacing and labels
-ax.gridlines(
-    draw_labels=True,
-    xlocs=range(-180, 180, 10),
-    ylocs=range(-90, 90, 5),
-    color="lightslategrey",
-    linewidth=.5
-)
-
-# plot data for the variable
-plot_data.plot(
-    ax=ax,
-    cmap="GnBu",
-    transform=plot_transform,
-    x="rlon",
-    y="rlat",
-    cbar_kwargs={"label": cbar_label}
-)
-
-# add boundaries
-ax.coastlines(resolution="50m", color="darkslategrey", linewidth=.5)
-
-ax.set_title(cplt.cordex_plot_title(pr))  # set plot title
-
-plt.show()
+pr

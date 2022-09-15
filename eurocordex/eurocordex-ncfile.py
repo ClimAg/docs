@@ -14,7 +14,7 @@ import climag.plot_configs as cplt
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DIR_BASE = os.path.join("data", "eurocordex")
+DATA_DIR_BASE = os.path.join("data", "eurocordex", "DMI")
 
 # %%
 # Cork Airport met station coords
