@@ -41,8 +41,8 @@ dependencies:
   - jupyterlab
   - flake8
   - pylint
-  - pytest
   - aiohttp
+  - odfpy
 ```
 
 ## R environment

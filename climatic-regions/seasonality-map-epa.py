@@ -43,7 +43,7 @@ import climag.plot_configs
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-# define data directories
+# define data directory
 DATA_DIR_BASE = os.path.join(
     "data", "climatic-regions", "seasonality-map-epa"
 )
@@ -98,7 +98,7 @@ colors = np.vstack((colors1, colors2))
 data.plot(
     column="plot_class",
     legend=True,
-    figsize=(9,9),
+    figsize=(9, 9),
     cmap=mcolors.ListedColormap(colors),
     legend_kwds={"loc": "upper right", "bbox_to_anchor": (1.15, 1.05)}
 )
