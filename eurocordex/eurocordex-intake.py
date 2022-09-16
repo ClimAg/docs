@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
+import xarray as xr
 import climag.plot_configs as cplt
 from climag.download_data import download_data
 
@@ -56,8 +57,8 @@ timerange = [
 
 # %%
 variables = [
-    "evspsblpot", "hurs", "huss", "mrso", "pr", "ps", "rlds", "rsds", "rlus",
-    "rsus", "sund", "tas", "tasmax", "tasmin"
+    "evspsblpot", "mrso", "pr", "rlds", "rlus", "rsds", "rsus", "sund",
+    "tas", "tasmax", "tasmin"
 ]
 
 # %% [markdown]
@@ -90,7 +91,9 @@ query = dict(
     experiment_id=["historical", "rcp85"],
     frequency="day",
     variable_id=variables,
-    time_range=timerange
+    time_range=timerange,
+    institute_id=["SMHI"],
+    rcm_version_id=["v1a"]
 )
 
 # %%
@@ -106,8 +109,9 @@ cordex_eur11.df.shape
 # replace URI to path to downloaded data
 cordex_eur11.df["uri"] = (
     DATA_DIR_BASE + os.sep +
+    cordex_eur11.df["institute_id"] + os.sep +
     cordex_eur11.df["experiment_id"] + os.sep +
-    "day" + os.sep +
+    cordex_eur11.df["variable_id"] + os.sep +
     cordex_eur11.df["uri"].str.split("/").str[-1]
 )
 
@@ -139,8 +143,8 @@ cordex_eur11_cat["id"] = "eurocordex_eur11"
 
 # %%
 cordex_eur11_cat["description"] = (
-    "This is an ESM collection for EURO-CORDEX data accessible on GitHub "
-    "LFS. Data has been generated using the DKRZ intake-esm stores. "
+    "This is an ESM collection for EURO-CORDEX data used in the ClimAg "
+    "project. Data has been generated using the DKRZ intake-esm stores. "
     "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, "
     "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and "
     "the following variables: " + ", ".join(variables)
@@ -196,11 +200,7 @@ cordex_eur11_cat.df.head()
 # %%
 # filter data subset
 query = dict(
-    driving_model_id="NCC-NorESM1-M",
     experiment_id="rcp85",
-    member="r1i1p1",
-    model_id="DMI-HIRHAM5",
-    rcm_version_id="v3",
     variable_id="pr"
 )
 
@@ -214,9 +214,9 @@ cordex_eur11_pr
 cordex_eur11_pr.df
 
 # %%
-pr = cordex_eur11_pr.to_dataset_dict(
-    cdf_kwargs=dict(chunks=True, decode_coords="all")
-)
+pr = cordex_eur11_pr.to_dataset_dict()
+#     cdf_kwargs=dict(chunks=True, decode_coords="all")
+# )
 
 # %%
 pr = pr.popitem()[1]
@@ -225,7 +225,13 @@ pr = pr.popitem()[1]
 pr
 
 # %%
-cds = cplt.rotated_pole_point(pr, lon=LON, lat=LAT)
+# read one of the data files to extract CRS info
+data_ec = xr.open_dataset(
+    cordex_eur11_pr.df["uri"][0], decode_coords="all", chunks=True
+)
+
+# %%
+pr.rio.write_crs(data_ec.rio.crs, inplace=True)
 
 # %% [markdown]
 # ### Time subset
@@ -254,7 +260,7 @@ ax.gridlines(
 # plot data for the variable
 plot_data.plot(
     ax=ax,
-    cmap="Blues",
+    cmap="GnBu",
     transform=plot_transform,
     x="rlon",
     y="rlat",
@@ -270,6 +276,9 @@ plt.show()
 
 # %% [markdown]
 # ### Point subset
+
+# %%
+cds = cplt.rotated_pole_point(data=pr, lon=LON, lat=LAT)
 
 # %%
 pr_ca = pr.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
@@ -317,7 +326,7 @@ ax.gridlines(
 # plot data for the variable
 plot_data.plot(
     ax=ax,
-    cmap="viridis_r",
+    cmap="GnBu",
     transform=plot_transform,
     x="rlon",
     y="rlat",

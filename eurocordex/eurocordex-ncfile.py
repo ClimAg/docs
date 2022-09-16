@@ -45,6 +45,9 @@ data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 data_ec
 
 # %%
+data_ec.rio.crs
+
+# %%
 # extract time series for Cork Airport
 cds = cplt.rotated_pole_point(data_ec, lon=LON, lat=LAT)
 data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
