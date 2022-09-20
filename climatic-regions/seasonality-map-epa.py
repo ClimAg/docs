@@ -80,8 +80,58 @@ data.crs
 data
 
 # %%
+# assign clusters to groups as defined in a draft paper by Scarrott et al.
+groups = {
+    1: 6,
+    2: 6,
+    3: 7,
+    4: 7,
+    5: 1,
+    6: 7,
+    7: 2,
+    8: 7,
+    9: 8,
+    10: 3,
+    11: 10,
+    12: 7,
+    13: 4,
+    14: 10,
+    15: 8,
+    16: 10,
+    17: 9,
+    18: 10,
+    19: 10,
+    20: 5,
+    21: 9,
+    22: 10,
+    23: 10,
+    24: 10,
+    25: 10,
+    26: 9,
+    27: 10,
+    28: 10,
+    29: 10,
+    30: 10,
+    31: 9,
+    32: 10,
+    33: 10,
+    34: 10,
+    35: 10,
+    36: 10,
+    37: 10,
+    38: 10
+}
+
+# %%
+data["Group"] = data["Class"].map(groups)
+
+# %%
 # convert column to string for plotting
 data["plot_class"] = data["Class"].astype(str).str.zfill(2)
+data["Group"] = data["Group"].astype(str).str.zfill(2)
+
+# %%
+data
 
 # %%
 # new colour map
@@ -100,6 +150,16 @@ data.plot(
     legend=True,
     figsize=(9, 9),
     cmap=mcolors.ListedColormap(colors),
-    legend_kwds={"loc": "upper right", "bbox_to_anchor": (1.15, 1.05)}
+    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.15, 1.05))
+)
+plt.show()
+
+# %%
+data.plot(
+    column="Group",
+    legend=True,
+    figsize=(9, 9),
+    cmap="tab20c",
+    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.15, 1.05))
 )
 plt.show()

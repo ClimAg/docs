@@ -91,7 +91,7 @@ GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/pasturebase.ipynb)
 ***Climatic regions***
 Seasonality map from EPA phenology study by Scarrott et al. (2010) | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/seasonality-map-epa.ipynb)
-Agro-climatic regions based on February rainfall by Holden and Brereton (2004) | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/agro-environmental-regions.ipynb)
+Agro-environmental regions based on February rainfall by Holden and Brereton (2004) | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/agro-environmental-regions.ipynb)
 ***[climate-change-droughts](https://github.com/ClimAg/climate-change-droughts) project (R)***
 Find closest EURO-CORDEX icell to study area | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-find-icell.ipynb)
 SPI - historical - Cork Airport | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-process-spi-hist-ca.ipynb)

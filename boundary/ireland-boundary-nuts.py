@@ -21,7 +21,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 DATA_DIR = os.path.join("data", "boundary")
 
 # %%
-# file name for the GeoPackage where the ooundary vector layers will be saved
+# file name for the GeoPackage where the boundary vector layers will be saved
 GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
 
 # %%

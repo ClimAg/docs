@@ -98,7 +98,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries
@@ -137,7 +137,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries
@@ -206,7 +206,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries
@@ -246,7 +246,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries
@@ -319,7 +319,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries
@@ -359,7 +359,7 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs={"label": cbar_label}
+    cbar_kwargs=dict(label=cbar_label)
 )
 
 # add boundaries

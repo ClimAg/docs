@@ -5,9 +5,12 @@
 # import libraries
 import os
 from datetime import datetime, timezone
-import geopandas as gpd
-import matplotlib.pyplot as plt
+from zipfile import ZipFile
 import climag.plot_configs
+import geopandas as gpd
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
 from climag.download_data import download_data
 
 # %%
@@ -21,9 +24,9 @@ DATA_DIR = os.path.join("data", "boundary")
 GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
 
 # %% [markdown]
-# ## Administrative Areas - OSi National Statutory Boundaries - 2019
+# ##  Counties - OSi National Statutory Boundaries - 2019
 #
-# <https://data.gov.ie/dataset/administrative-areas-osi-national-statutory-boundaries-2019>
+# <https://data-osi.opendata.arcgis.com/datasets/osi::counties-osi-national-statutory-boundaries-2019/about>
 
 # %%
 SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
@@ -32,8 +35,9 @@ SUB_DIR = os.path.join(DATA_DIR, "admin-osi", "raw")
 # download data if necessary
 URL = (
     "https://data-osi.opendata.arcgis.com/datasets/"
-    "d81188d16e804bde81548e982e80c53e_0.geojson"
+    "osi::counties-osi-national-statutory-boundaries-2019.zip"
 )
+
 payload = {
     "outSR": {
         "latestWkid": "2157",
@@ -47,13 +51,18 @@ download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(
-    SUB_DIR,
-    "Administrative_Areas_-_OSi_National_Statutory_Boundaries_-_2019.geojson"
+ZIP_FILE = os.path.join(
+    SUB_DIR, "Counties_-_OSi_National_Statutory_Boundaries_-_2019.zip"
 )
 
 # %%
-osi = gpd.read_file(DATA_FILE)
+# list of files/folders in the ZIP archive
+ZipFile(ZIP_FILE).namelist()
+
+# %%
+osi = gpd.read_file(
+    "zip://" + ZIP_FILE + "!Counties___OSi_National_Statutory_Boundaries_.shp"
+)
 
 # %%
 osi
@@ -65,7 +74,7 @@ osi.crs
 base = osi.plot(color="navajowhite", figsize=(9, 9))
 osi.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-plt.title("Administrative Areas of the Republic of Ireland")
+plt.title("Counties of the Republic of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
@@ -90,8 +99,9 @@ SUB_DIR = os.path.join(DATA_DIR, "admin-osni", "raw")
 # download data if necessary
 URL = (
     "https://osni-spatialni.opendata.arcgis.com/datasets/spatialni::"
-    "osni-open-data-largescale-boundaries-county-boundaries-.geojson"
+    "osni-open-data-largescale-boundaries-county-boundaries-.zip"
 )
+
 payload = {
     "outSR": {
         "latestWkid": "29902",
@@ -105,13 +115,19 @@ download_data(server=URL, dl_dir=SUB_DIR, params=payload)
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(
-    SUB_DIR,
-    "OSNI_Open_Data_-_Largescale_Boundaries_-_County_Boundaries_.geojson"
+ZIP_FILE = os.path.join(
+    SUB_DIR, "OSNI_Open_Data_-_Largescale_Boundaries_-_County_Boundaries_.zip"
 )
 
 # %%
-osni = gpd.read_file(DATA_FILE)
+# list of files/folders in the ZIP archive
+ZipFile(ZIP_FILE).namelist()
+
+# %%
+osni = gpd.read_file(
+    "zip://" + ZIP_FILE +
+    "!OSNI_Open_Data_-_Largescale_Boundaries_-_County_Boundaries_.shp"
+)
 
 # %%
 osni
@@ -227,16 +243,10 @@ ie.to_file(GPKG_BOUNDARY, layer="Boundary_ROI_NI_OS")
 # ## Counties - Island of Ireland
 
 # %%
-osi_counties = osi.dissolve(by="COUNTY")
+osi
 
 # %%
-osi_counties
-
-# %%
-osi_counties = osi_counties[["CONTAE", "PROVINCE", "geometry"]]
-
-# %%
-osi_counties.reset_index(inplace=True)
+osi_counties = osi[["CONTAE", "COUNTY", "PROVINCE", "geometry"]]
 
 # %%
 osi_counties
@@ -295,6 +305,52 @@ plt.show()
 
 # %%
 ie_counties.to_file(GPKG_BOUNDARY, layer="Counties_IE_OS")
+
+# %%
+# new colour map
+# https://stackoverflow.com/a/31052741
+# sample the colormaps that you want to use. Use 20 from each so we get 40
+# colors in total
+colors1 = plt.cm.tab20b(np.linspace(0., 1, 20))
+colors2 = plt.cm.tab20c(np.linspace(0, 1, 20))
+
+# combine them and build a new colormap
+colors = np.vstack((colors1, colors2))
+
+# %%
+# categorical map - labels directly on plot
+ie_counties_itm = ie_counties.to_crs(2157)  # convert CRS to ITM
+
+base = ie_counties_itm.plot(
+    cmap=mcolors.ListedColormap(colors),
+    figsize=(9, 9), column="COUNTY", alpha=.45
+)
+
+ie_counties_itm.boundary.plot(color="white", ax=base, linewidth=.4)
+
+# ie_counties_itm.centroid.plot(ax=base, color="darkslategrey", markersize=5)
+
+map_labels = zip(
+    zip(ie_counties_itm.centroid.x, ie_counties_itm.centroid.y),
+    ie_counties_itm["COUNTY"]
+)
+for xy, lab in map_labels:
+    base.annotate(
+        text=lab, xy=xy, textcoords="data", rotation=10, ha="center"
+    )
+
+plt.title("Counties of Ireland")
+plt.xlabel("Easting (m)")
+plt.ylabel("Northing (m)")
+plt.text(
+    612500, 502500,
+    "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
+)
+
+plt.show()
+
+# %%
+ie_counties_itm.to_file(GPKG_BOUNDARY, layer="Counties_IE_OS_ITM")
 
 # %% [markdown]
 # ## Island of Ireland boundary
