@@ -50,9 +50,7 @@ zipfile.ZipFile(DATA_FILE).namelist()
 # ## NUTS2
 
 # %%
-nuts = gpd.read_file(
-    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_2.geojson"
-)
+nuts = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_2.geojson")
 
 # %%
 nuts.head()
@@ -112,9 +110,7 @@ nuts2.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS2")
 # ## NUTS3
 
 # %%
-nuts = gpd.read_file(
-    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_3.geojson"
-)
+nuts = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_3.geojson")
 
 # %%
 nuts.head()
@@ -170,9 +166,7 @@ nuts3.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS3")
 # ## Boundaries
 
 # %%
-ie = gpd.read_file(
-    "zip://" + DATA_FILE + "!NUTS_RG_01M_2021_4326_LEVL_1.geojson"
-)
+ie = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_1.geojson")
 
 # %%
 ie = ie[ie["NUTS_ID"].str.contains("UKN|IE")]

@@ -111,7 +111,7 @@ colors = np.vstack((colors1, colors2))
 grass_ts.plot(
     figsize=(16, 6), linewidth=1, cmap=mcolors.ListedColormap(colors)
 )
-plt.title("Grass growth in Ireland based on PastureBase Ireland data")
+plt.title("Grass growth in Ireland. Data: PastureBase Ireland.")
 plt.xlabel("Time")
 plt.ylabel("Grass growth (kg DM/ha/d)")
 plt.legend(ncol=3)
@@ -120,9 +120,7 @@ plt.show()
 # %%
 for c in list(grass_ts):
     grass_ts[c].plot(figsize=(12, 4), linewidth=1)
-    plt.title(
-        "Grass growth in Co. " + c + " based on PastureBase Ireland data"
-    )
+    plt.title(f"Grass growth in Co. {c}. Data: PastureBase Ireland.")
     plt.xlabel("Time")
     plt.ylabel("Grass growth (kg DM/ha/d)")
     plt.show()
@@ -137,8 +135,7 @@ for y in years:
             cmap=mcolors.ListedColormap(colors)
         )
         plt.title(
-            "Grass growth per county in " + str(y) +
-            " based on PastureBase Ireland data"
+            f"Grass growth in Ireland in {y}. Data: PastureBase Ireland."
         )
         plt.xlabel("Time")
         plt.ylabel("Grass growth (kg DM/ha/d)")

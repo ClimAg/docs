@@ -63,9 +63,7 @@ except BadZipFile:
     print("There were issues with the file", ZIP_FILE)
 
 # %%
-ZIP_FILE = os.path.join(
-    DATA_DIR, "u2018_clc2018_v2020_20u1_raster100m.zip"
-)
+ZIP_FILE = os.path.join(DATA_DIR, "u2018_clc2018_v2020_20u1_raster100m.zip")
 
 # %%
 # list of TIF files in the new ZIP archive

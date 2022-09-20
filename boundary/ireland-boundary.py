@@ -61,7 +61,7 @@ ZipFile(ZIP_FILE).namelist()
 
 # %%
 osi = gpd.read_file(
-    "zip://" + ZIP_FILE + "!Counties___OSi_National_Statutory_Boundaries_.shp"
+    f"zip://{ZIP_FILE}!Counties___OSi_National_Statutory_Boundaries_.shp"
 )
 
 # %%
@@ -125,8 +125,8 @@ ZipFile(ZIP_FILE).namelist()
 
 # %%
 osni = gpd.read_file(
-    "zip://" + ZIP_FILE +
-    "!OSNI_Open_Data_-_Largescale_Boundaries_-_County_Boundaries_.shp"
+    f"zip://{ZIP_FILE}!OSNI_Open_Data_-_Largescale_Boundaries_-_"
+    "County_Boundaries_.shp"
 )
 
 # %%

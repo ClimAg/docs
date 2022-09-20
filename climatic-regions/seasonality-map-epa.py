@@ -66,7 +66,7 @@ ZipFile(ZIP_FILE).namelist()
 
 # %%
 data = gpd.read_file(
-    "zip://" + ZIP_FILE + "!2006IESeasonalityDataset_FinalProductPackage/" +
+    f"zip://{ZIP_FILE}!2006IESeasonalityDataset_FinalProductPackage/"
     "IrishSeasonalityMap2006_38Clusters_ScarrottEtAl2010.shp"
 )
 
