@@ -85,7 +85,7 @@ plt.text(
 plt.show()
 
 # %%
-osi.to_file(GPKG_BOUNDARY, layer="Admin_Areas_ROI_OSi")
+osi.to_file(GPKG_BOUNDARY, layer="OSi_Counties")
 
 # %% [markdown]
 # ## OSNI Open Data - Largescale Boundaries - County Boundaries
@@ -150,100 +150,10 @@ plt.text(
 plt.show()
 
 # %%
-osni.to_file(GPKG_BOUNDARY, layer="Admin_Areas_NI_OSNI")
+osni.to_file(GPKG_BOUNDARY, layer="OSNI_Counties")
 
 # %% [markdown]
-# ## Boundaries
-
-# %%
-osi_roi = osi[["geometry"]].copy()
-
-# %%
-osi_roi["NAME"] = "Republic of Ireland"
-
-# %%
-osi_roi = osi_roi.dissolve(by="NAME")
-
-# %%
-osi_roi.reset_index(inplace=True)
-
-# %%
-osi_roi
-
-# %%
-base = osi_roi.plot(color="navajowhite", figsize=(9, 9))
-osi_roi.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Boundary of the Republic of Ireland")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -7.75, 51.275,
-    "© Ordnance Survey Ireland"
-)
-
-plt.show()
-
-# %%
-osni_ni = osni[["geometry"]].copy()
-
-# %%
-osni_ni["NAME"] = "Northern Ireland"
-
-# %%
-osni_ni = osni_ni.dissolve(by="NAME")
-
-# %%
-osni_ni.reset_index(inplace=True)
-
-# %%
-osni_ni
-
-# %%
-base = osni_ni.plot(color="navajowhite", figsize=(9, 9))
-osni_ni.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Boundary of Northern Ireland")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -6.35, 53.975,
-    "© Ordnance Survey Northern Ireland"
-)
-
-plt.show()
-
-# %%
-ie = osi_roi.merge(osni_ni, how="outer")
-
-# %%
-ie
-
-# %%
-ie.total_bounds.round(2)
-
-# %%
-base = ie.plot(color="navajowhite", figsize=(9, 9))
-ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Boundaries of ROI and NI")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -7.75, 51.275,
-    "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
-)
-
-plt.show()
-
-# %%
-ie.to_file(GPKG_BOUNDARY, layer="Boundary_ROI_NI_OS")
-
-# %% [markdown]
-# ## Counties - Island of Ireland
-
-# %%
-osi
+# ## County boundaries - simplified
 
 # %%
 osi_counties = osi[["CONTAE", "COUNTY", "PROVINCE", "geometry"]]
@@ -252,13 +162,13 @@ osi_counties = osi[["CONTAE", "COUNTY", "PROVINCE", "geometry"]]
 osi_counties
 
 # %%
+osi_counties.to_file(GPKG_BOUNDARY, layer="OSi_Counties_simplified")
+
+# %%
 osni_counties = osni.rename(columns={"CountyName": "COUNTY"})
 
 # %%
 osni_counties = osni_counties[["geometry", "COUNTY"]]
-
-# %%
-osni_counties
 
 # %%
 # https://en.wikipedia.org/wiki/Counties_of_Ireland
@@ -281,13 +191,13 @@ osni_counties["PROVINCE"] = "Ulster"
 osni_counties
 
 # %%
+osni_counties.to_file(GPKG_BOUNDARY, layer="OSNI_Counties_simplified")
+
+# %%
 ie_counties = osi_counties.merge(osni_counties, how="outer")
 
 # %%
 ie_counties
-
-# %%
-ie_counties.crs
 
 # %%
 base = ie_counties.plot(color="navajowhite", figsize=(9, 9))
@@ -302,9 +212,6 @@ plt.text(
 )
 
 plt.show()
-
-# %%
-ie_counties.to_file(GPKG_BOUNDARY, layer="Counties_IE_OS")
 
 # %%
 # new colour map
@@ -348,41 +255,3 @@ plt.text(
 )
 
 plt.show()
-
-# %%
-ie_counties_itm.to_file(GPKG_BOUNDARY, layer="Counties_IE_OS_ITM")
-
-# %% [markdown]
-# ## Island of Ireland boundary
-
-# %%
-ie = ie_counties[["geometry"]].copy()
-
-# %%
-ie["NAME"] = "Ireland"
-
-# %%
-ie = ie.dissolve(by="NAME")
-
-# %%
-ie.reset_index(inplace=True)
-
-# %%
-ie
-
-# %%
-base = ie.plot(color="navajowhite", figsize=(9, 9))
-ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Boundary of Ireland")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -7.75, 51.275,
-    "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
-)
-
-plt.show()
-
-# %%
-ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_OS")

@@ -6,8 +6,8 @@
 # %%
 # import libraries
 import os
-import zipfile
 from datetime import datetime, timezone
+from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import climag.plot_configs
@@ -32,7 +32,7 @@ SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
 # download data if necessary
 URL = (
     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
-    "ref-nuts-2021-01m.geojson.zip"
+    "ref-nuts-2021-01m.shp.zip"
 )
 
 download_data(server=URL, dl_dir=SUB_DIR)
@@ -41,44 +41,118 @@ download_data(server=URL, dl_dir=SUB_DIR)
 os.listdir(SUB_DIR)
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-01m.geojson.zip")
+DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-01m.shp.zip")
 
 # %%
-zipfile.ZipFile(DATA_FILE).namelist()
+ZipFile(DATA_FILE).namelist()
+
+# %%
+# extract the archive
+try:
+    z = ZipFile(DATA_FILE)
+    z.extractall(SUB_DIR)
+except BadZipFile:
+    print("There were issues with the file", DATA_FILE)
+
+# %% [markdown]
+# ## NUTS0
+
+# %%
+DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_0.shp.zip")
+
+# %%
+ZipFile(DATA_FILE).namelist()
+
+# %%
+nuts0 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_0.shp")
+
+# %%
+nuts0.head()
+
+# %%
+nuts0.crs
+
+# %%
+# filter for Ireland and UK
+nuts0 = nuts0[nuts0["CNTR_CODE"].isin(["IE", "UK"])]
+
+# %%
+nuts0
+
+# %%
+base = nuts0.plot(color="navajowhite", figsize=(9, 9))
+nuts0.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
+
+plt.title("NUTS0 Regions of Ireland and UK")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.text(
+    -8.75, 49.5,
+    "© EuroGeographics for the administrative boundaries"
+)
+
+plt.show()
+
+# %% [markdown]
+# ## NUTS1
+
+# %%
+DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_1.shp.zip")
+
+# %%
+nuts1 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_1.shp")
+
+# %%
+nuts1.head()
+
+# %%
+# filter for Ireland and UK
+nuts1 = nuts1[nuts1["CNTR_CODE"].isin(["IE", "UK"])]
+
+# %%
+nuts1
+
+# %%
+# filter for Ireland and Northern Ireland
+nuts1 = nuts1[nuts1["NUTS_ID"].isin(["IE0", "UKN"])]
+
+# %%
+nuts1
+
+# %%
+base = nuts1.plot(color="navajowhite", figsize=(9, 9))
+nuts1.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
+
+plt.title("NUTS1 Regions of Ireland")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.text(
+    -8.75, 51.275,
+    "© EuroGeographics for the administrative boundaries"
+)
+
+plt.show()
+
+# %%
+nuts1 = nuts1.drop(columns="FID")
+
+# %%
+nuts1.to_file(GPKG_BOUNDARY, layer="NUTS1")
 
 # %% [markdown]
 # ## NUTS2
 
 # %%
-nuts = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_2.geojson")
+DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_2.shp.zip")
 
 # %%
-nuts.head()
+nuts2 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_2.shp")
 
 # %%
-nuts.crs
+nuts2.head()
 
 # %%
-nuts = nuts[nuts["CNTR_CODE"].isin(["IE", "UK"])]
-
-# %%
-nuts.head()
-
-# %%
-nuts_ie = nuts[nuts["CNTR_CODE"].isin(["IE"])]
-
-# %%
-nuts_ie
-
-# %%
-nuts_ni = nuts[nuts["CNTR_CODE"].isin(["UK"])]
-nuts_ni = nuts[nuts["NUTS_NAME"].str.contains("Ireland")]
-
-# %%
-nuts_ni
-
-# %%
-nuts2 = nuts_ie.merge(nuts_ni, how="outer")
+nuts2 = nuts2[nuts2["NUTS_ID"].str.contains("IE|UKN")]
 
 # %%
 nuts2
@@ -101,43 +175,25 @@ plt.text(
 plt.show()
 
 # %%
-nuts2.drop(columns="FID", inplace=True)
+nuts2 = nuts2.drop(columns="FID")
 
 # %%
-nuts2.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS2")
+nuts2.to_file(GPKG_BOUNDARY, layer="NUTS2")
 
 # %% [markdown]
 # ## NUTS3
 
 # %%
-nuts = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_3.geojson")
+DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_3.shp.zip")
 
 # %%
-nuts.head()
+nuts3 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_3.shp")
 
 # %%
-nuts.crs
+nuts3.head()
 
 # %%
-nuts = nuts[nuts["CNTR_CODE"].isin(["IE", "UK"])]
-
-# %%
-nuts.head()
-
-# %%
-nuts_ie = nuts[nuts["CNTR_CODE"].isin(["IE"])]
-
-# %%
-nuts_ie
-
-# %%
-nuts_ni = nuts[nuts["NUTS_ID"].str.contains("UKN0")]
-
-# %%
-nuts_ni
-
-# %%
-nuts3 = nuts_ie.merge(nuts_ni, how="outer")
+nuts3 = nuts3[nuts3["NUTS_ID"].str.contains("IE|UKN")]
 
 # %%
 nuts3
@@ -157,57 +213,38 @@ plt.text(
 plt.show()
 
 # %%
-nuts3.drop(columns="FID", inplace=True)
+nuts3 = nuts3.drop(columns="FID")
 
 # %%
-nuts3.to_file(GPKG_BOUNDARY, layer="Admin_Areas_IE_NUTS3")
+nuts3.to_file(GPKG_BOUNDARY, layer="NUTS3")
 
 # %% [markdown]
-# ## Boundaries
+# ## Island of Ireland boundary
 
 # %%
-ie = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_1.geojson")
+ie = nuts1.copy()
 
 # %%
-ie = ie[ie["NUTS_ID"].str.contains("UKN|IE")]
-
-# %%
-ie.reset_index(inplace=True)
+ie = ie.dissolve(by="LEVL_CODE")
 
 # %%
 ie
 
 # %%
-base = ie.plot(color="navajowhite", figsize=(9, 9))
-ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Boundaries of ROI and NI")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -8.75, 51.275,
-    "© EuroGeographics for the administrative boundaries"
-)
-
-plt.show()
-
-# %%
-ie.drop(columns="FID", inplace=True)
-
-# %%
-ie.to_file(GPKG_BOUNDARY, layer="Boundary_ROI_NI_NUTS")
+ie.reset_index(inplace=True)
 
 # %%
 ie = ie[["geometry"]]
 
 # %%
-ie["NAME"] = "Ireland"
+ie = ie.assign(NAME="Ireland")
 
 # %%
-ie = ie.dissolve(by="NAME")
+description = (
+    "Boundary for the Island of Ireland generated using NUTS1 boundaries"
+)
 
-# %%
-ie.reset_index(inplace=True)
+ie = ie.assign(DESCRIPTION=description)
 
 # %%
 ie
@@ -216,7 +253,7 @@ ie
 base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-plt.title("Boundary of Ireland")
+plt.title("Boundary of the Island of Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
@@ -227,10 +264,10 @@ plt.text(
 plt.show()
 
 # %%
-ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
+ie.to_file(GPKG_BOUNDARY, layer="NUTS_Ireland")
 
 # %% [markdown]
-# ## Boundaries in Irish transverse mercator
+# ## Island of Ireland in Irish transverse mercator
 #
 # Useful for plotting
 #
@@ -259,4 +296,4 @@ plt.text(
 plt.show()
 
 # %%
-ie.to_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS_ITM")
+ie.to_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
