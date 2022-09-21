@@ -225,13 +225,10 @@ nuts3.to_file(GPKG_BOUNDARY, layer="NUTS3")
 ie = nuts1.copy()
 
 # %%
-ie = ie.dissolve(by="LEVL_CODE")
+ie = ie.dissolve(by="LEVL_CODE", as_index=False)
 
 # %%
 ie
-
-# %%
-ie.reset_index(inplace=True)
 
 # %%
 ie = ie[["geometry"]]

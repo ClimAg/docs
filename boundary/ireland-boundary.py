@@ -156,10 +156,18 @@ osni.to_file(GPKG_BOUNDARY, layer="OSNI_Counties")
 # ## County boundaries - simplified
 
 # %%
+# save to a separate GPKG file
+GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries_fix.gpkg")
+
+# %%
 osi_counties = osi[["CONTAE", "COUNTY", "PROVINCE", "geometry"]]
 
 # %%
 osi_counties
+
+# %%
+# reproject to Irish Transverse Mercator
+osi_counties = osi_counties.to_crs(2157)
 
 # %%
 osi_counties.to_file(GPKG_BOUNDARY, layer="OSi_Counties_simplified")
@@ -191,27 +199,18 @@ osni_counties["PROVINCE"] = "Ulster"
 osni_counties
 
 # %%
+# reproject to Irish Transverse Mercator
+osni_counties = osni_counties.to_crs(2157)
+
+# %%
 osni_counties.to_file(GPKG_BOUNDARY, layer="OSNI_Counties_simplified")
 
 # %%
+# merge county layers
 ie_counties = osi_counties.merge(osni_counties, how="outer")
 
 # %%
 ie_counties
-
-# %%
-base = ie_counties.plot(color="navajowhite", figsize=(9, 9))
-ie_counties.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
-
-plt.title("Counties of Ireland")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
-plt.text(
-    -7.75, 51.275,
-    "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
-)
-
-plt.show()
 
 # %%
 # new colour map
@@ -226,20 +225,18 @@ colors = np.vstack((colors1, colors2))
 
 # %%
 # categorical map - labels directly on plot
-ie_counties_itm = ie_counties.to_crs(2157)  # convert CRS to ITM
-
-base = ie_counties_itm.plot(
+base = ie_counties.plot(
     cmap=mcolors.ListedColormap(colors),
     figsize=(9, 9), column="COUNTY", alpha=.45
 )
 
-ie_counties_itm.boundary.plot(color="white", ax=base, linewidth=.4)
+ie_counties.boundary.plot(color="white", ax=base, linewidth=.4)
 
-# ie_counties_itm.centroid.plot(ax=base, color="darkslategrey", markersize=5)
+# ie_counties.centroid.plot(ax=base, color="darkslategrey", markersize=5)
 
 map_labels = zip(
-    zip(ie_counties_itm.centroid.x, ie_counties_itm.centroid.y),
-    ie_counties_itm["COUNTY"]
+    zip(ie_counties.centroid.x, ie_counties.centroid.y),
+    ie_counties["COUNTY"]
 )
 for xy, lab in map_labels:
     base.annotate(
