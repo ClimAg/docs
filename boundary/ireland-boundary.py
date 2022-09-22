@@ -153,24 +153,13 @@ plt.show()
 osni.to_file(GPKG_BOUNDARY, layer="OSNI_Counties")
 
 # %% [markdown]
-# ## County boundaries - simplified
-
-# %%
-# save to a separate GPKG file
-GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries_fix.gpkg")
+# ## County boundaries - Island of Ireland
 
 # %%
 osi_counties = osi[["CONTAE", "COUNTY", "PROVINCE", "geometry"]]
 
 # %%
 osi_counties
-
-# %%
-# reproject to Irish Transverse Mercator
-osi_counties = osi_counties.to_crs(2157)
-
-# %%
-osi_counties.to_file(GPKG_BOUNDARY, layer="OSi_Counties_simplified")
 
 # %%
 osni_counties = osni.rename(columns={"CountyName": "COUNTY"})
@@ -200,10 +189,14 @@ osni_counties
 
 # %%
 # reproject to Irish Transverse Mercator
+osi_counties = osi_counties.to_crs(2157)
+
+# %%
 osni_counties = osni_counties.to_crs(2157)
 
 # %%
-osni_counties.to_file(GPKG_BOUNDARY, layer="OSNI_Counties_simplified")
+# remove overlapping areas in OSi layer
+osi_counties = osi_counties.overlay(osni_counties, how="difference")
 
 # %%
 # merge county layers
@@ -252,3 +245,16 @@ plt.text(
 )
 
 plt.show()
+
+# %%
+ie_counties.crs
+
+# %%
+ie_counties.to_file(GPKG_BOUNDARY, layer="OS_IE_Counties_ITM")
+
+# %%
+# reproject to EPSG:4326
+ie_counties = ie_counties.to_crs(4326)
+
+# %%
+ie_counties.to_file(GPKG_BOUNDARY, layer="OS_IE_Counties")

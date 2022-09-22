@@ -32,13 +32,13 @@ DATA_DIR = os.path.join(
 grass_ie = pd.read_csv(DATA_DIR)
 
 # %%
-grass_ie.sort_values(by=["Name", "Year", "WeekNo"], inplace=True)
-
-# %%
 grass_ie.shape
 
 # %%
 list(grass_ie)
+
+# %%
+grass_ie.sort_values(by=["Name", "Year", "WeekNo"], inplace=True)
 
 # %%
 # convert year and week number to timestamp
