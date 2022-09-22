@@ -4,7 +4,8 @@
 # MODIS-EVI-derived Irish landcover seasonality dataset for 2006
 #
 # Rory Scarrott (1), Brian O'Connor (1, 2), Ned Dwyer (1), and Fiona Cawkwell
-# (2)\
+# (2)
+#
 # (1) Coastal and Marine Research Centre, University College Cork
 # (2) Department of Geography, University College Cork
 #
@@ -159,7 +160,7 @@ data.plot(
     column="Group",
     legend=True,
     figsize=(9, 9),
-    cmap="tab20c",
+    cmap="viridis_r",
     legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.15, 1.05))
 )
 plt.show()

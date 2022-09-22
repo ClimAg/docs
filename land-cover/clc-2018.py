@@ -120,7 +120,7 @@ landcover.rio.crs
 # %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="Boundary_IE_NUTS")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="OS_IE_Ireland")
 
 # %%
 # convert the boundary's CRS to match the CLC raster's CRS

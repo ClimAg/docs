@@ -175,7 +175,7 @@ icell <- st_as_sf(icell, coords = c("lon", "lat"), crs = 4326)
 
 # %%
 # Ireland boundary data
-ie <- st_read("./data/boundary/boundaries.gpkg", "Boundary_IE_NUTS")
+ie <- st_read("./data/boundary/boundaries.gpkg", "NUTS_Ireland")
 
 # %%
 print(ie)

@@ -28,7 +28,7 @@ DATA_DIR = os.path.join(
 )
 
 # %%
-data = gpd.read_file(DATA_DIR, layer="holden_brereton_2004_NUTS_ITM")
+data = gpd.read_file(DATA_DIR, layer="agro-environmental-regions")
 
 # %%
 data
@@ -44,9 +44,10 @@ data.plot(
     column="Cluster",
     legend=True,
     figsize=(9, 9),
-    cmap="Accent",
+    cmap="viridis",
     legend_kwds=dict(loc="upper left")
 )
-plt.xlabel("Easting (m)")
-plt.ylabel("Northing (m)")
+plt.title("Agro-environmental regions in Ireland [Holden and Brereton (2004)]")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
 plt.show()
