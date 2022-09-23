@@ -281,7 +281,7 @@ plt.show()
 cds = cplt.rotated_pole_point(data=pr, lon=LON, lat=LAT)
 
 # %%
-pr_ca = pr.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+pr_ca = pr.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 # %%
 plt.figure(figsize=(12, 4))

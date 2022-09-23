@@ -50,7 +50,7 @@ data_ec.rio.crs
 # %%
 # extract time series for Cork Airport
 cds = cplt.rotated_pole_point(data_ec, lon=LON, lat=LAT)
-data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+data_ca = data_ec.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 # %%
 data_ca
@@ -165,7 +165,7 @@ FILE_PATH = os.path.join(
 data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 
 cds = cplt.rotated_pole_point(data_ec, lon=LON, lat=LAT)
-data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+data_ca = data_ec.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 # %%
 plt.figure(figsize=(12, 4))
@@ -276,7 +276,7 @@ data_ec = xr.open_dataset(FILE_PATH, decode_coords="all", chunks=True)
 cds = cplt.rotated_pole_point(data_ec, lon=LON, lat=LAT)
 
 # %%
-data_ca = data_ec.sel({"rlat": cds[1], "rlon": cds[0]}, method="nearest")
+data_ca = data_ec.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 # %%
 plt.figure(figsize=(12, 4))
