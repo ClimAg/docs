@@ -14,6 +14,9 @@
 #
 # [Jouven1]: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 # [Jouven2]: https://doi.org/10.1111/j.1365-2494.2006.00517.x
+#
+# Running ModVege using the example data provided in
+# <https://github.com/YannChemin/modvege>
 
 # %%
 import os
