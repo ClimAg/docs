@@ -3,9 +3,12 @@
 #
 # <https://agrisearch.org/grasscheck>
 #
-# Huson, K. M., Lively, F. O., Aubry, A., Takahashi, T., Gordon, A. and McDonnell, D. A. (2020).
-# 'GrassCheck: monitoring grass growth and maximizing grass utilisation on UK farms',
-# in Virkajärvi, P. et al. (eds), *Meeting the future demands for grassland production*,
+# Huson, K. M., Lively, F. O., Aubry, A., Takahashi, T., Gordon, A. and
+# McDonnell, D. A. (2020).
+# 'GrassCheck: monitoring grass growth and maximizing grass utilisation on UK
+# farms',
+# in Virkajärvi, P. et al. (eds),
+# *Meeting the future demands for grassland production*,
 # Grassland Science in Europe, Helsinki, Finland, European Grassland Federation,
 # vol. 25, pp. 716–718. [Online]. Available at
 # <https://www.europeangrassland.org/fileadmin/documents/Infos/Printed_Matter/Proceedings/EGF2020.pdf>

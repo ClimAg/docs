@@ -1,11 +1,18 @@
 # %% [markdown]
 # # Agro-environmental regions in Ireland
 #
-# Agro-environmental regions described in Holden and Brereton (2004) derived from February rainfall data
+# Agro-environmental regions described in Holden and Brereton (2004) derived
+# from February rainfall data
 #
-# A screenshot of the map in the paper was taken and georeferenced into vector data
+# A screenshot of the map in the paper was taken and georeferenced into vector
+# data
 #
-# Holden, N. M. and Brereton, A. J. (2004). ‘Definition of agroclimatic regions in Ireland using hydro-thermal and crop yield data’, Agricultural and Forest Meteorology, vol. 122, no. 3, pp. 175–191. DOI: [10.1016/j.agrformet.2003.09.010](https://doi.org/10.1016/j.agrformet.2003.09.010).
+# Holden, N. M. and Brereton, A. J. (2004). 'Definition of agroclimatic regions
+# in Ireland using hydro-thermal and crop yield data', Agricultural and Forest
+# Meteorology, vol. 122, no. 3, pp. 175–191. DOI:
+# [10.1016/j.agrformet.2003.09.010][DOI].
+#
+# [DOI]: https://doi.org/10.1016/j.agrformet.2003.09.010
 
 # %%
 # import libraries

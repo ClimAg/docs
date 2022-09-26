@@ -15,8 +15,8 @@
 # This work is licenced under a Creative Commons Attribution 4.0 International
 # Licence
 #
-# - Scarrott, R. G., O’Connor, B., Dwyer, N. and Cawkwell, F. (2010).
-#   ‘MODIS-EVI-derived Irish landcover seasonality dataset for 2006’,
+# - Scarrott, R. G., O'Connor, B., Dwyer, N. and Cawkwell, F. (2010).
+#   'MODIS-EVI-derived Irish landcover seasonality dataset for 2006',
 #   Environmental Protection Agency project 2007-CCRP-2.4,
 #   University College Cork.
 # - O'Connor, B., Scarrott, R. and Dwyer, N. (2013).

@@ -16,9 +16,11 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %% [markdown]
 # ## Met Éireann stations
 #
-# - Station details can be found here: <https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv>
+# - Station details can be found here:
+#   <https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv>
 # - <https://www.met.ie/climate/weather-observing-stations>
-# - Check the "Show closed stations" box to obtain data for this replaced station: <https://www.met.ie/climate/available-data/historical-data>
+# - Check the "Show closed stations" box to obtain data for this replaced
+#   station: <https://www.met.ie/climate/available-data/historical-data>
 
 # %%
 URL = "https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv"
@@ -98,7 +100,9 @@ stations_roi.shape
 #
 # <https://www.metoffice.gov.uk/research/climate/maps-and-data/uk-synoptic-and-climate-stations>
 #
-# Met Office (2019): Met Office MIDAS Open: UK Land Surface Stations Data (1853-current). Centre for Environmental Data Analysis. <https://catalogue.ceda.ac.uk/uuid/dbd451271eb04662beade68da43546e1>
+# Met Office (2019): Met Office MIDAS Open: UK Land Surface Stations Data
+# (1853-current). Centre for Environmental Data Analysis.
+# <https://catalogue.ceda.ac.uk/uuid/dbd451271eb04662beade68da43546e1>
 
 # %%
 SUB_DIR = os.path.join("data", "met", "metoffice", "raw")
