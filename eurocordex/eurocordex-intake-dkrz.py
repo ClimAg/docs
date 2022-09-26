@@ -13,7 +13,6 @@
 import os
 from datetime import datetime, timezone
 import intake
-import matplotlib.pyplot as plt
 import xarray as xr
 
 # %%

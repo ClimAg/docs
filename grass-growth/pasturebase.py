@@ -18,7 +18,6 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import climag.plot_configs
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))

@@ -20,7 +20,6 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import climag.plot_configs
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))

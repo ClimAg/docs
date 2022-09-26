@@ -10,7 +10,6 @@ from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import climag.plot_configs
 from climag.download_data import download_data
 
 # %%

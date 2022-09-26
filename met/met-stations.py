@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-import climag.plot_configs
 from climag.download_data import download_data
 
 # %%
@@ -195,9 +194,10 @@ plt.title("Meteorological stations in Ireland")
 plt.xlabel("Longitude")
 plt.ylabel("Latitude")
 plt.text(
-    -8.75, 51.275,
+    -8, 51.275,
     "© Met Éireann\n© Met Office, NERC EDS CEDA\n" +
-    "© EuroGeographics for the administrative boundaries"
+    "© Ordnance Survey Ireland\n"
+    "© Ordnance Survey Northern Ireland"
 )
 plt.legend(loc="upper left")
 

@@ -29,8 +29,6 @@ from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
-import climag.plot_configs
-
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
@@ -265,61 +263,3 @@ plt.xlim(landcover.rio.bounds()[0] - 9e3, landcover.rio.bounds()[1] + 9e3)
 plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
-
-# %%
-# reproject to Irish transverse mercator
-landcover = landcover.rio.reproject("EPSG:2157")
-
-# %%
-img = plt.figure(figsize=(15, 15))
-img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
-img.set_visible(False)
-
-ticks = list(np.arange(.5, len(uniquevals) + .5, 1))
-cbar = plt.colorbar(ticks=ticks)
-cbar.ax.set_yticklabels(list(uniquevals["label"]))
-
-landcover.plot(add_colorbar=False, cmap=colours)
-
-plt.title("CLC 2018 - Ireland [EPSG:2157]")
-plt.xlabel("Easting (m)")
-plt.ylabel("Northing (m)")
-
-plt.axis("equal")
-plt.xlim(landcover.rio.bounds()[0], landcover.rio.bounds()[2])
-plt.ylim(landcover.rio.bounds()[1], landcover.rio.bounds()[3])
-
-plt.show()
-
-# %% [markdown]
-# ## QGIS
-#
-# Unique value counts can also be generated using QGIS.
-#
-# Run the following code snippets in the QGIS Python console.
-
-# %%
-# generate statistics for the unique values
-
-# params = {
-#     "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
-#     "OUTPUT_HTML_FILE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.html"),
-#     "OUTPUT_TABLE": os.path.join(DATA_DIR_BASE, "raster_unique_vals.geojson")
-# }
-
-# processing.run("native:rasterlayeruniquevaluesreport", params)
-
-# %%
-# apply the raster's style file to view the legend
-
-# params = {
-#     "INPUT": os.path.join(DATA_DIR_BASE, "clc-2018-ie.tif"),
-#     "STYLE": os.path.join(
-#         DATA_DIR,
-#         "u2018_clc2018_v2020_20u1_raster100m",
-#         "Legend",
-#         "clc_legend_qgis_raster.qml"
-#     )
-# }
-
-# processing.run("native:setlayerstyle", params)

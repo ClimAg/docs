@@ -38,7 +38,6 @@ import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
-import climag.plot_configs
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -151,16 +150,20 @@ data.plot(
     legend=True,
     figsize=(9, 9),
     cmap=mcolors.ListedColormap(colors),
-    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.15, 1.05))
+    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.18, 1.07))
 )
+plt.title("MODIS-EVI-derived Irish landcover seasonality dataset for 2006")
 plt.show()
 
 # %%
+# see the excerpt of a draft paper by Scarrott et al. for more information
+# about these groupings
 data.plot(
     column="Group",
     legend=True,
     figsize=(9, 9),
     cmap="viridis_r",
-    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.15, 1.05))
+    legend_kwds=dict(loc="lower right")
 )
+plt.title("Cluster groupings of the seasonality dataset")
 plt.show()

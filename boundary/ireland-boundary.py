@@ -6,7 +6,6 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
-import climag.plot_configs
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt

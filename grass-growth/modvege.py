@@ -17,7 +17,11 @@
 
 # %%
 import os
+from datetime import datetime, timezone
 from climag.modvege_run import run_modvege
+
+# %%
+print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 DATA_PATH = os.path.join("data", "grass-growth", "modvege")
