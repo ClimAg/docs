@@ -10,9 +10,6 @@ import intake
 import matplotlib.pyplot as plt
 import xarray as xr
 import climag.plot_configs as cplt
-import itertools
-import pandas as pd
-from sqlalchemy import create_engine
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -144,31 +141,6 @@ FILE_NAME = cplt.ie_cordex_ncfile_name(data)
 
 # %%
 data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
-
-# %%
-# len(list(itertools.product(
-#     range(len(data["pr"]["rlon"])), range(len(data["pr"]["rlat"]))
-# ))) == len(data["pr"]["rlon"]) * len(data["pr"]["rlat"])
-
-# %%
-# TS_OUT_DIR = os.path.join(
-#     os.path.split(cordex_eur11.df["uri"][0])[0], "timeseries"
-# )
-# TS_FILE_BASE = os.path.split(cordex_eur11.df["uri"][0])[1][:-20]
-# engine = create_engine("sqlite://", echo=False)
-# os.makedirs(TS_OUT_DIR, exist_ok=True)
-# for x, y in itertools.product(
-#     range(len(data["pr"]["rlon"])), range(len(data["pr"]["rlat"]))
-# ):
-#     data_ie = data.isel(rlon=x, rlat=y)
-#     data_df = pd.DataFrame(
-#         {"time": data_ie["pr"]["time"], "pr": data_ie["pr"]}
-#     )
-#     if data_df["pr"].isna().all() == False:
-#         TS_OUT_FILE = os.path.join(
-#             TS_OUT_DIR, TS_FILE_BASE + str(x) + "-" + str(y) + ".csv"
-#         )
-#         data_df.to_csv(TS_OUT_FILE, index=False)
 
 # %% [markdown]
 # #### Time subset
