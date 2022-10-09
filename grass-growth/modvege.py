@@ -26,6 +26,9 @@ from climag.modvege_run import run_modvege
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
+# %% [markdown]
+# ## Using example timeseries data
+
 # %%
 DATA_PATH = os.path.join("data", "grass-growth", "modvege")
 
@@ -35,6 +38,28 @@ PARAMS_FILE = os.path.join(DATA_PATH, "params.csv")
 TS_FILE = os.path.join(DATA_PATH, "timeseries.csv")
 # outputs
 OUT_FILE = os.path.join(DATA_PATH, "output.csv")
+
+# %%
+# run the main function using the example data
+run_modvege(
+    input_params_file=PARAMS_FILE,
+    input_timeseries_file=TS_FILE,
+    out_file=OUT_FILE
+)
+
+# %% [markdown]
+# ## EURO-CORDEX
+
+# %%
+# define the name of the input timeseries file
+TS_FILE = os.path.join(
+    "data", "eurocordex", "IE",
+    "evspsblpot_pr_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_v1a_"
+    "day_20410101-20701231_IE.nc"
+)
+
+# outputs
+OUT_FILE = os.path.join(DATA_PATH, "output.nc")
 
 # %%
 # run the main function using the example data
