@@ -30,7 +30,7 @@ LAT = 51.84722
 # %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="OS_IE_Ireland_ITM")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
 
 # %% [markdown]
 # ## Reading the local catalogue
@@ -81,39 +81,22 @@ data = xr.open_mfdataset(
     chunks="auto",
     decode_coords="all"
 )
-# data = cordex_eur11.to_dataset_dict(
-#     xarray_open_kwargs=dict(chunks=True, decode_coords="all")
-# )
 
 # %%
 data
 
 # %%
-# # read one of the data files to extract CRS info
-# data_ec = xr.open_dataset(
-#     cordex_eur11.df["uri"][0], decode_coords="all", chunks=True
-# )
-
-# data.rio.write_crs(data_ec.rio.crs, inplace=True)
-
-# data = data.set_coords(("time_bnds"))
-
-# del data["pr"].attrs["grid_mapping"]
-
 data.rio.crs
 
 # %% [markdown]
 # ### Ireland subset
 
 # %%
-# clip to Ireland's bounding box with a 10 km buffer
-data = data.rio.clip(ie.envelope.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary with a 10 km buffer
+data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
 
 # %%
 data
-
-# %%
-data.dims
 
 # %% [markdown]
 # ### Convert units
@@ -246,14 +229,11 @@ data.rio.crs
 # ### Ireland subset
 
 # %%
-# clip to Ireland's bounding box with a 10 km buffer
-data = data.rio.clip(ie.envelope.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary with a 10 km buffer
+data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
 
 # %%
 data
-
-# %%
-data.dims
 
 # %% [markdown]
 # ### Convert units
