@@ -139,10 +139,12 @@ for v in data.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )  # colorbar label
-    if v == "tas":
-        cmap = "Spectral_r"
-    else:
+    if v == "pr":
         cmap = "GnBu"
+    elif v == "evspsblpot":
+        cmap = "PuRd"
+    else:
+        cmap = "Spectral_r"
     plot_transform = cplt.rotated_pole_transform(data_ie)
 
     plt.figure(figsize=(20, 10))
@@ -276,10 +278,12 @@ for v in data.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )  # colorbar label
-    if v == "tas":
-        cmap = "Spectral_r"
-    else:
+    if v == "pr":
         cmap = "GnBu"
+    elif v == "evspsblpot":
+        cmap = "PuRd"
+    else:
+        cmap = "Spectral_r"
     plot_transform = cplt.rotated_pole_transform(data_ie)
 
     plt.figure(figsize=(20, 10))
