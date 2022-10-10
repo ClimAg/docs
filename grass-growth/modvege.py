@@ -58,8 +58,8 @@ run_modvege(
 # define the name of the input timeseries file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
-    "evspsblpot_pr_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_v1a_"
-    "day_20410101-20701231_IE.nc"
+    "evspsblpot_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_"
+    "v1a_day_20410101-20701231_IE.nc"
 )
 
 # outputs
@@ -84,59 +84,31 @@ data = xr.open_dataset(
     decode_coords="all"
 )
 
-# %%
-data
+# %% [markdown]
+# ### Time subset
 
 # %%
-# subset for a point in time
-data_ie = data.isel(time=3458)
+data_ie = data.sel(
+    time=[
+        f"2050-{month}-21T12:00:00.000000000" for month in sorted(
+            list(set(data["time"].dt.month.values))
+        )
+    ]
+)
 
 # %%
 data_ie
 
 # %%
-for v in data.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-    plot_transform = cplt.rotated_pole_transform(data_ie)
-
-    plt.figure(figsize=(20, 10))
-    ax = plt.axes(projection=plot_transform)
-
-    # specify gridline spacing and labels
-    ax.gridlines(
-        draw_labels=True,
-        xlocs=range(-180, 180, 2),
-        ylocs=range(-90, 90, 1),
-        color="lightslategrey",
-        linewidth=.5
-    )
-
-    # plot data for the variable
+for v in data_ie.data_vars:
     data_ie[v].plot(
-        ax=ax,
-        cmap="YlGn",
-        transform=plot_transform,
-        x="rlon",
-        y="rlat",
-        cbar_kwargs=dict(label=cbar_label)
+        x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
+        cbar_kwargs=dict(aspect=35)
     )
-
-    # add boundaries
-    ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-
-    ax.set_title(
-        "ModVege output, " +
-        datetime.strftime(
-            datetime.strptime(
-                str(data_ie.coords["time"].values)[:10], "%Y-%m-%d"
-            ),
-            "%-d %b %Y"
-        )
-    )  # set plot title
-
     plt.show()
+
+# %% [markdown]
+# ### Point subset
 
 # %%
 # point subset

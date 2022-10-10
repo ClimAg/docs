@@ -65,7 +65,7 @@ cordex_eur11_cat.df.head()
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="rcp85",
-    variable_id=["pr", "tas", "evspsblpot"],
+    variable_id=["pr", "tas", "evspsblpot", "rsds"],
     institute_id="SMHI"
 )
 
@@ -107,8 +107,11 @@ for v in data.data_vars:
     if v == "tas":
         var_attrs["units"] = "°C"  # convert K to deg C
         data[v] = data[v] - 273.15
+    elif v == "rsds":
+        var_attrs["units"] = "MJ/m²"  # convert W m-2 to MJ m-2
+        data[v] = data[v] * 3.6e-3
     else:
-        var_attrs["units"] = "mm/day"  # convert kg m-2 s-1 to mm/day
+        var_attrs["units"] = "mm/day"  # convert kg m-2 s-1 to mm day-1
         data[v] = data[v] * 60 * 60 * 24
     data[v].attrs = var_attrs  # reassign attributes
 
@@ -157,6 +160,9 @@ for v in data_ie.data_vars:
 
 # %%
 data_ie = data.sel(time="2055-06-21T12:00:00.000000000")
+
+# %%
+data_ie
 
 # %%
 for v in data_ie.data_vars:
@@ -210,7 +216,10 @@ cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 # %%
-for v in data.data_vars:
+data_ie
+
+# %%
+for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
     plt.plot(data_ie["time"], data_ie[v])
     plt.xlabel(data_ie["time"].attrs["standard_name"])
@@ -227,7 +236,7 @@ for v in data.data_vars:
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="historical",
-    variable_id=["pr", "tas", "evspsblpot"],
+    variable_id=["pr", "tas", "evspsblpot", "rsds"],
     institute_id="SMHI"
 )
 
@@ -269,8 +278,11 @@ for v in data.data_vars:
     if v == "tas":
         var_attrs["units"] = "°C"  # convert K to deg C
         data[v] = data[v] - 273.15
+    elif v == "rsds":
+        var_attrs["units"] = "MJ/m²"  # convert W m-2 to MJ m-2
+        data[v] = data[v] * 3.6e-3
     else:
-        var_attrs["units"] = "mm/day"  # convert kg m-2 s-1 to mm/day
+        var_attrs["units"] = "mm/day"  # convert kg m-2 s-1 to mm day-1
         data[v] = data[v] * 60 * 60 * 24
     data[v].attrs = var_attrs  # reassign attributes
 
@@ -373,6 +385,9 @@ cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+# %%
+data_ie
 
 # %%
 for v in data.data_vars:
