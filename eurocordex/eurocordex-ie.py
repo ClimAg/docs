@@ -119,35 +119,56 @@ data
 # ### Export data
 
 # %%
-# export to NetCDF
-FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# # export to NetCDF
+# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
 
 # %%
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # #### Time subset
 
 # %%
-data_ie = data.isel(time=50)
+data_ie = data.sel(
+    time=[
+        str(year) + "-06-21T12:00:00.000000000" for year in sorted(
+            list(set(data["time"].dt.year.values))
+        )
+    ]
+)
 
 # %%
 data_ie
 
 # %%
-for v in data.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
+for v in data_ie.data_vars:
+    if v == "pr":
+        cmap = "mako_r"
+    elif v == "evspsblpot":
+        cmap = "BrBG_r"
+    else:
+        cmap = "Spectral_r"
+    data_ie[v].plot(
+        x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
+        cbar_kwargs=dict(aspect=35)
+    )
+    # plt.suptitle(cplt.cordex_plot_title_facet(data_ie))
+    plt.show()
+
+# %%
+data_ie = data.sel(time="2055-06-21T12:00:00.000000000")
+
+# %%
+for v in data_ie.data_vars:
     if v == "pr":
         cmap = "GnBu"
     elif v == "evspsblpot":
-        cmap = "PuRd"
+        cmap = "BrBG_r"
     else:
         cmap = "Spectral_r"
     plot_transform = cplt.rotated_pole_transform(data_ie)
 
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(7.5, 7))
     ax = plt.axes(projection=plot_transform)
 
     # specify gridline spacing and labels
@@ -166,7 +187,7 @@ for v in data.data_vars:
         transform=plot_transform,
         x="rlon",
         y="rlat",
-        cbar_kwargs=dict(label=cbar_label)
+        levels=15
     )
 
     # add boundaries
@@ -174,6 +195,8 @@ for v in data.data_vars:
 
     ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
 
+    plt.axis("equal")
+    plt.tight_layout()
     plt.show()
 
 # %% [markdown]
@@ -258,35 +281,59 @@ data
 # ### Export data
 
 # %%
-# export to NetCDF
-FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# # export to NetCDF
+# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
 
 # %%
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # #### Time subset
 
 # %%
-data_ie = data.isel(time=50)
+data_ie = data.sel(
+    time=[
+        str(year) + "-06-21T12:00:00.000000000" for year in sorted(
+            list(set(data["time"].dt.year.values))
+        )
+    ]
+)
 
 # %%
 data_ie
 
 # %%
-for v in data.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
+for v in data_ie.data_vars:
+    if v == "pr":
+        cmap = "mako_r"
+    elif v == "evspsblpot":
+        cmap = "BrBG_r"
+    else:
+        cmap = "Spectral_r"
+    data_ie[v].plot(
+        x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
+        cbar_kwargs=dict(aspect=35)
+    )
+    # plt.suptitle(cplt.cordex_plot_title_facet(data_ie))
+    plt.show()
+
+# %%
+data_ie = data.sel(time="1990-06-21T12:00:00.000000000")
+
+# %%
+data_ie
+
+# %%
+for v in data_ie.data_vars:
     if v == "pr":
         cmap = "GnBu"
     elif v == "evspsblpot":
-        cmap = "PuRd"
+        cmap = "BrBG_r"
     else:
         cmap = "Spectral_r"
     plot_transform = cplt.rotated_pole_transform(data_ie)
 
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(7.5, 7))
     ax = plt.axes(projection=plot_transform)
 
     # specify gridline spacing and labels
@@ -305,7 +352,7 @@ for v in data.data_vars:
         transform=plot_transform,
         x="rlon",
         y="rlat",
-        cbar_kwargs=dict(label=cbar_label)
+        levels=15
     )
 
     # add boundaries
@@ -313,6 +360,8 @@ for v in data.data_vars:
 
     ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
 
+    plt.axis("equal")
+    plt.tight_layout()
     plt.show()
 
 # %% [markdown]
