@@ -55,18 +55,23 @@ run_modvege(
 # ## EURO-CORDEX
 
 # %%
+DATA_PATH = os.path.join("data", "grass-growth", "modvege")
+
+# define the name of the input params file
+PARAMS_FILE = os.path.join(DATA_PATH, "params.csv")
+
 # define the name of the input timeseries file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
-    "evspsblpot_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_"
-    "v1a_day_20410101-20701231_IE.nc"
+    "evspsblpot_pr_rsds_rsus_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_"
+    "SMHI-RCA4_v1a_day_20410101-20701231_IE.nc"
 )
 
 # outputs
 OUT_FILE = os.path.join(
     DATA_PATH,
     "modvege_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_v1a_"
-    "day_20410101-20701231_IE.nc"
+    "day_2055_IE.nc"
 )
 
 # %%
@@ -84,13 +89,16 @@ data = xr.open_dataset(
     decode_coords="all"
 )
 
+# %%
+data
+
 # %% [markdown]
 # ### Time subset
 
 # %%
 data_ie = data.sel(
     time=[
-        f"2050-{month}-21T12:00:00.000000000" for month in sorted(
+        f"2055-{month}-21T12:00:00.000000000" for month in sorted(
             list(set(data["time"].dt.month.values))
         )
     ]
@@ -101,9 +109,12 @@ data_ie
 
 # %%
 for v in data_ie.data_vars:
+    cbar_label = (
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )  # colorbar label
     data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35)
+        cbar_kwargs=dict(aspect=35, label=cbar_label)
     )
     plt.show()
 
