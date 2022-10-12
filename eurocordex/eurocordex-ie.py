@@ -65,7 +65,7 @@ cordex_eur11_cat.df.head()
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="rcp85",
-    variable_id=["pr", "tas", "evspsblpot", "rsds", "rsus"],
+    variable_id=["pr", "tas", "evspsblpot", "rsds"],
     institute_id="SMHI"
 )
 
@@ -107,7 +107,7 @@ for v in data.data_vars:
     if v == "tas":
         var_attrs["units"] = "°C"  # convert K to deg C
         data[v] = data[v] - 273.15
-    elif v in ("rsds", "rsus"):
+    elif v == "rsds":
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
         # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
         # (per second to per day; then convert to mega)
@@ -260,7 +260,7 @@ for v in data_ie.data_vars:
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="historical",
-    variable_id=["pr", "tas", "evspsblpot", "rsds", "rsus"],
+    variable_id=["pr", "tas", "evspsblpot", "rsds"],
     institute_id="SMHI"
 )
 
@@ -302,7 +302,7 @@ for v in data.data_vars:
     if v == "tas":
         var_attrs["units"] = "°C"  # convert K to deg C
         data[v] = data[v] - 273.15
-    elif v in ("rsds", "rsus"):
+    elif v == "rsds":
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
         # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
         # (per second to per day; then convert to mega)
