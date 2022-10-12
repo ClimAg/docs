@@ -81,6 +81,8 @@ Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran
 Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/ireland-boundary.ipynb)
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/clc-2018.ipynb)
 Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/met-stations.ipynb)
+***HiResIreland***
+HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/hiresireland.ipynb)
 ***EURO-CORDEX***
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ie.ipynb)
 Loading EURO-CORDEX data from an NC file | [nbviewer](https://nbviewer.org/gist/nmstreethran/20d0fdcb9fd282703aa24abd401bb8e1/eurocordex-ncfile.ipynb)
