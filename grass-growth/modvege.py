@@ -30,36 +30,39 @@ from climag.modvege_run import run_modvege
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
+# %%
+DATA_DIR = os.path.join("data", "grass-growth", "modvege")
+
+# define the name of the input params file
+PARAMS_FILE = os.path.join(DATA_DIR, "params.csv")
+
+# %%
+# Ireland boundary
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+
 # %% [markdown]
 # ## Using example timeseries data
 
 # %%
-DATA_PATH = os.path.join("data", "grass-growth", "modvege")
-
-# define the name of the input params file
-PARAMS_FILE = os.path.join(DATA_PATH, "params.csv")
 # define the name of the input timeseries file
-TS_FILE = os.path.join(DATA_PATH, "timeseries.csv")
-# outputs
-OUT_FILE = os.path.join(DATA_PATH, "output.csv")
+TS_FILE = os.path.join(DATA_DIR, "timeseries.csv")
 
 # %%
 # run the main function using the example data
 run_modvege(
     input_params_file=PARAMS_FILE,
     input_timeseries_file=TS_FILE,
-    out_file=OUT_FILE
+    out_dir=DATA_DIR
 )
 
 # %% [markdown]
 # ## EURO-CORDEX
 
+# %% [markdown]
+# ### rcp85
+
 # %%
-DATA_PATH = os.path.join("data", "grass-growth", "modvege")
-
-# define the name of the input params file
-PARAMS_FILE = os.path.join(DATA_PATH, "params.csv")
-
 # define the name of the input timeseries file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
@@ -67,22 +70,23 @@ TS_FILE = os.path.join(
     "SMHI-RCA4_v1a_day_20410101-20701231_IE.nc"
 )
 
-# outputs
-OUT_FILE = os.path.join(
-    DATA_PATH,
-    "modvege_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_v1a_"
-    "day_2055_IE.nc"
-)
+OUT_DIR = os.path.join(DATA_DIR, "eurocordex", "rcp85")
 
 # %%
 # run the main function using the example data
 run_modvege(
     input_params_file=PARAMS_FILE,
     input_timeseries_file=TS_FILE,
-    out_file=OUT_FILE
+    out_dir=OUT_DIR
 )
 
 # %%
+OUT_FILE = os.path.join(
+    OUT_DIR,
+    "modvege_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_SMHI-RCA4_v1a_day_"
+    "20550101-20551231_IE.nc"
+)
+
 data = xr.open_dataset(
     OUT_FILE,
     chunks="auto",
@@ -92,13 +96,8 @@ data = xr.open_dataset(
 # %%
 data
 
-# %%
-# Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
-
 # %% [markdown]
-# ### Time subset
+# #### Time subset
 
 # %%
 data_ie = data.sel(
@@ -131,7 +130,7 @@ for v in data_ie.data_vars:
     plt.show()
 
 # %% [markdown]
-# ### Point subset
+# #### Point subset
 
 # %%
 # point subset
@@ -162,6 +161,107 @@ for v, ax in zip(data_ie.data_vars, axs.flat):
     )
 
 fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
+
+plt.tight_layout()
+
+plt.show()
+
+# %% [markdown]
+# ### historical
+
+# %%
+# define the name of the input timeseries file
+TS_FILE = os.path.join(
+    "data", "eurocordex", "IE",
+    "evspsblpot_pr_rsds_rsus_tas_EUR-11_MPI-M-MPI-ESM-LR_historical_r1i1p1_"
+    "SMHI-RCA4_v1a_day_19760101-20051231_IE.nc"
+)
+
+OUT_DIR = os.path.join(DATA_DIR, "eurocordex", "historical")
+
+# run the main function using the example data
+run_modvege(
+    input_params_file=PARAMS_FILE,
+    input_timeseries_file=TS_FILE,
+    out_dir=OUT_DIR
+)
+
+# %%
+OUT_FILE = os.path.join(
+    OUT_DIR,
+    "modvege_EUR-11_MPI-M-MPI-ESM-LR_historical_r1i1p1_SMHI-RCA4_v1a_day_"
+    "19900101-19901231_IE.nc"
+)
+
+data = xr.open_dataset(
+    OUT_FILE,
+    chunks="auto",
+    decode_coords="all"
+)
+
+data
+
+# %% [markdown]
+# #### Time subset
+
+# %%
+data_ie = data.sel(
+    time=[
+        f"1990-{month}-21T12:00:00.000000000" for month in sorted(
+            list(set(data["time"].dt.month.values))
+        )
+    ]
+)
+
+data_ie
+
+# %%
+for v in data_ie.data_vars:
+    cbar_label = (
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )  # colorbar label
+
+    fig = data_ie[v].plot(
+        x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
+        cbar_kwargs=dict(aspect=35, label=cbar_label)
+    )
+
+    for ax in fig.axes.flat:
+        ie.to_crs(4326).boundary.plot(
+            ax=ax, color="darkslategrey", linewidth=.5
+        )
+
+    plt.show()
+
+# %% [markdown]
+# #### Point subset
+
+# %%
+# point subset
+# Cork Airport met station coords
+LON = -8.48611
+LAT = 51.84722
+
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+data_ie
+
+# %%
+fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14))
+
+# cycle colours: https://stackoverflow.com/a/53523348
+colors = plt.rcParams["axes.prop_cycle"]()
+
+for v, ax in zip(data_ie.data_vars, axs.flat):
+    color = next(colors)["color"]
+    ax.plot(data_ie["time"], data_ie[v], color=color)
+    ax.set_title(
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )
+
+fig.suptitle(f"ModVege outputs, historical ({LON}, {LAT})")
 
 plt.tight_layout()
 
