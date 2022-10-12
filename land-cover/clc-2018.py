@@ -118,7 +118,7 @@ landcover.rio.crs
 # %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="OS_IE_Ireland")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
 
 # %%
 # convert the boundary's CRS to match the CLC raster's CRS
@@ -255,6 +255,8 @@ cbar = plt.colorbar(ticks=ticks)
 cbar.ax.set_yticklabels(list(uniquevals["label"]))
 
 landcover.plot(add_colorbar=False, cmap=colours)
+
+ie.boundary.plot(ax=img.axes, color="darkslategrey")
 
 plt.title("CLC 2018 - Ireland [EPSG:3035]")
 

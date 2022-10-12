@@ -1,3 +1,6 @@
+# %% [markdown]
+# # HiResIreland
+
 # %%
 # import libraries
 import glob
@@ -32,7 +35,7 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
 data = xr.open_mfdataset(
     list(itertools.chain(*list(
         glob.glob(os.path.join(DATA_DIR_BASE, "rcp85", "MPI-ESM-LR", e))
-        for e in ["*mean_T_2M*.nc", "*ASOB_S*.nc", "*TOT_PREC*.nc"]
+        for e in ["*mean_T_2M*.nc", "*ASOB_S*.nc", "*ET*.nc", "*TOT_PREC*.nc"]
     ))),
     chunks="auto",
     decode_coords="all"
@@ -73,11 +76,17 @@ for v in data.data_vars:
     elif v == "TOT_PREC":
         var_attrs["units"] = "mm day⁻¹"  # kg m-2 is the same as mm day-1
         var_attrs["long_name"] = "Precipitation"
+    else:
+        var_attrs["units"] = "mm day⁻¹"
+        var_attrs["long_name"] = "Evapotranspiration"
+        var_attrs["standard_name"] = "evapotranspiration"
     data[v].attrs = var_attrs  # reassign attributes
 
 # %%
 # rename
-data = data.rename({"T_2M": "tas", "ASOB_S": "rsds", "TOT_PREC": "pr"})
+data = data.rename({
+    "T_2M": "tas", "ASOB_S": "rsds", "TOT_PREC": "pr", "w": "evspsblpot"
+})
 
 # %%
 data
@@ -202,3 +211,229 @@ for v in data_ie.data_vars:
     )
     plt.tight_layout()
     plt.show()
+
+# %% [markdown]
+# ### Export data
+
+# %%
+# assign attributes for the data
+data.attrs["comment"] = (
+    "This data has been clipped with the Island of Ireland's boundary. "
+    "Last updated: " + str(datetime.now(tz=timezone.utc)) +
+    " by nstreethran@ucc.ie."
+)
+
+# %%
+data
+
+# %%
+data.to_netcdf(os.path.join(
+    DATA_DIR_BASE,
+    "rcp85",
+    "_".join(list(data.data_vars)) + "_" + data.attrs["title"] + ".nc"
+))
+
+# %% [markdown]
+# ## historical
+
+# %%
+data = xr.open_mfdataset(
+    list(itertools.chain(*list(
+        glob.glob(os.path.join(DATA_DIR_BASE, "historical", "MPI-ESM-LR", e))
+        for e in ["*mean_T_2M*.nc", "*ASOB_S*.nc", "*ET*.nc", "*TOT_PREC*.nc"]
+    ))),
+    chunks="auto",
+    decode_coords="all"
+)
+
+# %%
+data
+
+# %%
+data.rio.crs
+
+# %% [markdown]
+# ### Ireland subset
+
+# %%
+# clip to Ireland's boundary with a 10 km buffer
+data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
+
+# %%
+data
+
+# %% [markdown]
+# ### Convert units and rename variables
+
+# %%
+for v in data.data_vars:
+    var_attrs = data[v].attrs  # extract attributes
+    if v == "T_2M":
+        var_attrs["units"] = "°C"  # convert K to deg C
+        data[v] = data[v] - 273.15
+        var_attrs["long_name"] = "Near-Surface Air Temperature"
+    elif v == "ASOB_S":
+        var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
+        # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
+        # (per second to per day; then convert to mega)
+        data[v] = data[v] * (60 * 60 * 24 / 1e6)
+        var_attrs["long_name"] = "Surface Net Downwelling Shortwave Radiation"
+    elif v == "TOT_PREC":
+        var_attrs["units"] = "mm day⁻¹"  # kg m-2 is the same as mm day-1
+        var_attrs["long_name"] = "Precipitation"
+    else:
+        var_attrs["units"] = "mm day⁻¹"
+        var_attrs["long_name"] = "Evapotranspiration"
+        var_attrs["standard_name"] = "evapotranspiration"
+    data[v].attrs = var_attrs  # reassign attributes
+
+# %%
+# rename
+data = data.rename({
+    "T_2M": "tas", "ASOB_S": "rsds", "TOT_PREC": "pr", "w": "evspsblpot"
+})
+
+# %%
+data
+
+# %% [markdown]
+# ### Time subset
+
+# %%
+data_ie = data.sel(
+    time=[
+        str(year) + "-06-21T10:30:00.000000000" for year in sorted(
+            list(set(data["time"].dt.year.values))
+        )
+    ]
+)
+
+# %%
+data_ie
+
+# %%
+for v in data_ie.data_vars:
+    cbar_label = (
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )  # colorbar label
+
+    if v == "pr":
+        cmap = "mako_r"
+    elif v == "evspsblpot":
+        cmap = "BrBG_r"
+    else:
+        cmap = "Spectral_r"
+
+    fig = data_ie[v].plot(
+        x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
+        cbar_kwargs=dict(aspect=35, label=cbar_label)
+    )
+
+    for ax in fig.axes.flat:
+        ie.to_crs(4326).boundary.plot(
+            ax=ax, color="darkslategrey", linewidth=.5
+        )
+
+    plt.show()
+
+# %%
+data_ie = data.sel(time="1990-06-21T10:30:00.000000000")
+
+# %%
+data_ie
+
+# %%
+for v in data_ie.data_vars:
+    cbar_label = (
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )  # colorbar label
+    if v == "pr":
+        cmap = "GnBu"
+    elif v == "evspsblpot":
+        cmap = "BrBG_r"
+    else:
+        cmap = "Spectral_r"
+    plot_transform = cplt.rotated_pole_transform(data_ie)
+
+    plt.figure(figsize=(7.5, 7))
+    ax = plt.axes(projection=plot_transform)
+
+    # specify gridline spacing and labels
+    ax.gridlines(
+        draw_labels=True,
+        xlocs=range(-180, 180, 2),
+        ylocs=range(-90, 90, 1),
+        color="lightslategrey",
+        linewidth=.5
+    )
+
+    # plot data for the variable
+    data_ie[v].plot(
+        ax=ax,
+        cmap=cmap,
+        transform=plot_transform,
+        x="rlon",
+        y="rlat",
+        levels=15,
+        cbar_kwargs=dict(label=cbar_label)
+    )
+
+    # add boundaries
+    ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
+
+    ax.set_title(
+        f"HiResIreland, {data_ie.attrs['title']}, "
+        f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
+    )
+
+    plt.axis("equal")
+    plt.tight_layout()
+    plt.show()
+
+# %% [markdown]
+# ### Point subset
+
+# %%
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+
+# %%
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+# %%
+data_ie
+
+# %%
+for v in data_ie.data_vars:
+    plt.figure(figsize=(12, 4))
+    plt.plot(data_ie["time"], data_ie[v])
+    plt.xlabel(data_ie["time"].attrs["standard_name"])
+    plt.ylabel(
+        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
+    )
+    plt.title(
+        f"HiResIreland, {data_ie.attrs['title']}, "
+        f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
+    )
+    plt.tight_layout()
+    plt.show()
+
+# %% [markdown]
+# ### Export data
+
+# %%
+# assign attributes for the data
+data.attrs["comment"] = (
+    "This data has been clipped with the Island of Ireland's boundary. "
+    "Last updated: " + str(datetime.now(tz=timezone.utc)) +
+    " by nstreethran@ucc.ie."
+)
+
+# %%
+data
+
+# %%
+data.to_netcdf(os.path.join(
+    DATA_DIR_BASE,
+    "historical",
+    "_".join(list(data.data_vars)) + "_" + data.attrs["title"] + ".nc"
+))

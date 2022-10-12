@@ -139,7 +139,7 @@ data
 # data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
-# #### Time subset
+# ### Time subset
 
 # %%
 data_ie = data.sel(
@@ -230,7 +230,7 @@ for v in data_ie.data_vars:
     plt.show()
 
 # %% [markdown]
-# #### Point subset
+# ### Point subset
 
 # %%
 # using Cork Airport met station coordinates
@@ -334,7 +334,7 @@ data
 # data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
-# #### Time subset
+# ### Time subset
 
 # %%
 data_ie = data.sel(
@@ -425,7 +425,7 @@ for v in data_ie.data_vars:
     plt.show()
 
 # %% [markdown]
-# #### Point subset
+# ### Point subset
 
 # %%
 # using Cork Airport met station coordinates
