@@ -135,6 +135,10 @@ osni
 osni.crs
 
 # %%
+# rename Londonderry to Derry
+osni.replace("LONDONDERRY", "DERRY", inplace=True)
+
+# %%
 base = osni.plot(color="navajowhite", figsize=(9, 9))
 osni.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
@@ -173,7 +177,7 @@ contae = {
     "ARMAGH": "Ard Mhacha",
     "DOWN": "An Dún",
     "FERMANAGH": "Fear Manach",
-    "LONDONDERRY": "Doire",
+    "DERRY": "Doire",
     "TYRONE": "Tír Eoghain"
 }
 

@@ -82,24 +82,24 @@ grass_ts.columns = counties
 
 # %%
 grass_ts.plot(figsize=(12, 4), linewidth=1)
-plt.title("Grass growth in Northern Ireland. Data: GrassCheck NI.")
+plt.title("Grass growth in Northern Ireland [Data: GrassCheck NI]")
 plt.xlabel("Time")
-plt.ylabel("Grass growth (kg DM/ha/d)")
+plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
 plt.show()
 
 # %%
 for c in counties:
     grass_ts[c].plot(figsize=(12, 4), linewidth=1)
-    plt.title(f"Grass growth in Co. {c}. Data: GrassCheck NI.")
+    plt.title(f"Grass growth in Co. {c} [Data: GrassCheck NI]")
     plt.xlabel("Time")
-    plt.ylabel("Grass growth (kg DM/ha/d)")
+    plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
     plt.show()
 
 # %%
 years = list(grass_ts.index.year.unique())
 for y in years:
     grass_ts.loc[str(y)].plot(figsize=(12, 4), linewidth=1.25)
-    plt.title(f"Grass growth in Northern Ireland in {y}. Data: GrassCheck NI.")
+    plt.title(f"Grass growth in Northern Ireland in {y} [Data: GrassCheck NI]")
     plt.xlabel("Time")
-    plt.ylabel("Grass growth (kg DM/ha/d)")
+    plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
     plt.show()

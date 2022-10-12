@@ -109,8 +109,9 @@ for v in data.data_vars:
         data[v] = data[v] - 273.15
     elif v in ("rsds", "rsus"):
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
-        # from Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
-        data[v] = data[v] * 0.0864
+        # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
+        # (per second to per day; then convert to mega)
+        data[v] = data[v] * (60 * 60 * 24 / 1e6)
     else:
         var_attrs["units"] = "mm day⁻¹"  # convert kg m-2 s-1 to mm day-1
         data[v] = data[v] * 60 * 60 * 24  # (per second to per day)
@@ -131,11 +132,11 @@ data
 # ### Export data
 
 # %%
-# export to NetCDF
-FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# # export to NetCDF
+# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
 
 # %%
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # #### Time subset
@@ -157,17 +158,24 @@ for v in data_ie.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )  # colorbar label
+
     if v == "pr":
         cmap = "mako_r"
     elif v == "evspsblpot":
         cmap = "BrBG_r"
     else:
         cmap = "Spectral_r"
-    data_ie[v].plot(
+
+    fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
         cbar_kwargs=dict(aspect=35, label=cbar_label)
     )
-    # plt.suptitle(cplt.cordex_plot_title_main(data_ie))
+
+    for ax in fig.axes.flat:
+        ie.to_crs(4326).boundary.plot(
+            ax=ax, color="darkslategrey", linewidth=.5
+        )
+
     plt.show()
 
 # %%
@@ -296,8 +304,9 @@ for v in data.data_vars:
         data[v] = data[v] - 273.15
     elif v in ("rsds", "rsus"):
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
-        # from Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
-        data[v] = data[v] * 0.0864
+        # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
+        # (per second to per day; then convert to mega)
+        data[v] = data[v] * (60 * 60 * 24 / 1e6)
     else:
         var_attrs["units"] = "mm day⁻¹"  # convert kg m-2 s-1 to mm day-1
         data[v] = data[v] * 60 * 60 * 24  # (per second to per day)
@@ -318,11 +327,11 @@ data
 # ### Export data
 
 # %%
-# export to NetCDF
-FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# # export to NetCDF
+# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
 
 # %%
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # #### Time subset
@@ -344,17 +353,24 @@ for v in data_ie.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )  # colorbar label
+
     if v == "pr":
         cmap = "mako_r"
     elif v == "evspsblpot":
         cmap = "BrBG_r"
     else:
         cmap = "Spectral_r"
-    data_ie[v].plot(
+
+    fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
         cbar_kwargs=dict(aspect=35, label=cbar_label)
     )
-    # plt.suptitle(cplt.cordex_plot_title_main(data_ie))
+
+    for ax in fig.axes.flat:
+        ie.to_crs(4326).boundary.plot(
+            ax=ax, color="darkslategrey", linewidth=.5
+        )
+
     plt.show()
 
 # %%

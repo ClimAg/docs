@@ -19,9 +19,9 @@
 # <https://github.com/YannChemin/modvege>
 
 # %%
-import itertools
 import os
 from datetime import datetime, timezone
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import xarray as xr
 import climag.plot_configs as cplt
@@ -92,6 +92,11 @@ data = xr.open_dataset(
 # %%
 data
 
+# %%
+# Ireland boundary
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+
 # %% [markdown]
 # ### Time subset
 
@@ -112,10 +117,17 @@ for v in data_ie.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )  # colorbar label
-    data_ie[v].plot(
+
+    fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
         cbar_kwargs=dict(aspect=35, label=cbar_label)
     )
+
+    for ax in fig.axes.flat:
+        ie.to_crs(4326).boundary.plot(
+            ax=ax, color="darkslategrey", linewidth=.5
+        )
+
     plt.show()
 
 # %% [markdown]
@@ -138,11 +150,19 @@ data_ie
 
 # %%
 fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14))
-for v, ax in zip(data_ie.data_vars, itertools.product(range(6), range(3))):
-    axs[ax[0], ax[1]].plot(data_ie["time"], data_ie[v])
-    axs[ax[0], ax[1]].set_title(
+
+# cycle colours: https://stackoverflow.com/a/53523348
+colors = plt.rcParams["axes.prop_cycle"]()
+
+for v, ax in zip(data_ie.data_vars, axs.flat):
+    color = next(colors)["color"]
+    ax.plot(data_ie["time"], data_ie[v], color=color)
+    ax.set_title(
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )
+
 fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
+
 plt.tight_layout()
+
 plt.show()
