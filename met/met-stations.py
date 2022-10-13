@@ -84,9 +84,12 @@ stations_roi = stations_roi[
 ]
 
 # %%
+stations_roi
+
+# %%
 # replace null values
-stations_roi = stations_roi.replace(9999, None)
-stations_roi = stations_roi.replace(0, None)
+stations_roi = stations_roi.replace({"close year": {9999: None}})
+stations_roi = stations_roi.replace({"open year": {0: None}})
 
 # %%
 stations_roi.head()
@@ -169,6 +172,12 @@ stations_ni = stations_ni[
 ]
 
 # %%
+# rename Londonderry to Derry
+stations_ni = stations_ni.replace(
+    {"historic_county": {"londonderry": "derry"}}
+)
+
+# %%
 stations_ni.head()
 
 # %%
@@ -180,7 +189,7 @@ stations_ni.shape
 # %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="OS_IE_Ireland")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland")
 
 # %%
 base = ie.plot(color="navajowhite", figsize=(9, 9))

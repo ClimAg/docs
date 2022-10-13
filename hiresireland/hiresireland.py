@@ -237,7 +237,7 @@ data.rio.crs
 data.to_netcdf(os.path.join(
     DATA_DIR_BASE,
     "rcp85",
-    "_".join(list(data.data_vars)) + "_" + data.attrs["title"] + ".nc"
+    "_".join(sorted(list(data.data_vars))) + "_" + data.attrs["title"] + ".nc"
 ))
 
 # %% [markdown]
@@ -449,5 +449,5 @@ data.rio.crs
 data.to_netcdf(os.path.join(
     DATA_DIR_BASE,
     "historical",
-    "_".join(list(data.data_vars)) + "_" + data.attrs["title"] + ".nc"
+    "_".join(sorted(list(data.data_vars))) + "_" + data.attrs["title"] + ".nc"
 ))
