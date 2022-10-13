@@ -45,14 +45,17 @@ data = xr.open_mfdataset(
 data
 
 # %%
-data.rio.crs
+data_crs = data.rio.crs
+
+# %%
+data_crs
 
 # %% [markdown]
 # ### Ireland subset
 
 # %%
-# clip to Ireland's boundary with a 10 km buffer
-data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary
+data = data.rio.clip(ie.buffer(1).to_crs(data_crs))
 
 # %%
 data
@@ -218,13 +221,17 @@ for v in data_ie.data_vars:
 # %%
 # assign attributes for the data
 data.attrs["comment"] = (
-    "This data has been clipped with the Island of Ireland's boundary. "
+    "This dataset has been clipped with the Island of Ireland's boundary. "
     "Last updated: " + str(datetime.now(tz=timezone.utc)) +
     " by nstreethran@ucc.ie."
 )
 
 # %%
-data
+# reassign CRS
+data.rio.write_crs(data_crs, inplace=True)
+
+# %%
+data.rio.crs
 
 # %%
 data.to_netcdf(os.path.join(
@@ -250,14 +257,17 @@ data = xr.open_mfdataset(
 data
 
 # %%
-data.rio.crs
+data_crs = data.rio.crs
+
+# %%
+data_crs
 
 # %% [markdown]
 # ### Ireland subset
 
 # %%
-# clip to Ireland's boundary with a 10 km buffer
-data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary
+data = data.rio.clip(ie.buffer(1).to_crs(data.rio.crs))
 
 # %%
 data
@@ -423,13 +433,17 @@ for v in data_ie.data_vars:
 # %%
 # assign attributes for the data
 data.attrs["comment"] = (
-    "This data has been clipped with the Island of Ireland's boundary. "
+    "This dataset has been clipped with the Island of Ireland's boundary. "
     "Last updated: " + str(datetime.now(tz=timezone.utc)) +
     " by nstreethran@ucc.ie."
 )
 
 # %%
-data
+# reassign CRS
+data.rio.write_crs(data_crs, inplace=True)
+
+# %%
+data.rio.crs
 
 # %%
 data.to_netcdf(os.path.join(

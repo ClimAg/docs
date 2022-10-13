@@ -66,7 +66,8 @@ cordex_eur11_cat.df.head()
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="rcp85",
     variable_id=["pr", "tas", "evspsblpot", "rsds"],
-    institute_id="SMHI"
+    driving_model_id="MPI-M-MPI-ESM-LR",
+    rcm_version_id="v1a"
 )
 
 # %%
@@ -86,14 +87,17 @@ data = xr.open_mfdataset(
 data
 
 # %%
-data.rio.crs
+data_crs = data.rio.crs
+
+# %%
+data_crs
 
 # %% [markdown]
 # ### Ireland subset
 
 # %%
-# clip to Ireland's boundary with a 10 km buffer
-data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary
+data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
 
 # %%
 data
@@ -120,7 +124,7 @@ for v in data.data_vars:
 # %%
 # assign attributes for the data
 data.attrs["comment"] = (
-    "This data has been clipped with the Island of Ireland's boundary. "
+    "This dataset has been clipped with the Island of Ireland's boundary. "
     "Last updated: " + str(datetime.now(tz=timezone.utc)) +
     " by nstreethran@ucc.ie."
 )
@@ -132,11 +136,18 @@ data
 # ### Export data
 
 # %%
-# # export to NetCDF
-# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# reassign CRS
+data.rio.write_crs(data_crs, inplace=True)
 
 # %%
-# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+data.rio.crs
+
+# %%
+# export to NetCDF
+FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+
+# %%
+data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # ### Time subset
@@ -261,7 +272,8 @@ for v in data_ie.data_vars:
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="historical",
     variable_id=["pr", "tas", "evspsblpot", "rsds"],
-    institute_id="SMHI"
+    driving_model_id="MPI-M-MPI-ESM-LR",
+    rcm_version_id="v1a"
 )
 
 # %%
@@ -281,14 +293,17 @@ data = xr.open_mfdataset(
 data
 
 # %%
-data.rio.crs
+data_crs = data.rio.crs
+
+# %%
+data_crs
 
 # %% [markdown]
 # ### Ireland subset
 
 # %%
-# clip to Ireland's boundary with a 10 km buffer
-data = data.rio.clip(ie.buffer(10000).to_crs(data.rio.crs))
+# clip to Ireland's boundary
+data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
 
 # %%
 data
@@ -315,7 +330,7 @@ for v in data.data_vars:
 # %%
 # assign attributes for the data
 data.attrs["comment"] = (
-    "This data has been clipped with the Island of Ireland's boundary. "
+    "This dataset has been clipped with the Island of Ireland's boundary. "
     "Last updated: " + str(datetime.now(tz=timezone.utc)) +
     " by nstreethran@ucc.ie."
 )
@@ -327,11 +342,18 @@ data
 # ### Export data
 
 # %%
-# # export to NetCDF
-# FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+# reassign CRS
+data.rio.write_crs(data_crs, inplace=True)
 
 # %%
-# data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+data.rio.crs
+
+# %%
+# export to NetCDF
+FILE_NAME = cplt.ie_cordex_ncfile_name(data)
+
+# %%
+data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
 
 # %% [markdown]
 # ### Time subset

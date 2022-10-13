@@ -37,7 +37,7 @@ LAT = 51.84722
 # %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="OS_IE_Ireland_ITM")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
 
 # %%
 timerange = [
@@ -56,10 +56,7 @@ timerange = [
 ]
 
 # %%
-variables = [
-    "evspsblpot", "mrso", "pr", "rlds", "rlus", "rsds", "rsus", "sund",
-    "tas", "tasmax", "tasmin"
-]
+variables = ["evspsblpot", "mrso", "pr", "rsds", "tas"]
 
 # %% [markdown]
 # ## Create local catalogue
@@ -68,13 +65,13 @@ variables = [
 dkrz_cat = intake.open_catalog(["https://dkrz.de/s/intake"])
 
 # %%
-dkrz_cordex = dkrz_cat.dkrz_cordex_disk
-
-# %%
 server = dkrz_cat._entries["dkrz_cordex_disk"]._open_args["esmcol_obj"]
 
 # %%
 server
+
+# %%
+dkrz_cordex = intake.open_esm_datastore(server)
 
 # %%
 # download JSON catalogue from DKRZ's GitLab
@@ -92,8 +89,9 @@ query = dict(
     frequency="day",
     variable_id=variables,
     time_range=timerange,
-    institute_id=["SMHI"],
-    rcm_version_id=["v1a"]
+    institute_id="SMHI",
+    model_id="SMHI-RCA4",
+    member="r1i1p1"
 )
 
 # %%
@@ -106,6 +104,9 @@ cordex_eur11
 cordex_eur11.df.shape
 
 # %%
+list(cordex_eur11.df)
+
+# %%
 # replace URI to path to downloaded data
 cordex_eur11.df["uri"] = (
     DATA_DIR_BASE + os.sep +
@@ -114,6 +115,8 @@ cordex_eur11.df["uri"] = (
     cordex_eur11.df["variable_id"] + os.sep +
     cordex_eur11.df["uri"].str.split("/").str[-1]
 )
+
+cordex_eur11.df["path"] = cordex_eur11.df["uri"]
 
 # %%
 cordex_eur11.df
@@ -183,7 +186,7 @@ JSON_FILE_PATH = os.path.join(
 cordex_eur11_cat = intake.open_esm_datastore(JSON_FILE_PATH)
 
 # %%
-list(cordex_eur11_cat)[0:5]
+list(cordex_eur11_cat)
 
 # %%
 cordex_eur11_cat
@@ -201,7 +204,9 @@ cordex_eur11_cat.df.head()
 # filter data subset
 query = dict(
     experiment_id="rcp85",
-    variable_id="pr"
+    variable_id="pr",
+    driving_model_id="MPI-M-MPI-ESM-LR",
+    rcm_version_id="v1a"
 )
 
 # %%
@@ -215,8 +220,6 @@ cordex_eur11_pr.df
 
 # %%
 pr = cordex_eur11_pr.to_dataset_dict()
-#     cdf_kwargs=dict(chunks=True, decode_coords="all")
-# )
 
 # %%
 pr = pr.popitem()[1]
@@ -237,11 +240,11 @@ pr.rio.write_crs(data_ec.rio.crs, inplace=True)
 # ### Time subset
 
 # %%
-pr_50 = pr.isel(time=50)
+pr_50 = pr.sel(time="2055-06-21T12:00:00.000000000")
 
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_50)
-data_var = pr_50[pr_50.attrs["intake_esm_varname"][0]]  # extract variable name
+data_var = pr_50["pr"]  # variable name
 plot_data = data_var * 60 * 60 * 24  # convert to mm/day
 cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
 
@@ -287,13 +290,10 @@ pr_ca = pr.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 plt.figure(figsize=(12, 4))
 plt.plot(
     pr_ca["time"],
-    pr_ca[pr_ca.attrs["intake_esm_varname"][0]].values[0] * 60 * 60 * 24
+    pr_ca["pr"].values[0] * 60 * 60 * 24
 )
 plt.xlabel(pr_ca["time"].attrs["standard_name"])
-plt.ylabel(
-    pr_ca[pr_ca.attrs["intake_esm_varname"][0]].attrs["long_name"] +
-    " [mm/day]"
-)
+plt.ylabel(pr_ca["pr"].attrs["long_name"] + " [mm/day]")
 plt.title(cplt.cordex_plot_title(pr_ca, lon=LON, lat=LAT))
 plt.tight_layout()
 plt.show()
@@ -302,12 +302,12 @@ plt.show()
 # ### Ireland subset
 
 # %%
-# clip to Ireland's bounding box with a 10 km buffer
-pr_ie = pr_50.rio.clip(ie.envelope.buffer(10000).to_crs(pr_50.rio.crs))
+# clip to Ireland's boundary
+pr_ie = pr_50.rio.clip(ie.buffer(1).to_crs(pr_50.rio.crs))
 
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_ie)
-data_var = pr_ie[pr_ie.attrs["intake_esm_varname"][0]]  # extract variable name
+data_var = pr_ie["pr"]  # extract variable name
 plot_data = data_var * 60 * 60 * 24  # convert to mm/day
 cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
 
@@ -339,24 +339,3 @@ ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
 ax.set_title(cplt.cordex_plot_title(pr_ie))  # set plot title
 
 plt.show()
-
-# %% [markdown]
-# ### Save subset as an NC file
-
-# %%
-# clip to Ireland's bounding box with a 10 km buffer
-pr_ie = pr.rio.clip(ie.envelope.buffer(10000).to_crs(pr.rio.crs))
-
-# %%
-pr_ie
-
-# %%
-FILE_NAME = (
-    pr_ie.attrs["intake_esm_dataset_key"] + "." +
-    pr_ie.attrs["driving_model_ensemble_member"] + "." +
-    pr_ie.attrs["rcm_version_id"] + "." +
-    pr_ie.attrs["intake_esm_varname"][0] + ".nc"
-)
-
-# %%
-pr_ie.to_netcdf(os.path.join(DATA_DIR_BASE, FILE_NAME))
