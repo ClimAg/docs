@@ -66,8 +66,7 @@ cordex_eur11_cat.df.head()
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="rcp85",
     variable_id=["pr", "tas", "evspsblpot", "rsds"],
-    driving_model_id="MPI-M-MPI-ESM-LR",
-    rcm_version_id="v1a"
+    driving_model_id="MPI-M-MPI-ESM-LR"
 )
 
 # %%
@@ -272,8 +271,7 @@ for v in data_ie.data_vars:
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="historical",
     variable_id=["pr", "tas", "evspsblpot", "rsds"],
-    driving_model_id="MPI-M-MPI-ESM-LR",
-    rcm_version_id="v1a"
+    driving_model_id="MPI-M-MPI-ESM-LR"
 )
 
 # %%

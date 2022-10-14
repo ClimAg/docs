@@ -119,13 +119,28 @@ cordex_eur11.df["uri"] = (
 cordex_eur11.df["path"] = cordex_eur11.df["uri"]
 
 # %%
-cordex_eur11.df
+cordex_eur11.df.head()
 
 # %%
 CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_catalogue.csv")
 
 # %%
-cordex_eur11.df.to_csv(CSV_FILE_PATH, index=False)
+# drop v1 of MPI-M-MPI-ESM-LR outputs
+cordex_eur11_df = cordex_eur11.df.drop(
+    cordex_eur11.df[
+        (cordex_eur11.df["driving_model_id"] == "MPI-M-MPI-ESM-LR") &
+        (cordex_eur11.df["rcm_version_id"] == "v1")
+    ].index
+)
+
+# %%
+cordex_eur11_df.shape
+
+# %%
+cordex_eur11_df.head()
+
+# %%
+cordex_eur11_df.to_csv(CSV_FILE_PATH, index=False)
 
 # %%
 # modify the JSON catalogue
