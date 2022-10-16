@@ -9,7 +9,7 @@
 #
 # Holden, N. M. and Brereton, A. J. (2004). 'Definition of agroclimatic regions
 # in Ireland using hydro-thermal and crop yield data', Agricultural and Forest
-# Meteorology, vol. 122, no. 3, pp. 175–191. DOI:
+# Meteorology, vol. 122, no. 3, pp. 175-191. DOI:
 # [10.1016/j.agrformet.2003.09.010][DOI].
 #
 # [DOI]: https://doi.org/10.1016/j.agrformet.2003.09.010
@@ -46,14 +46,28 @@ data.crs
 data.shape
 
 # %%
-data.plot(
+ax = data.plot(
     column="Cluster",
     legend=True,
     figsize=(9, 9),
-    cmap="viridis",
+    cmap="Set3",
     legend_kwds=dict(loc="upper left")
 )
-plt.title("Agro-environmental regions in Ireland [Holden and Brereton (2004)]")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
+
+
+def longitude(x, pos):
+    """The two arguments are the value and tick position."""
+    return "{:,.0f}°W".format(x * -1)
+
+
+ax.xaxis.set_major_formatter(longitude)
+ax.yaxis.set_major_formatter("{x}°N")
+
+data.boundary.plot(ax=ax, color="darkslategrey", linewidth=.5)
+
+plt.title(
+    "Agro-environmental regions in Ireland [Holden and Brereton (2004)]"
+)
+# plt.xlabel("Longitude")
+# plt.ylabel("Latitude")
 plt.show()

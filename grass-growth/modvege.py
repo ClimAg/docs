@@ -117,6 +117,11 @@ data_ie = data.sel(
 data_ie
 
 # %%
+def longitude(x, pos):
+    """The two arguments are the value and tick position."""
+    return "{:,.0f}°W".format(x * -1)
+
+# %%
 for v in data_ie.data_vars:
     cbar_label = (
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
@@ -124,13 +129,23 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels("")
+    fig.set_ylabels("")
+
+    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
+        ax.xaxis.set_major_formatter(longitude)
+        ax.yaxis.set_major_formatter("{x:.0f}°N")
+        # ax.tick_params(axis="x", rotation=30)
 
     plt.show()
 
@@ -147,19 +162,21 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14))
+fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14), sharex=True)
 
 # cycle colours: https://stackoverflow.com/a/53523348
 colors = plt.rcParams["axes.prop_cycle"]()
 
 for v, ax in zip(data_ie.data_vars, axs.flat):
     color = next(colors)["color"]
-    ax.plot(data_ie["time"], data_ie[v], color=color)
+    ax.plot(data_ie["time"].dt.dayofyear, data_ie[v], color=color)
     ax.set_title(
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )
 
-fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
+fig.supxlabel("Day of the year")
+
+# fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
 
 plt.tight_layout()
 
@@ -222,13 +239,23 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels("")
+    fig.set_ylabels("")
+
+    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
+        ax.xaxis.set_major_formatter(longitude)
+        ax.yaxis.set_major_formatter("{x:.0f}°N")
+        # ax.tick_params(axis="x", rotation=30)
 
     plt.show()
 
@@ -243,19 +270,21 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14))
+fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14), sharex=True)
 
 # cycle colours: https://stackoverflow.com/a/53523348
 colors = plt.rcParams["axes.prop_cycle"]()
 
 for v, ax in zip(data_ie.data_vars, axs.flat):
     color = next(colors)["color"]
-    ax.plot(data_ie["time"], data_ie[v], color=color)
+    ax.plot(data_ie["time"].dt.dayofyear, data_ie[v], color=color)
     ax.set_title(
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )
 
-fig.suptitle(f"ModVege outputs, historical ({LON}, {LAT})")
+fig.supxlabel("Day of the year")
+
+# fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
 
 plt.tight_layout()
 
@@ -276,6 +305,7 @@ TS_FILE = os.path.join(
 
 OUT_DIR = os.path.join(DATA_DIR, "hiresireland", "rcp85")
 
+# %%
 # run the main function using the example data
 run_modvege(
     input_params_file=PARAMS_FILE,
@@ -319,13 +349,23 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels("")
+    fig.set_ylabels("")
+
+    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
+        ax.xaxis.set_major_formatter(longitude)
+        ax.yaxis.set_major_formatter("{x:.0f}°N")
+        # ax.tick_params(axis="x", rotation=30)
 
     plt.show()
 
@@ -340,19 +380,21 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14))
+fig, axs = plt.subplots(nrows=6, ncols=3, figsize=(15, 14), sharex=True)
 
 # cycle colours: https://stackoverflow.com/a/53523348
 colors = plt.rcParams["axes.prop_cycle"]()
 
 for v, ax in zip(data_ie.data_vars, axs.flat):
     color = next(colors)["color"]
-    ax.plot(data_ie["time"], data_ie[v], color=color)
+    ax.plot(data_ie["time"].dt.dayofyear, data_ie[v], color=color)
     ax.set_title(
         data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
     )
 
-fig.suptitle(f"ModVege outputs, rcp85, HiResIreland ({LON}, {LAT})")
+fig.supxlabel("Day of the year")
+
+# fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
 
 plt.tight_layout()
 

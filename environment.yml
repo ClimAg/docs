@@ -8,7 +8,7 @@ dependencies:
   - matplotlib
   - rioxarray
   - geopandas
-  - intake-esm>=2022.9.18
+  - intake-esm
   - cartopy
   - nc-time-axis
   - jupyterlab

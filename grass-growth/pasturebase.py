@@ -111,8 +111,8 @@ grass_ts.plot(
     figsize=(16, 6), linewidth=1, cmap=mcolors.ListedColormap(colors)
 )
 plt.title("Grass growth in Ireland [Data: PastureBase Ireland (Teagasc)]")
-plt.xlabel("Time")
-plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
+plt.xlabel("")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.legend(ncol=3)
 plt.show()
 
@@ -122,8 +122,8 @@ for c in list(grass_ts):
     plt.title(
         f"Grass growth in Co. {c} [Data: PastureBase Ireland (Teagasc)]"
     )
-    plt.xlabel("Time")
-    plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
+    plt.xlabel("")
+    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
     plt.show()
 
 # %%
@@ -139,7 +139,7 @@ for y in years:
             f"Grass growth in Ireland in {y} "
             "[Data: PastureBase Ireland (Teagasc)]"
         )
-        plt.xlabel("Time")
-        plt.ylabel("Grass growth (kg DM ha⁻¹ day⁻¹)")
+        plt.xlabel("")
+        plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
         plt.legend(ncol=6)
         plt.show()

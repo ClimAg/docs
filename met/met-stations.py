@@ -199,9 +199,18 @@ stations_roi.plot(
 )
 stations_ni.plot(ax=base, color="crimson", markersize=5, label="Met Office")
 
+
+def longitude(x, pos):
+    """The two arguments are the value and tick position."""
+    return "{:,.0f}°W".format(x * -1)
+
+
+base.xaxis.set_major_formatter(longitude)
+base.yaxis.set_major_formatter("{x}°N")
+
 plt.title("Meteorological stations in Ireland")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
+# plt.xlabel("Longitude")
+# plt.ylabel("Latitude")
 plt.text(
     -8, 51.275,
     "© Met Éireann\n© Met Office, NERC EDS CEDA\n" +

@@ -86,6 +86,11 @@ data = xr.open_mfdataset(
 data
 
 # %%
+# copy time_bnds coordinates
+data_time_bnds = data.coords["time_bnds"]
+
+# %%
+# copy CRS
 data_crs = data.rio.crs
 
 # %%
@@ -97,6 +102,10 @@ data_crs
 # %%
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
+
+# %%
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
 
 # %%
 data
@@ -178,13 +187,18 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        robust=True, cbar_kwargs=dict(aspect=40, label=cbar_label)
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
+        # ax.tick_params(axis="x", rotation=30)
 
     plt.show()
 
@@ -227,13 +241,15 @@ for v in data_ie.data_vars:
         x="rlon",
         y="rlat",
         levels=15,
-        cbar_kwargs=dict(label=cbar_label)
+        cbar_kwargs=dict(label=cbar_label),
+        robust=True
     )
 
     # add boundaries
     ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
 
-    ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
+    # ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
+    ax.set_title(None)
 
     plt.axis("equal")
     plt.tight_layout()
@@ -255,12 +271,18 @@ data_ie
 # %%
 for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v])
-    plt.xlabel(data_ie["time"].attrs["standard_name"])
-    plt.ylabel(
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )
-    plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
+    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    if v == "rsds":
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        )
+    else:
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
+        )
+    plt.ylabel(ylabel)
     plt.tight_layout()
     plt.show()
 
@@ -291,6 +313,11 @@ data = xr.open_mfdataset(
 data
 
 # %%
+# copy time_bnds coordinates
+data_time_bnds = data.coords["time_bnds"]
+
+# %%
+# copy CRS
 data_crs = data.rio.crs
 
 # %%
@@ -302,6 +329,10 @@ data_crs
 # %%
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
+
+# %%
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
 
 # %%
 data
@@ -383,13 +414,18 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        robust=True, cbar_kwargs=dict(aspect=40, label=cbar_label)
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
+        # ax.tick_params(axis="x", rotation=30)
 
     plt.show()
 
@@ -432,13 +468,15 @@ for v in data_ie.data_vars:
         x="rlon",
         y="rlat",
         levels=15,
-        cbar_kwargs=dict(label=cbar_label)
+        cbar_kwargs=dict(label=cbar_label),
+        robust=True
     )
 
     # add boundaries
     ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
 
-    ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
+    # ax.set_title(cplt.cordex_plot_title(data_ie))  # set plot title
+    ax.set_title(None)
 
     plt.axis("equal")
     plt.tight_layout()
@@ -458,13 +496,19 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-for v in data.data_vars:
+for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v])
-    plt.xlabel(data_ie["time"].attrs["standard_name"])
-    plt.ylabel(
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )
-    plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
+    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    if v == "rsds":
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        )
+    else:
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
+        )
+    plt.ylabel(ylabel)
     plt.tight_layout()
     plt.show()

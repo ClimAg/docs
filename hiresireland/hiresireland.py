@@ -45,6 +45,11 @@ data = xr.open_mfdataset(
 data
 
 # %%
+# copy time_bnds
+data_time_bnds = data.coords["time_bnds"]
+
+# %%
+# copy CRS
 data_crs = data.rio.crs
 
 # %%
@@ -56,6 +61,10 @@ data_crs
 # %%
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(1).to_crs(data_crs))
+
+# %%
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
 
 # %%
 data
@@ -124,13 +133,17 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        cbar_kwargs=dict(aspect=40, label=cbar_label), robust=True
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.hiresireland_date_format(data_ie.isel(time=i)))
 
     plt.show()
 
@@ -173,16 +186,18 @@ for v in data_ie.data_vars:
         x="rlon",
         y="rlat",
         levels=15,
-        cbar_kwargs=dict(label=cbar_label)
+        cbar_kwargs=dict(label=cbar_label),
+        robust=True
     )
 
     # add boundaries
     ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
 
-    ax.set_title(
-        f"HiResIreland, {data_ie.attrs['title']}, "
-        f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
-    )
+    # ax.set_title(
+    #     f"HiResIreland, {data_ie.attrs['title']}, "
+    #     f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
+    # )
+    ax.set_title(None)
 
     plt.axis("equal")
     plt.tight_layout()
@@ -203,15 +218,21 @@ data_ie
 # %%
 for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v])
-    plt.xlabel(data_ie["time"].attrs["standard_name"])
-    plt.ylabel(
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )
-    plt.title(
-        f"HiResIreland, {data_ie.attrs['title']}, "
-        f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
-    )
+    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
+    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    if v == "rsds":
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        )
+    else:
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
+        )
+    plt.ylabel(ylabel)
+    # plt.title(
+    #     f"HiResIreland, {data_ie.attrs['title']}, "
+    #     f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
+    # )
     plt.tight_layout()
     plt.show()
 
@@ -257,6 +278,11 @@ data = xr.open_mfdataset(
 data
 
 # %%
+# copy time_bnds
+data_time_bnds = data.coords["time_bnds"]
+
+# %%
+# copy CRS
 data_crs = data.rio.crs
 
 # %%
@@ -268,6 +294,10 @@ data_crs
 # %%
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(1).to_crs(data.rio.crs))
+
+# %%
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
 
 # %%
 data
@@ -336,13 +366,17 @@ for v in data_ie.data_vars:
 
     fig = data_ie[v].plot(
         x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label)
+        cbar_kwargs=dict(aspect=40, label=cbar_label), robust=True
     )
 
-    for ax in fig.axes.flat:
+    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
+    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
+
+    for i, ax in enumerate(fig.axes.flat):
         ie.to_crs(4326).boundary.plot(
             ax=ax, color="darkslategrey", linewidth=.5
         )
+        ax.set_title(cplt.hiresireland_date_format(data_ie.isel(time=i)))
 
     plt.show()
 
@@ -385,16 +419,18 @@ for v in data_ie.data_vars:
         x="rlon",
         y="rlat",
         levels=15,
-        cbar_kwargs=dict(label=cbar_label)
+        cbar_kwargs=dict(label=cbar_label),
+        robust=True
     )
 
     # add boundaries
     ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
 
-    ax.set_title(
-        f"HiResIreland, {data_ie.attrs['title']}, "
-        f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
-    )
+    # ax.set_title(
+    #     f"HiResIreland, {data_ie.attrs['title']}, "
+    #     f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
+    # )
+    ax.set_title(None)
 
     plt.axis("equal")
     plt.tight_layout()
@@ -415,15 +451,21 @@ data_ie
 # %%
 for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v])
-    plt.xlabel(data_ie["time"].attrs["standard_name"])
-    plt.ylabel(
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )
-    plt.title(
-        f"HiResIreland, {data_ie.attrs['title']}, "
-        f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
-    )
+    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
+    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    if v == "rsds":
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        )
+    else:
+        ylabel = (
+            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
+        )
+    plt.ylabel(ylabel)
+    # plt.title(
+    #     f"HiResIreland, {data_ie.attrs['title']}, "
+    #     f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
+    # )
     plt.tight_layout()
     plt.show()
 
