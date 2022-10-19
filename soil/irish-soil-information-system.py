@@ -5,14 +5,16 @@
 
 # %%
 import json
+import os
 from datetime import datetime, timezone
-from zipfile import BadZipFile, ZipFile
+from zipfile import ZipFile
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
+from matplotlib import ticker
 from climag.download_data import download_data
 
 # %%
@@ -185,14 +187,19 @@ colors2 = plt.cm.tab20c(np.linspace(0, 1, 20))
 colors = np.vstack((colors1, colors2))
 
 # %%
-soil_map.plot(
+base = soil_map.plot(
     column="Associat_S",
     figsize=(9, 9),
     cmap=mcolors.ListedColormap(colors)
 )
+base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+plt.xlabel("Easting (m)")
+plt.ylabel("Northing (m)")
+plt.text(
+    200000, 4000, "EPSG:29902\n"
+    "Data: Irish Soil Information System\n"
+    "(Teagasc, EPA, Cranfield)"
+)
+plt.title("Irish soil map")
 plt.show()
-
-# %%
-
-
-

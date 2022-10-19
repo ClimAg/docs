@@ -10,6 +10,8 @@ import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import ticker
+import climag.plot_configs as cplt
 from climag.download_data import download_data
 
 # %%
@@ -73,18 +75,11 @@ osi.crs
 base = osi.plot(color="navajowhite", figsize=(9, 9))
 osi.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("Counties of the Republic of Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -7.75, 51.275,
     "© Ordnance Survey Ireland"
@@ -148,21 +143,21 @@ osni.crs
 osni.replace("LONDONDERRY", "DERRY", inplace=True)
 
 # %%
-base = osni.plot(color="navajowhite", figsize=(9, 9))
-osni.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
+ax = osni.plot(color="navajowhite", figsize=(9, 9))
+osni.boundary.plot(ax=ax, color="darkslategrey", linewidth=.4)
 
+def longitude_tick(x, pos):
+    """
+    Return the longitude in degrees west.
+    The two arguments are the value and tick position.
+    https://matplotlib.org/stable/gallery/ticks/tick-formatters.html
+    """
+    return "{:,.1f}°W".format(x * -1)
 
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x:.1f}°N")
+ax.xaxis.set_major_formatter(longitude_tick)
+ax.yaxis.set_major_formatter("{x:.1f}°N")
 
 plt.title("Administrative Areas of Northern Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -6.35, 53.975,
     "© Ordnance Survey Northern Ireland"
@@ -247,6 +242,7 @@ base = ie_counties.plot(
 ie_counties.boundary.plot(color="white", ax=base, linewidth=.4)
 
 plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
 
 # ie_counties.centroid.plot(ax=base, color="darkslategrey", markersize=5)
 

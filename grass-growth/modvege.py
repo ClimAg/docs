@@ -78,12 +78,12 @@ TS_FILE = os.path.join(
 OUT_DIR = os.path.join(DATA_DIR, "eurocordex", "rcp85")
 
 # %%
-# run the main function using the example data
-run_modvege(
-    input_params_file=PARAMS_FILE,
-    input_timeseries_file=TS_FILE,
-    out_dir=OUT_DIR
-)
+# # run the main function using the example data
+# run_modvege(
+#     input_params_file=PARAMS_FILE,
+#     input_timeseries_file=TS_FILE,
+#     out_dir=OUT_DIR
+# )
 
 # %%
 OUT_FILE = os.path.join(
@@ -117,37 +117,7 @@ data_ie = data.sel(
 data_ie
 
 # %%
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-# %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-
-    fig = data_ie[v].plot(
-        x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
-    )
-
-    fig.set_xlabels("")
-    fig.set_ylabels("")
-
-    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
-    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
-
-    for i, ax in enumerate(fig.axes.flat):
-        ie.to_crs(4326).boundary.plot(
-            ax=ax, color="darkslategrey", linewidth=.5
-        )
-        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
-        ax.xaxis.set_major_formatter(longitude)
-        ax.yaxis.set_major_formatter("{x:.0f}°N")
-        # ax.tick_params(axis="x", rotation=30)
-
-    plt.show()
+cplt.plot_facet_map_variables(data_ie, ie)
 
 # %% [markdown]
 # #### Point subset
@@ -195,12 +165,13 @@ TS_FILE = os.path.join(
 
 OUT_DIR = os.path.join(DATA_DIR, "eurocordex", "historical")
 
-# run the main function using the example data
-run_modvege(
-    input_params_file=PARAMS_FILE,
-    input_timeseries_file=TS_FILE,
-    out_dir=OUT_DIR
-)
+# %%
+# # run the main function using the example data
+# run_modvege(
+#     input_params_file=PARAMS_FILE,
+#     input_timeseries_file=TS_FILE,
+#     out_dir=OUT_DIR
+# )
 
 # %%
 OUT_FILE = os.path.join(
@@ -232,32 +203,7 @@ data_ie = data.sel(
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-
-    fig = data_ie[v].plot(
-        x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
-    )
-
-    fig.set_xlabels("")
-    fig.set_ylabels("")
-
-    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
-    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
-
-    for i, ax in enumerate(fig.axes.flat):
-        ie.to_crs(4326).boundary.plot(
-            ax=ax, color="darkslategrey", linewidth=.5
-        )
-        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
-        ax.xaxis.set_major_formatter(longitude)
-        ax.yaxis.set_major_formatter("{x:.0f}°N")
-        # ax.tick_params(axis="x", rotation=30)
-
-    plt.show()
+cplt.plot_facet_map_variables(data_ie, ie)
 
 # %% [markdown]
 # #### Point subset
@@ -284,7 +230,7 @@ for v, ax in zip(data_ie.data_vars, axs.flat):
 
 fig.supxlabel("Day of the year")
 
-# fig.suptitle(f"ModVege outputs, rcp85 ({LON}, {LAT})")
+# fig.suptitle(f"ModVege outputs, historical ({LON}, {LAT})")
 
 plt.tight_layout()
 
@@ -306,12 +252,12 @@ TS_FILE = os.path.join(
 OUT_DIR = os.path.join(DATA_DIR, "hiresireland", "rcp85")
 
 # %%
-# run the main function using the example data
-run_modvege(
-    input_params_file=PARAMS_FILE,
-    input_timeseries_file=TS_FILE,
-    out_dir=OUT_DIR
-)
+# # run the main function using the example data
+# run_modvege(
+#     input_params_file=PARAMS_FILE,
+#     input_timeseries_file=TS_FILE,
+#     out_dir=OUT_DIR
+# )
 
 # %%
 OUT_FILE = os.path.join(
@@ -342,32 +288,7 @@ data_ie = data.sel(
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-
-    fig = data_ie[v].plot(
-        x="lon", y="lat", col="time", col_wrap=4, cmap="YlGn", levels=15,
-        cbar_kwargs=dict(aspect=35, label=cbar_label), robust=True
-    )
-
-    fig.set_xlabels("")
-    fig.set_ylabels("")
-
-    # fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
-    # fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
-
-    for i, ax in enumerate(fig.axes.flat):
-        ie.to_crs(4326).boundary.plot(
-            ax=ax, color="darkslategrey", linewidth=.5
-        )
-        ax.set_title(cplt.cordex_date_format(data_ie.isel(time=i)))
-        ax.xaxis.set_major_formatter(longitude)
-        ax.yaxis.set_major_formatter("{x:.0f}°N")
-        # ax.tick_params(axis="x", rotation=30)
-
-    plt.show()
+cplt.plot_facet_map_variables(data_ie, ie)
 
 # %% [markdown]
 # #### Point subset

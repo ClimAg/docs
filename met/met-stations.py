@@ -6,7 +6,9 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 import pandas as pd
+import climag.plot_configs as cplt
 from climag.download_data import download_data
 
 # %%
@@ -199,18 +201,11 @@ stations_roi.plot(
 )
 stations_ni.plot(ax=base, color="crimson", markersize=5, label="Met Office")
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("Meteorological stations in Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -8, 51.275,
     "© Met Éireann\n© Met Office, NERC EDS CEDA\n" +

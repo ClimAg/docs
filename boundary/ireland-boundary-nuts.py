@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from matplotlib import ticker
+import climag.plot_configs as cplt
 from climag.download_data import download_data
 
 # %%
@@ -122,18 +124,11 @@ nuts1
 base = nuts1.plot(color="navajowhite", figsize=(9, 9))
 nuts1.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("NUTS1 Regions of Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
@@ -172,18 +167,11 @@ nuts2.total_bounds.round(2)
 base = nuts2.plot(color="navajowhite", figsize=(9, 9))
 nuts2.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("NUTS2 Regions of Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
@@ -219,18 +207,11 @@ nuts3
 base = nuts3.plot(color="navajowhite", figsize=(9, 9))
 nuts3.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("NUTS3 Regions of Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
@@ -276,18 +257,11 @@ ie
 base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-base.xaxis.set_major_formatter(longitude)
-base.yaxis.set_major_formatter("{x}°N")
+base.xaxis.set_major_formatter(cplt.longitude_tick_format)
+base.yaxis.set_major_formatter(cplt.latitude_tick_format)
+base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 plt.title("Boundary of the Island of Ireland")
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
@@ -318,6 +292,7 @@ base = ie.plot(color="navajowhite", figsize=(9, 9))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
 
 plt.title("Boundary of Ireland")
 plt.xlabel("Easting (m)")

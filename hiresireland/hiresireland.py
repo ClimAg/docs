@@ -84,7 +84,7 @@ for v in data.data_vars:
         # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
         # (per second to per day; then convert to mega)
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
-        var_attrs["long_name"] = "Surface Net Downwelling Shortwave Radiation"
+        var_attrs["long_name"] = "Surface Downwelling Shortwave Radiation"
     elif v == "TOT_PREC":
         var_attrs["units"] = "mm day⁻¹"  # kg m-2 is the same as mm day-1
         var_attrs["long_name"] = "Precipitation"
@@ -119,33 +119,7 @@ data_ie = data.sel(
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-
-    if v == "pr":
-        cmap = "mako_r"
-    elif v == "evspsblpot":
-        cmap = "BrBG_r"
-    else:
-        cmap = "Spectral_r"
-
-    fig = data_ie[v].plot(
-        x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=40, label=cbar_label), robust=True
-    )
-
-    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
-    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
-
-    for i, ax in enumerate(fig.axes.flat):
-        ie.to_crs(4326).boundary.plot(
-            ax=ax, color="darkslategrey", linewidth=.5
-        )
-        ax.set_title(cplt.hiresireland_date_format(data_ie.isel(time=i)))
-
-    plt.show()
+cplt.plot_facet_map_variables(data_ie, ie)
 
 # %%
 data_ie = data.sel(time="2055-06-21T10:30:00.000000000")
@@ -154,54 +128,7 @@ data_ie = data.sel(time="2055-06-21T10:30:00.000000000")
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-    if v == "pr":
-        cmap = "GnBu"
-    elif v == "evspsblpot":
-        cmap = "BrBG_r"
-    else:
-        cmap = "Spectral_r"
-    plot_transform = cplt.rotated_pole_transform(data_ie)
-
-    plt.figure(figsize=(7.5, 7))
-    ax = plt.axes(projection=plot_transform)
-
-    # specify gridline spacing and labels
-    ax.gridlines(
-        draw_labels=True,
-        xlocs=range(-180, 180, 2),
-        ylocs=range(-90, 90, 1),
-        color="lightslategrey",
-        linewidth=.5
-    )
-
-    # plot data for the variable
-    data_ie[v].plot(
-        ax=ax,
-        cmap=cmap,
-        transform=plot_transform,
-        x="rlon",
-        y="rlat",
-        levels=15,
-        cbar_kwargs=dict(label=cbar_label),
-        robust=True
-    )
-
-    # add boundaries
-    ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-
-    # ax.set_title(
-    #     f"HiResIreland, {data_ie.attrs['title']}, "
-    #     f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
-    # )
-    ax.set_title(None)
-
-    plt.axis("equal")
-    plt.tight_layout()
-    plt.show()
+cplt.plot_map_variables(data_ie)
 
 # %% [markdown]
 # ### Point subset
@@ -220,6 +147,7 @@ for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
     plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
     # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
     if v == "rsds":
         ylabel = (
             f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
@@ -229,10 +157,6 @@ for v in data_ie.data_vars:
             f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
         )
     plt.ylabel(ylabel)
-    # plt.title(
-    #     f"HiResIreland, {data_ie.attrs['title']}, "
-    #     f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
-    # )
     plt.tight_layout()
     plt.show()
 
@@ -317,7 +241,7 @@ for v in data.data_vars:
         # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
         # (per second to per day; then convert to mega)
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
-        var_attrs["long_name"] = "Surface Net Downwelling Shortwave Radiation"
+        var_attrs["long_name"] = "Surface Downwelling Shortwave Radiation"
     elif v == "TOT_PREC":
         var_attrs["units"] = "mm day⁻¹"  # kg m-2 is the same as mm day-1
         var_attrs["long_name"] = "Precipitation"
@@ -352,33 +276,7 @@ data_ie = data.sel(
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-
-    if v == "pr":
-        cmap = "mako_r"
-    elif v == "evspsblpot":
-        cmap = "BrBG_r"
-    else:
-        cmap = "Spectral_r"
-
-    fig = data_ie[v].plot(
-        x="lon", y="lat", col="time", col_wrap=5, cmap=cmap, levels=15,
-        cbar_kwargs=dict(aspect=40, label=cbar_label), robust=True
-    )
-
-    fig.set_xlabels(data_ie["lon"].attrs["standard_name"].capitalize())
-    fig.set_ylabels(data_ie["lat"].attrs["standard_name"].capitalize())
-
-    for i, ax in enumerate(fig.axes.flat):
-        ie.to_crs(4326).boundary.plot(
-            ax=ax, color="darkslategrey", linewidth=.5
-        )
-        ax.set_title(cplt.hiresireland_date_format(data_ie.isel(time=i)))
-
-    plt.show()
+cplt.plot_facet_map_variables(data_ie, ie)
 
 # %%
 data_ie = data.sel(time="1990-06-21T10:30:00.000000000")
@@ -387,54 +285,7 @@ data_ie = data.sel(time="1990-06-21T10:30:00.000000000")
 data_ie
 
 # %%
-for v in data_ie.data_vars:
-    cbar_label = (
-        data_ie[v].attrs["long_name"] + " [" + data_ie[v].attrs["units"] + "]"
-    )  # colorbar label
-    if v == "pr":
-        cmap = "GnBu"
-    elif v == "evspsblpot":
-        cmap = "BrBG_r"
-    else:
-        cmap = "Spectral_r"
-    plot_transform = cplt.rotated_pole_transform(data_ie)
-
-    plt.figure(figsize=(7.5, 7))
-    ax = plt.axes(projection=plot_transform)
-
-    # specify gridline spacing and labels
-    ax.gridlines(
-        draw_labels=True,
-        xlocs=range(-180, 180, 2),
-        ylocs=range(-90, 90, 1),
-        color="lightslategrey",
-        linewidth=.5
-    )
-
-    # plot data for the variable
-    data_ie[v].plot(
-        ax=ax,
-        cmap=cmap,
-        transform=plot_transform,
-        x="rlon",
-        y="rlat",
-        levels=15,
-        cbar_kwargs=dict(label=cbar_label),
-        robust=True
-    )
-
-    # add boundaries
-    ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-
-    # ax.set_title(
-    #     f"HiResIreland, {data_ie.attrs['title']}, "
-    #     f"{data_ie.attrs['frequency']}, {str(data_ie['time'].values)[:10]}"
-    # )
-    ax.set_title(None)
-
-    plt.axis("equal")
-    plt.tight_layout()
-    plt.show()
+cplt.plot_map_variables(data_ie)
 
 # %% [markdown]
 # ### Point subset
@@ -453,6 +304,7 @@ for v in data_ie.data_vars:
     plt.figure(figsize=(12, 4))
     plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
     # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
+    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
     if v == "rsds":
         ylabel = (
             f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
@@ -462,10 +314,6 @@ for v in data_ie.data_vars:
             f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
         )
     plt.ylabel(ylabel)
-    # plt.title(
-    #     f"HiResIreland, {data_ie.attrs['title']}, "
-    #     f"{data_ie.attrs['frequency']}, ({LON}, {LAT})"
-    # )
     plt.tight_layout()
     plt.show()
 
