@@ -56,7 +56,19 @@ timerange = [
 ]
 
 # %%
+# add additional time ranges for the MOHC datasets
+timerange = timerange + [t.replace("1231", "1230") for t in timerange]
+
+# %%
 variables = ["evspsblpot", "mrso", "pr", "rsds", "tas"]
+
+# %%
+driving_model_id = [
+    "CNRM-CERFACS-CNRM-CM5",
+    "ICHEC-EC-EARTH",
+    "MPI-M-MPI-ESM-LR",
+    "MOHC-HadGEM2-ES"
+]
 
 # %% [markdown]
 # ## Create local catalogue
@@ -71,27 +83,26 @@ server = dkrz_cat._entries["dkrz_cordex_disk"]._open_args["esmcol_obj"]
 server
 
 # %%
-dkrz_cordex = intake.open_esm_datastore(server)
+dkrz_cordex = intake.open_esm_datastore(
+    server,
+    read_csv_kwargs={"dtype": {"time_min": "string", "time_max": "string"}}
+)
 
 # %%
 # download JSON catalogue from DKRZ's GitLab
 download_data(server=server, dl_dir=DATA_DIR_BASE)
 
 # %%
-JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
-
-# %%
-# filter for EUR-11, historical and rcp85 experiments only, at daily res
 # keep data for the relevant variables and time ranges
 query = dict(
     CORDEX_domain="EUR-11",
-    experiment_id=["historical", "rcp85"],
+    experiment_id=["historical", "rcp45", "rcp85"],
     frequency="day",
     variable_id=variables,
     time_range=timerange,
-    institute_id="SMHI",
     model_id="SMHI-RCA4",
-    member="r1i1p1"
+    driving_model_id=driving_model_id,
+    member=["r1i1p1", "r12i1p1"]
 )
 
 # %%
@@ -107,22 +118,7 @@ cordex_eur11.df.shape
 list(cordex_eur11.df)
 
 # %%
-# replace URI to path to downloaded data
-cordex_eur11.df["uri"] = (
-    DATA_DIR_BASE + os.sep +
-    cordex_eur11.df["institute_id"] + os.sep +
-    cordex_eur11.df["experiment_id"] + os.sep +
-    cordex_eur11.df["variable_id"] + os.sep +
-    cordex_eur11.df["uri"].str.split("/").str[-1]
-)
-
-cordex_eur11.df["path"] = cordex_eur11.df["uri"]
-
-# %%
 cordex_eur11.df.head()
-
-# %%
-CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_catalogue.csv")
 
 # %%
 # drop v1 of MPI-M-MPI-ESM-LR outputs
@@ -134,13 +130,40 @@ cordex_eur11_df = cordex_eur11.df.drop(
 )
 
 # %%
-cordex_eur11_df.shape
+# keep only r12i1p1 outputs of ICHEC-EC-EARTH
+cordex_eur11_df = cordex_eur11_df.drop(
+    cordex_eur11_df[
+        (cordex_eur11_df["driving_model_id"] == "ICHEC-EC-EARTH") &
+        (cordex_eur11_df["member"] == "r1i1p1")
+    ].index
+)
+
+# %%
+# replace URI to path to downloaded data
+cordex_eur11_df["uri"] = (
+    DATA_DIR_BASE + os.sep +
+    cordex_eur11_df["institute_id"] + os.sep +
+    cordex_eur11_df["experiment_id"] + os.sep +
+    cordex_eur11_df["variable_id"] + os.sep +
+    cordex_eur11_df["uri"].str.split("/").str[-1]
+)
+
+cordex_eur11_df["path"] = cordex_eur11_df["uri"]
 
 # %%
 cordex_eur11_df.head()
 
 # %%
+cordex_eur11_df.shape
+
+# %%
+CSV_FILE_PATH = os.path.join(DATA_DIR_BASE, "eurocordex_eur11_catalogue.csv")
+
+# %%
 cordex_eur11_df.to_csv(CSV_FILE_PATH, index=False)
+
+# %%
+JSON_FILE_PATH = os.path.join(DATA_DIR_BASE, "dkrz_cordex_disk.json")
 
 # %%
 # modify the JSON catalogue
@@ -164,8 +187,11 @@ cordex_eur11_cat["description"] = (
     "This is an ESM collection for EURO-CORDEX data used in the ClimAg "
     "project. Data has been generated using the DKRZ intake-esm stores. "
     "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, "
-    "the 'historical' (1976-2005) and 'rcp85' (2041-2070) experiments, and "
-    "the following variables: " + ", ".join(variables)
+    "the historical (1976-2005) and future (rcp45, rcp85) (2041-2070) "
+    "experiments, and the following variables: " + ", ".join(variables) +
+    ". The SMHI-RCA4 RCM and four GCMs (" + ", ".join(driving_model_id) +
+    ") are the models used to generate these data. Last updated: " +
+    str(datetime.now(tz=timezone.utc)) + "."
 )
 
 # %%
@@ -221,7 +247,6 @@ query = dict(
     experiment_id="rcp85",
     variable_id="pr",
     driving_model_id="MPI-M-MPI-ESM-LR",
-    rcm_version_id="v1a"
 )
 
 # %%
