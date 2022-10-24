@@ -71,7 +71,7 @@ run_modvege(
 # define the name of the input timeseries file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
-    "evspsblpot_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_"
+    "evspsblpot_mrso_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_"
     "SMHI-RCA4_v1a_day_20410101-20701231_IE.nc"
 )
 
@@ -159,7 +159,7 @@ plt.show()
 # define the name of the input timeseries file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
-    "evspsblpot_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_historical_r1i1p1_"
+    "evspsblpot_mrso_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_historical_r1i1p1_"
     "SMHI-RCA4_v1a_day_19760101-20051231_IE.nc"
 )
 

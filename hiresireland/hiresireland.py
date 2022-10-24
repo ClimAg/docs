@@ -148,15 +148,9 @@ for v in data_ie.data_vars:
     plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
     # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
     # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
-    if v == "rsds":
-        ylabel = (
-            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
-        )
-    else:
-        ylabel = (
-            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
-        )
-    plt.ylabel(ylabel)
+    plt.ylabel(
+        f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+    )
     plt.tight_layout()
     plt.show()
 
@@ -305,15 +299,9 @@ for v in data_ie.data_vars:
     plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
     # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
     # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
-    if v == "rsds":
-        ylabel = (
-            f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
-        )
-    else:
-        ylabel = (
-            f"{data_ie[v].attrs['long_name']} [{data_ie[v].attrs['units']}]"
-        )
-    plt.ylabel(ylabel)
+    plt.ylabel(
+        f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+    )
     plt.tight_layout()
     plt.show()
 
