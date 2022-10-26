@@ -11,7 +11,6 @@ from zipfile import ZipFile
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import requests
 from matplotlib import ticker
@@ -48,6 +47,11 @@ except requests.exceptions.RequestException as err:
     print("Data download unsuccessful!", err)
 
 # %%
+soil_associations = pd.read_csv(
+    os.path.join(DATA_DIR, "soil_associations.csv")
+)
+
+# %%
 soil_associations.head()
 
 # %% [markdown]
@@ -65,6 +69,9 @@ try:
     )
 except requests.exceptions.RequestException as err:
     print("Data download unsuccessful!", err)
+
+# %%
+soil_series = pd.read_csv(os.path.join(DATA_DIR, "soil_series.csv"))
 
 # %%
 soil_series.head()
@@ -252,6 +259,15 @@ soil_nitrogen.shape
 # %%
 soil_nitrogen.head()
 
+# %%
+# group by soil association and get the max percentage
+soil_nitrogen_assoc = (
+    soil_nitrogen.groupby("soil_association").max(numeric_only=True)
+)
+
+# %%
+soil_nitrogen_assoc.shape
+
 # %% [markdown]
 # ## Soil map
 
@@ -283,30 +299,42 @@ soil_map.crs
 soil_map.shape
 
 # %%
-soil_map["Associatio"].unique()
+# dissolve by association
+soil_map = gpd.GeoDataFrame(soil_map).dissolve(by="Associatio")
 
 # %%
-soil_map["Associat_1"].unique()
+soil_map.reset_index(inplace=True)
 
 # %%
-soil_map["Associat_S"].unique()
+soil_map.head()
 
 # %%
-# new colour map
-# https://stackoverflow.com/a/31052741
-# sample the colormaps that you want to use. Use 20 from each so we get 40
-# colors in total
-colors1 = plt.cm.tab20b(np.linspace(0., 1, 20))
-colors2 = plt.cm.tab20c(np.linspace(0, 1, 20))
+soil_map.shape
 
-# combine them and build a new colormap
-colors = np.vstack((colors1, colors2))
+# %%
+# merge with soil associations
+soil_map = pd.merge(
+    soil_map, soil_associations,
+    left_on="Associatio",
+    right_on="Association_Unit"
+)
+
+# %%
+soil_map.head()
+
+# %%
+# define colours
+# https://stackoverflow.com/a/26517762
+for index, row in soil_map.iterrows():
+    soil_map.loc[index, "hex"] = mcolors.to_hex(
+        [row["Red_Value"]/255, row["Green_Value"]/255, row["Blue_Value"]/255]
+    )
 
 # %%
 base = soil_map.plot(
     column="Associat_S",
     figsize=(9, 9),
-    cmap=mcolors.ListedColormap(colors)
+    cmap=mcolors.ListedColormap(list(soil_map["hex"]))
 )
 ie.to_crs(soil_map.crs).boundary.plot(ax=base, color="black", linewidth=1)
 base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
@@ -326,22 +354,18 @@ plt.show()
 
 # %%
 soil_map_merged = pd.merge(
-    soil_nitrogen, soil_map, left_on="soil_association", right_on="Associatio"
+    soil_nitrogen_assoc, soil_map,
+    left_on="soil_association", right_on="Associatio"
 )
 
 # %%
 soil_map_merged.head()
-
-# %%
-soil_map_merged = gpd.GeoDataFrame(soil_map_merged).dissolve(
-    by="soil_association"
-)
 
 # %%
 soil_map_merged.shape
 
 # %%
-soil_map_merged.head()
+soil_map_merged = gpd.GeoDataFrame(soil_map_merged)
 
 # %%
 base = soil_map_merged.plot(
@@ -365,5 +389,5 @@ plt.show()
 
 # %%
 soil_map_merged.to_file(
-    os.path.join(DATA_DIR, "soil.gpkg"), layer="soil_nitrogen"
+    os.path.join(DATA_DIR, "soil.gpkg"), layer="soil_nitrogen_assoc_max"
 )
