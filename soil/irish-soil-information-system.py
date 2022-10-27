@@ -342,9 +342,8 @@ plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 plt.xlabel("Easting (m)")
 plt.ylabel("Northing (m)")
 plt.text(
-    200000, 4000, "EPSG:29902\n"
-    "Data: Irish Soil Information System\n"
-    "(Teagasc, EPA, Cranfield)"
+    200000, 4000, str(soil_map.crs).upper() +
+    "\nData: Irish Soil Information System\n(Teagasc, EPA, Cranfield)"
 )
 plt.title("Irish soil map")
 plt.show()
@@ -380,9 +379,8 @@ plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 plt.xlabel("Easting (m)")
 plt.ylabel("Northing (m)")
 plt.text(
-    200000, 4000, "EPSG:29902\n"
-    "Data: Irish Soil Information System\n"
-    "(Teagasc, EPA, Cranfield)"
+    200000, 4000, str(soil_map_merged.crs).upper() +
+    "\nData: Irish Soil Information System\n(Teagasc, EPA, Cranfield)"
 )
 # plt.title("Irish soil map")
 plt.show()

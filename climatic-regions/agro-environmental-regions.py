@@ -20,6 +20,8 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from matplotlib import ticker
+import climag.plot_configs as cplt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -54,20 +56,14 @@ ax = data.plot(
     legend_kwds=dict(loc="upper left")
 )
 
-
-def longitude(x, pos):
-    """The two arguments are the value and tick position."""
-    return "{:,.0f}°W".format(x * -1)
-
-
-ax.xaxis.set_major_formatter(longitude)
-ax.yaxis.set_major_formatter("{x}°N")
+ax.xaxis.set_major_formatter(cplt.longitude_tick_format)
+ax.yaxis.set_major_formatter(cplt.latitude_tick_format)
+ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 data.boundary.plot(ax=ax, color="darkslategrey", linewidth=.5)
 
+plt.text(-7, 51.3, "Holden and Brereton (2004)")
 plt.title(
-    "Agro-environmental regions in Ireland [Holden and Brereton (2004)]"
+    "Agro-environmental regions in Ireland"
 )
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
 plt.show()

@@ -60,7 +60,7 @@ timerange = [
 timerange = timerange + [t.replace("1231", "1230") for t in timerange]
 
 # %%
-variables = ["evspsblpot", "mrso", "pr", "rsds", "tas"]
+variables = ["evspsblpot", "mrso", "pr", "rsds", "rsus", "tas"]
 
 # %%
 driving_model_id = [
@@ -307,7 +307,9 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs=dict(label=cbar_label)
+    cbar_kwargs=dict(label=cbar_label),
+    levels=15,
+    robust=True
 )
 
 # add boundaries
@@ -343,7 +345,7 @@ plt.show()
 
 # %%
 # clip to Ireland's boundary
-pr_ie = pr_50.rio.clip(ie.buffer(1).to_crs(pr_50.rio.crs))
+pr_ie = pr_50.rio.clip(ie.buffer(500).to_crs(pr_50.rio.crs))
 
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_ie)
@@ -351,17 +353,8 @@ data_var = pr_ie["pr"]  # extract variable name
 plot_data = data_var * 60 * 60 * 24  # convert to mm/day
 cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
 
-plt.figure(figsize=(20, 10))
-ax = plt.axes(projection=plot_transform)
-
-# specify gridline spacing and labels
-ax.gridlines(
-    draw_labels=True,
-    xlocs=range(-180, 180, 2),
-    ylocs=range(-90, 90, 1),
-    color="lightslategrey",
-    linewidth=.5
-)
+plt.figure(figsize=(7, 7))
+ax = plt.axes(projection=cplt.plot_projection)
 
 # plot data for the variable
 plot_data.plot(
@@ -370,11 +363,28 @@ plot_data.plot(
     transform=plot_transform,
     x="rlon",
     y="rlat",
-    cbar_kwargs=dict(label=cbar_label)
+    cbar_kwargs=dict(label=cbar_label),
+    levels=15,
+    robust=True
 )
 
 # add boundaries
 ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
+
+plt.axis("equal")
+plt.tight_layout()
+plt.xlim(-1.5, 1.33)
+plt.ylim(-2.05, 2.05)
+
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    xlocs=range(-180, 180, 2),
+    ylocs=range(-90, 90, 1),
+    color="lightslategrey",
+    linewidth=.5,
+    x_inline=False,
+    y_inline=False
+)
 
 ax.set_title(cplt.cordex_plot_title(pr_ie))  # set plot title
 

@@ -110,6 +110,20 @@ data.coords["time_bnds"] = data_time_bnds
 data
 
 # %% [markdown]
+# ### Calculate photosynthetically active radiation
+
+# %%
+# Papaioannou et al. (1993) - irradiance ratio
+data = data.assign(par=(data["rsds"] + data["rsus"]) * 0.473)
+
+# %%
+# drop original radiation data
+data = data.drop_vars(["rsds", "rsus"])
+
+# %%
+data
+
+# %% [markdown]
 # ### Convert units
 
 # %%
@@ -118,7 +132,8 @@ for v in data.data_vars:
     if v == "tas":
         var_attrs["units"] = "°C"  # convert K to deg C
         data[v] = data[v] - 273.15
-    elif v == "rsds":
+    elif v == "par":
+        var_attrs["long_name"] = "Surface Photosynthetically Active Radiation"
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
         # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
         # (per second to per day; then convert to mega)
@@ -214,7 +229,8 @@ for v in data_ie.data_vars:
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="rcp45",
-    driving_model_id="MPI-M-MPI-ESM-LR"
+    driving_model_id="MPI-M-MPI-ESM-LR",
+    variable_id=["evspsblpot", "mrso", "pr", "rsds", "tas"]
 )
 
 # %%
@@ -363,7 +379,8 @@ for v in data_ie.data_vars:
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
     experiment_id="historical",
-    driving_model_id="MPI-M-MPI-ESM-LR"
+    driving_model_id="MPI-M-MPI-ESM-LR",
+    variable_id=["evspsblpot", "mrso", "pr", "rsds", "tas"]
 )
 
 # %%

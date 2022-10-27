@@ -260,7 +260,8 @@ plt.xlabel("Easting (m)")
 plt.ylabel("Northing (m)")
 plt.text(
     612500, 502500,
-    "EPSG:2157\n© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
+    str(ie_counties.crs).upper() +
+    "\n© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland"
 )
 
 plt.show()

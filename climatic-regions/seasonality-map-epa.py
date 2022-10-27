@@ -25,7 +25,7 @@
 #   Implications for Terrestrial Ecosystems,
 #   Climate Change Research Programme (CCRP) 2007-2013,
 #   Johnstown Castle, Co. Wexford, Ireland,
-#   Environmental Protection Agency, pp. 35–39. [Online]. Available at
+#   Environmental Protection Agency, pp. 35-39. [Online]. Available at
 #   https://www.epa.ie/publications/research/climate-change/climate-change-impacts-on-phenology-implications-for-terrestrial-ecosystems.php
 #   (Accessed 19 August 2022).
 
@@ -38,6 +38,7 @@ import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import ticker
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -145,12 +146,19 @@ colors2 = plt.cm.tab20c(np.linspace(0, 1, 20))
 colors = np.vstack((colors1, colors2))
 
 # %%
-data.plot(
+base = data.plot(
     column="plot_class",
-    legend=True,
+    # legend=True,
     figsize=(9, 9),
     cmap=mcolors.ListedColormap(colors),
-    legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.18, 1.07))
+    # legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.18, 1.07))
+)
+plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+plt.text(
+    5.6e5, 5.68e6,
+    str(data.crs).upper() +
+    "\nScarrott et al. (2010), O'Connor et al. (2013)"
 )
 plt.title("MODIS-EVI-derived Irish landcover seasonality dataset for 2006")
 plt.show()
@@ -158,12 +166,19 @@ plt.show()
 # %%
 # see the excerpt of a draft paper by Scarrott et al. for more information
 # about these groupings
-data.plot(
+base = data.plot(
     column="Group",
     legend=True,
     figsize=(9, 9),
     cmap="viridis_r",
-    legend_kwds=dict(loc="lower right")
+    legend_kwds=dict(loc="upper left")
 )
-plt.title("Cluster groupings of the seasonality dataset")
+plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+plt.text(
+    5.6e5, 5.68e6,
+    str(data.crs).upper() +
+    "\nScarrott et al. (2010), O'Connor et al. (2013)"
+)
+plt.title("Cluster groupings of the MODIS-EVI-derived seasonality dataset")
 plt.show()

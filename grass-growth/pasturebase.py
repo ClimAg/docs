@@ -108,12 +108,13 @@ colors = np.vstack((colors1, colors2))
 
 # %%
 grass_ts.plot(
-    figsize=(16, 6), linewidth=1, cmap=mcolors.ListedColormap(colors)
+    figsize=(14, 5), linewidth=1, cmap=mcolors.ListedColormap(colors)
 )
+plt.ylim(0, 120)
 plt.title("Grass growth in Ireland [Data: PastureBase Ireland (Teagasc)]")
 plt.xlabel("")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
-plt.legend(ncol=3)
+plt.legend(ncol=2)
 plt.show()
 
 # %%

@@ -299,7 +299,8 @@ plt.xlabel("Easting (m)")
 plt.ylabel("Northing (m)")
 plt.text(
     550000, 505000,
-    "EPSG:2157\n© EuroGeographics for the administrative boundaries"
+    str(ie.crs).upper() +
+    "\n© EuroGeographics for the administrative boundaries"
 )
 
 plt.show()
