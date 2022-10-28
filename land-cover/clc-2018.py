@@ -95,7 +95,8 @@ with LocalCluster() as cluster, Client(cluster) as client:
         chunks=True,
         cache=False,
         lock=False,
-        # lock=Lock("rio-read", client=client)  # when too many file handles open
+        # lock=Lock("rio-read", client=client)  # when too many file handles
+        #                                       # open
     )
     landcover.rio.to_raster(
         os.path.join(DATA_DIR_BASE, "dask_multiworker.tif"),
@@ -258,9 +259,16 @@ landcover.plot(add_colorbar=False, cmap=colours)
 
 ie.boundary.plot(ax=img.axes, color="darkslategrey")
 
-plt.title("CLC 2018 - Ireland [EPSG:3035]")
+# plt.title("CLC 2018 - Ireland")
+plt.title(None)
+
+plt.xlabel("Easting (m)")
+plt.ylabel("Northing (m)")
 
 plt.axis("equal")
+plt.text(
+    3.25e6, 3.275e6, "Corine Land Cover 2018\nEPSG:3035"
+)
 plt.xlim(landcover.rio.bounds()[0] - 9e3, landcover.rio.bounds()[1] + 9e3)
 plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 

@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
+import numpy as np
 import xarray as xr
 import climag.plot_configs as cplt
 
@@ -194,6 +195,12 @@ data_ie = data.sel(time="2055-06-21T12:00:00.000000000")
 
 # %%
 data_ie
+
+# %%
+# find number of grid cells with data
+len(
+    data_ie["pr"].values.flatten()[np.isfinite(data_ie["pr"].values.flatten())]
+)
 
 # %%
 cplt.plot_map_variables(data_ie)
