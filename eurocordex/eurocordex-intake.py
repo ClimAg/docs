@@ -186,7 +186,7 @@ cordex_eur11_cat["id"] = "eurocordex_eur11"
 cordex_eur11_cat["description"] = (
     "This is an ESM collection for EURO-CORDEX data used in the ClimAg "
     "project. Data has been generated using the DKRZ intake-esm stores. "
-    "Data is filtered for the EUR-11 CORDEX domain at the daily timescale, "
+    "Data is filtered for the EUR-11 CORDEX domain at the daily frequency, "
     "the historical (1976-2005) and future (rcp45, rcp85) (2041-2070) "
     "experiments, and the following variables: " + ", ".join(variables) +
     ". The SMHI-RCA4 RCM and four GCMs (" + ", ".join(driving_model_id) +

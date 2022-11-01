@@ -14,9 +14,6 @@
 #
 # [Jouven1]: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 # [Jouven2]: https://doi.org/10.1111/j.1365-2494.2006.00517.x
-#
-# Running ModVege using the example data provided in
-# <https://github.com/YannChemin/modvege>
 
 # %%
 import os
@@ -47,10 +44,13 @@ LON = -8.48611
 LAT = 51.84722
 
 # %% [markdown]
-# ## Using example timeseries data
+# ## Using example time series data
+#
+# Running ModVege using the example data provided in
+# <https://github.com/YannChemin/modvege>
 
 # %%
-# define the name of the input timeseries file
+# define the name of the input time series file
 TS_FILE = os.path.join(DATA_DIR, "timeseries.csv")
 
 # %%
@@ -68,22 +68,22 @@ run_modvege(
 # ### rcp85
 
 # %%
-# define the name of the input timeseries file
+# define the name of the input time series file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
-    "evspsblpot_mrso_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_"
+    "evspsblpot_mrso_par_pr_tas_EUR-11_MPI-M-MPI-ESM-LR_rcp85_r1i1p1_"
     "SMHI-RCA4_v1a_day_20410101-20701231_IE.nc"
 )
 
 OUT_DIR = os.path.join(DATA_DIR, "eurocordex", "rcp85")
 
 # %%
-# # run the main function using the example data
-# run_modvege(
-#     input_params_file=PARAMS_FILE,
-#     input_timeseries_file=TS_FILE,
-#     out_dir=OUT_DIR
-# )
+# run the main function using the example data
+run_modvege(
+    input_params_file=PARAMS_FILE,
+    input_timeseries_file=TS_FILE,
+    out_dir=OUT_DIR
+)
 
 # %%
 OUT_FILE = os.path.join(
@@ -156,7 +156,7 @@ plt.show()
 # ### historical
 
 # %%
-# define the name of the input timeseries file
+# define the name of the input time series file
 TS_FILE = os.path.join(
     "data", "eurocordex", "IE",
     "evspsblpot_mrso_pr_rsds_tas_EUR-11_MPI-M-MPI-ESM-LR_historical_r1i1p1_"
@@ -243,7 +243,7 @@ plt.show()
 # ### rcp85
 
 # %%
-# define the name of the input timeseries file
+# define the name of the input time series file
 TS_FILE = os.path.join(
     "data", "HiResIreland", "rcp85",
     "evspsblpot_pr_rsds_tas_COSMO5_MPI-ESM-LR_rcp85_4km.nc"
