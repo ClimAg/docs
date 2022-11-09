@@ -18,3 +18,4 @@ dependencies:
   - odfpy
   - black
   - seaborn
+  - cfgrib
