@@ -39,9 +39,17 @@ dependencies:
   - cartopy
   - nc-time-axis
   - jupyterlab
+  - flake8
+  - pylint
   - aiohttp
   - odfpy
+  - black
   - seaborn
+  - cfgrib
+  - pygrib
+  - metpy
+  - python-cdo
+  - regionmask
 ```
 
 ## Notebooks
@@ -56,6 +64,7 @@ CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/irish-soil-information-system.ipynb)
 ***Meteorological data***
 Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/met-stations.ipynb)
+Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/mera-data.ipynb)
 ***HiResIreland***
 HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/hiresireland.ipynb)
 ***EURO-CORDEX***

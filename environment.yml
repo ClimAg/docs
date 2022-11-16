@@ -19,3 +19,7 @@ dependencies:
   - black
   - seaborn
   - cfgrib
+  - pygrib
+  - metpy
+  - python-cdo
+  - regionmask
