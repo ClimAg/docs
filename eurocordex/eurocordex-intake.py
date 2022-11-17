@@ -24,7 +24,10 @@ from climag.download_data import download_data
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DIR_BASE = os.path.join("data", "eurocordex")
+DATA_DRIVE = "/run/media/nms/Elements"
+
+# %%
+DATA_DIR_BASE = os.path.join(DATA_DRIVE, "EURO-CORDEX")
 
 # %%
 os.makedirs(DATA_DIR_BASE, exist_ok=True)
@@ -56,7 +59,7 @@ timerange = [
 ]
 
 # %%
-# add additional time ranges for the MOHC datasets
+# add additional time ranges for the MOHC datasets, which use a 360-day year
 timerange = timerange + [t.replace("1231", "1230") for t in timerange]
 
 # %%
@@ -139,12 +142,23 @@ cordex_eur11_df = cordex_eur11_df.drop(
 )
 
 # %%
+# extract driving model name, without the institution
+cordex_eur11_df["driving_model"] = cordex_eur11_df["driving_model_id"].replace(
+    to_replace={
+        "CNRM-CERFACS-CNRM-CM5": "CNRM-CM5",
+        "ICHEC-EC-EARTH": "EC-EARTH",
+        "MOHC-HadGEM2-ES": "HadGEM2-ES",
+        "MPI-M-MPI-ESM-LR": "MPI-ESM-LR"
+    }
+)
+
+# %%
 # replace URI to path to downloaded data
 cordex_eur11_df["uri"] = (
     DATA_DIR_BASE + os.sep +
-    cordex_eur11_df["institute_id"] + os.sep +
+    "RCA4" + os.sep +
     cordex_eur11_df["experiment_id"] + os.sep +
-    cordex_eur11_df["variable_id"] + os.sep +
+    cordex_eur11_df["driving_model"] + os.sep +
     cordex_eur11_df["uri"].str.split("/").str[-1]
 )
 

@@ -23,3 +23,5 @@ dependencies:
   - metpy
   - python-cdo
   - regionmask
+  - tqdm
+  - pooch
