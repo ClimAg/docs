@@ -6,13 +6,16 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from matplotlib import ticker
 import pandas as pd
+import pooch
+from matplotlib import ticker
 import climag.plot_configs as cplt
-from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
+
+# %%
+DATA_DRIVE = "/run/media/nms/Elements"
 
 # %% [markdown]
 # ## Met Éireann stations
@@ -25,11 +28,18 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 URL = "https://cli.fusio.net/cli/climate_data/webdata/StationDetails.csv"
-SUB_DIR = os.path.join("data", "met", "meteireann", "raw")
+SUB_DIR = os.path.join(DATA_DRIVE, "MetEireann")
+KNOWN_HASH = "bfe2e85aaf7a2ab9451f0acd0ab21c8acf0053b53200fe877889611f3c3cea9a"
+os.makedirs(SUB_DIR, exist_ok=True)
 
 # %%
-# download data if necessary
-download_data(server=URL, dl_dir=SUB_DIR)
+pooch.retrieve(
+    url=URL,
+    known_hash=KNOWN_HASH,
+    fname="StationDetails.csv",
+    path=SUB_DIR,
+    progressbar=True
+)
 
 # %%
 os.listdir(SUB_DIR)

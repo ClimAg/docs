@@ -10,24 +10,28 @@ from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import pooch
 from matplotlib import ticker
 import climag.plot_configs as cplt
-from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
+DATA_DRIVE = "/run/media/nms/Elements"
+
+# %%
 # base data download directory
-DATA_DIR = os.path.join("data", "boundary")
+DATA_DIR = os.path.join(DATA_DRIVE, "NUTS-2021")
+DATA_DIR_TEMP = os.path.join(DATA_DIR, "temp")
+DATA_DIR_PROCESSED = os.path.join(DATA_DIR, "processed")
+
+os.makedirs(DATA_DIR_TEMP, exist_ok=True)
+os.makedirs(DATA_DIR_PROCESSED, exist_ok=True)
 
 # %%
 # file name for the GeoPackage where the boundary vector layers will be saved
-GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
-
-# %%
-# sub directory for the downloaded data
-SUB_DIR = os.path.join(DATA_DIR, "nuts-2021", "raw")
+GPKG_BOUNDARY = os.path.join(DATA_DIR_PROCESSED, "NUTS-2021-IE.gpkg")
 
 # %%
 # download data if necessary
@@ -35,14 +39,18 @@ URL = (
     "https://gisco-services.ec.europa.eu/distribution/v2/nuts/download/"
     "ref-nuts-2021-01m.shp.zip"
 )
+KNOWN_HASH = "4d51d3778405a528573707d8318bf1cbfd1b0386a2fa69873524c2e6420f740b"
 
-download_data(server=URL, dl_dir=SUB_DIR)
+pooch.retrieve(
+    url=URL,
+    known_hash=KNOWN_HASH,
+    fname="ref-nuts-2021-01m.shp.zip",
+    path=DATA_DIR,
+    progressbar=True
+)
 
 # %%
-os.listdir(SUB_DIR)
-
-# %%
-DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-01m.shp.zip")
+DATA_FILE = os.path.join(DATA_DIR, "ref-nuts-2021-01m.shp.zip")
 
 # %%
 ZipFile(DATA_FILE).namelist()
@@ -51,7 +59,7 @@ ZipFile(DATA_FILE).namelist()
 # extract the archive
 try:
     z = ZipFile(DATA_FILE)
-    z.extractall(SUB_DIR)
+    z.extractall(DATA_DIR_TEMP)
 except BadZipFile:
     print("There were issues with the file", DATA_FILE)
 
@@ -59,7 +67,7 @@ except BadZipFile:
 # ## NUTS0
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_0.shp.zip")
+DATA_FILE = os.path.join(DATA_DIR_TEMP, "NUTS_RG_01M_2021_4326_LEVL_0.shp.zip")
 
 # %%
 ZipFile(DATA_FILE).namelist()
@@ -98,7 +106,7 @@ plt.show()
 # ## NUTS1
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_1.shp.zip")
+DATA_FILE = os.path.join(DATA_DIR_TEMP, "NUTS_RG_01M_2021_4326_LEVL_1.shp.zip")
 
 # %%
 nuts1 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_1.shp")
@@ -140,13 +148,13 @@ plt.show()
 nuts1 = nuts1.drop(columns="FID")
 
 # %%
-nuts1.to_file(GPKG_BOUNDARY, layer="NUTS1")
+nuts1.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_LEVL_1_IE")
 
 # %% [markdown]
 # ## NUTS2
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_2.shp.zip")
+DATA_FILE = os.path.join(DATA_DIR_TEMP, "NUTS_RG_01M_2021_4326_LEVL_2.shp.zip")
 
 # %%
 nuts2 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_2.shp")
@@ -183,13 +191,13 @@ plt.show()
 nuts2 = nuts2.drop(columns="FID")
 
 # %%
-nuts2.to_file(GPKG_BOUNDARY, layer="NUTS2")
+nuts2.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_LEVL_2_IE")
 
 # %% [markdown]
 # ## NUTS3
 
 # %%
-DATA_FILE = os.path.join(SUB_DIR, "NUTS_RG_01M_2021_4326_LEVL_3.shp.zip")
+DATA_FILE = os.path.join(DATA_DIR_TEMP, "NUTS_RG_01M_2021_4326_LEVL_3.shp.zip")
 
 # %%
 nuts3 = gpd.read_file(f"zip://{DATA_FILE}!NUTS_RG_01M_2021_4326_LEVL_3.shp")
@@ -223,7 +231,7 @@ plt.show()
 nuts3 = nuts3.drop(columns="FID")
 
 # %%
-nuts3.to_file(GPKG_BOUNDARY, layer="NUTS3")
+nuts3.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_LEVL_3_IE")
 
 # %% [markdown]
 # ## Island of Ireland boundary
@@ -245,7 +253,8 @@ ie = ie.assign(NAME="Ireland")
 
 # %%
 description = (
-    "Boundary for the Island of Ireland generated using NUTS1 boundaries"
+    "Boundary for the Island of Ireland generated using NUTS Level 1 "
+    "boundaries"
 )
 
 ie = ie.assign(DESCRIPTION=description)
@@ -270,7 +279,7 @@ plt.text(
 plt.show()
 
 # %%
-ie.to_file(GPKG_BOUNDARY, layer="NUTS_Ireland")
+ie.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_Ireland")
 
 # %% [markdown]
 # ## Island of Ireland in Irish transverse mercator
@@ -306,4 +315,4 @@ plt.text(
 plt.show()
 
 # %%
-ie.to_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+ie.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_Ireland")
