@@ -61,12 +61,14 @@ import matplotlib.units as munits
 import numpy as np
 import pooch
 import xarray as xr
+import glob
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DRIVE = "/run/media/nms/Elements"
+# DATA_DRIVE = "/run/media/nms/Elements"
+DATA_DRIVE = "data"
 
 # %%
 # Cork Airport met station coords
@@ -91,8 +93,7 @@ pooch.retrieve(
     url=URL,
     known_hash=KNOWN_HASH,
     fname="MERA_PRODYEAR_2015_06_11_105_2_0_FC3hr.grb",
-    path=DATA_DIR,
-    progressbar=True
+    path=DATA_DIR
 )
 
 # %%
@@ -297,6 +298,159 @@ data_sub
 fig = data_sub["var11"].plot(
     x="x", y="y", col="time", col_wrap=5, cmap="Spectral_r",
     robust=True, cbar_kwargs=dict(aspect=40, label="Temperature [K]"),
+    levels=15, transform=lambert_conformal,
+    subplot_kws=dict(projection=lambert_conformal)
+)
+
+for ax in fig.axes.flat:
+    ie.to_crs(lambert_conformal).boundary.plot(
+        ax=ax, color="darkslategrey", linewidth=.5
+    )
+
+plt.show()
+
+# %% [markdown]
+# ## 1981 ANALYSIS data - 2 m temperature
+
+# %%
+data = xr.open_mfdataset(
+    glob.glob(
+        os.path.join(DATA_DRIVE, "MERA", "11", "*", "*", "*", "*ANALYSIS")
+    ),
+    chunks="auto",
+    decode_coords="all",
+    engine="cfgrib"
+)
+
+# %%
+data
+
+# %%
+# convert 0/360 deg to -180/180 deg lon
+long_attrs = data.longitude.attrs
+data = data.assign_coords(longitude=(((data.longitude + 180) % 360) - 180))
+# reassign attributes
+data.longitude.attrs = long_attrs
+
+# %%
+plt.figure(figsize=(9, 7))
+data["t"][0].plot(
+    robust=True, levels=15, cmap="Spectral_r", x="longitude", y="latitude"
+)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Convert to NetCDF
+
+# %%
+for f in glob.glob(
+    os.path.join(DATA_DRIVE, "MERA", "11", "*", "*", "*", "*ANALYSIS")
+):
+    os.system(f"cdo -f nc copy {f} {f}.nc")
+
+# %% [markdown]
+# ### Read data
+
+# %%
+data = xr.open_mfdataset(
+    glob.glob(
+        os.path.join(DATA_DRIVE, "MERA", "11", "*", "*", "*", "*ANALYSIS.nc")
+    ),
+    chunks="auto",
+    decode_coords="all"
+)
+
+# %%
+data
+
+# %%
+data.rio.crs
+
+# %%
+plt.figure(figsize=(9, 7))
+ax = plt.axes(projection=lambert_conformal)
+data["var11"][0][0].plot(
+    ax=ax, robust=True, levels=15, cmap="Spectral_r",
+    x="x", y="y", transform=lambert_conformal,
+    cbar_kwargs=dict(label="Temperature [K]")
+)
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    color="lightslategrey",
+    linewidth=.5,
+    x_inline=False,
+    y_inline=False
+)
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Clip to boundary of Ireland
+
+# %%
+data_ie = data.rio.clip(ie.buffer(2500).to_crs(data_crs))
+
+# %%
+data_ie
+
+# %%
+plt.figure(figsize=(9, 7))
+ax = plt.axes(projection=lambert_conformal)
+data_ie["var11"][0][0].plot(
+    ax=ax, robust=True, levels=15, cmap="Spectral_r",
+    x="x", y="y", transform=lambert_conformal,
+    cbar_kwargs=dict(label="Temperature [K]")
+)
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    color="lightslategrey",
+    linewidth=.5,
+    x_inline=False,
+    y_inline=False
+)
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Time series for a point (Cork Airport met station)
+
+# %%
+# extract data for the nearest grid cell to the point
+data_ts = data.sel(dict(x=XLON, y=YLAT), method="nearest")
+
+# %%
+data_ts
+
+# %%
+plt.figure(figsize=(12, 4))
+plt.plot(data_ts["time"], data_ts["var11"])
+plt.ylabel("Temperature [K]")
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Facet plots
+
+# %%
+# subset data at T=12:00, d=15
+time_list = []
+for time in data_ie["time"].values:
+    if "15T12:00" in str(time):
+        time_list.append(time)
+
+# %%
+data_sub = data_ie.sel(time=time_list)
+
+# %%
+data_sub
+
+# %%
+fig = data_sub["var11"].plot(
+    x="x", y="y", col="time", col_wrap=4, cmap="Spectral_r",
+    robust=True, cbar_kwargs=dict(label="Temperature [K]"),
     levels=15, transform=lambert_conformal,
     subplot_kws=dict(projection=lambert_conformal)
 )
