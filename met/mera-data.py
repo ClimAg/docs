@@ -125,14 +125,18 @@ data.longitude.attrs = long_attrs
 
 # %%
 plt.figure(figsize=(9, 7))
-data["t"][0][0].plot(robust=True, levels=15, cmap="Spectral_r")
+(data["t"][0][0] - 273.15).plot(
+    robust=True, levels=15, cmap="Spectral_r",
+    cbar_kwargs=dict(label="Temperature [°C]")
+)
 plt.tight_layout()
 plt.show()
 
 # %%
 plt.figure(figsize=(9, 7))
-data["t"][0][0].plot(
-    robust=True, levels=15, cmap="Spectral_r", x="longitude", y="latitude"
+(data["t"][0][0] - 273.15).plot(
+    robust=True, levels=15, cmap="Spectral_r", x="longitude", y="latitude",
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 plt.tight_layout()
 plt.show()
@@ -166,9 +170,9 @@ data_crs = data.rio.crs
 
 # %%
 plt.figure(figsize=(9, 7))
-data["var11"][0][0].plot(
+(data["var11"][0][0] - 273.15).plot(
     robust=True, levels=15, cmap="Spectral_r",
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 plt.tight_layout()
 plt.show()
@@ -194,10 +198,10 @@ lambert_conformal
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
-data["var11"][0][0].plot(
+(data["var11"][0][0] - 273.15).plot(
     ax=ax, robust=True, levels=15, cmap="Spectral_r",
     x="x", y="y", transform=lambert_conformal,
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 ax.gridlines(
     draw_labels=dict(bottom="x", left="y"),
@@ -221,9 +225,9 @@ data_ie
 
 # %%
 plt.figure(figsize=(9, 7))
-data_ie["var11"][0][0].plot(
+(data_ie["var11"][0][0] - 273.15).plot(
     robust=True, levels=15, cmap="Spectral_r",
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 plt.tight_layout()
 plt.show()
@@ -231,10 +235,10 @@ plt.show()
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
-data_ie["var11"][0][0].plot(
+(data_ie["var11"][0][0] - 273.15).plot(
     ax=ax, robust=True, levels=15, cmap="Spectral_r",
     x="x", y="y", transform=lambert_conformal,
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 ax.gridlines(
     draw_labels=dict(bottom="x", left="y"),
@@ -273,8 +277,8 @@ munits.registry[date] = converter
 munits.registry[datetime] = converter
 
 plt.figure(figsize=(12, 4))
-plt.plot(data_ts["time"], data_ts["var11"])
-plt.ylabel("Temperature [K]")
+plt.plot(data_ts["time"], (data_ts["var11"] - 273.15))
+plt.ylabel("Temperature [°C]")
 plt.tight_layout()
 plt.show()
 
@@ -295,9 +299,9 @@ data_sub = data_ie.sel(time=time_list)
 data_sub
 
 # %%
-fig = data_sub["var11"].plot(
+fig = (data_sub["var11"] - 273.15).plot(
     x="x", y="y", col="time", col_wrap=5, cmap="Spectral_r",
-    robust=True, cbar_kwargs=dict(aspect=40, label="Temperature [K]"),
+    robust=True, cbar_kwargs=dict(aspect=40, label="Temperature [°C]"),
     levels=15, transform=lambert_conformal,
     subplot_kws=dict(projection=lambert_conformal)
 )
@@ -334,8 +338,9 @@ data.longitude.attrs = long_attrs
 
 # %%
 plt.figure(figsize=(9, 7))
-data["t"][0].plot(
-    robust=True, levels=15, cmap="Spectral_r", x="longitude", y="latitude"
+(data["t"][1400] - 273.15).plot(
+    robust=True, levels=15, cmap="Spectral_r", x="longitude", y="latitude",
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 plt.tight_layout()
 plt.show()
@@ -370,10 +375,10 @@ data.rio.crs
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
-data["var11"][0][0].plot(
+(data["var11"][1400][0] - 273.15).plot(
     ax=ax, robust=True, levels=15, cmap="Spectral_r",
     x="x", y="y", transform=lambert_conformal,
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 ax.gridlines(
     draw_labels=dict(bottom="x", left="y"),
@@ -398,10 +403,10 @@ data_ie
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
-data_ie["var11"][0][0].plot(
+(data_ie["var11"][1400][0] - 273.15).plot(
     ax=ax, robust=True, levels=15, cmap="Spectral_r",
     x="x", y="y", transform=lambert_conformal,
-    cbar_kwargs=dict(label="Temperature [K]")
+    cbar_kwargs=dict(label="Temperature [°C]")
 )
 ax.gridlines(
     draw_labels=dict(bottom="x", left="y"),
@@ -426,8 +431,8 @@ data_ts
 
 # %%
 plt.figure(figsize=(12, 4))
-plt.plot(data_ts["time"], data_ts["var11"])
-plt.ylabel("Temperature [K]")
+plt.plot(data_ts["time"], (data_ts["var11"] - 273.15))
+plt.ylabel("Temperature [°C]")
 plt.tight_layout()
 plt.show()
 
@@ -448,9 +453,9 @@ data_sub = data_ie.sel(time=time_list)
 data_sub
 
 # %%
-fig = data_sub["var11"].plot(
+fig = (data_sub["var11"] - 273.15).plot(
     x="x", y="y", col="time", col_wrap=4, cmap="Spectral_r",
-    robust=True, cbar_kwargs=dict(label="Temperature [K]"),
+    robust=True, cbar_kwargs=dict(label="Temperature [°C]"),
     levels=15, transform=lambert_conformal,
     subplot_kws=dict(projection=lambert_conformal)
 )

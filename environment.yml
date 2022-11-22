@@ -1,4 +1,4 @@
-name: ClimAg
+name: ClimAgTest
 channels:
   - conda-forge
   - defaults
@@ -21,6 +21,7 @@ dependencies:
   - cfgrib
   - pygrib
   - metpy
+  - cdo
   - python-cdo
   - regionmask
   - tqdm
