@@ -31,7 +31,9 @@ if not os.path.isfile(os.path.join(SUB_DIR, FILE_NAME)):
         path=SUB_DIR
     )
 
-    with open(os.path.join(SUB_DIR, f"{FILE_NAME[:-4]}.txt"), "w") as outfile:
+    with open(
+        os.path.join(SUB_DIR, f"{FILE_NAME[:-4]}.txt"), "w", encoding="utf-8"
+    ) as outfile:
         outfile.write(
             f"Data downloaded on: {datetime.now(tz=timezone.utc)}\n"
             f"Download URL: {URL}"
@@ -70,7 +72,7 @@ val["T"] = val[["maxtp", "mintp"]].mean(axis=1)
 val["gr"] = val["glorad"].astype(float) / 100
 
 # %%
-# convert global radiation to PARLarry Bolger decd.PNG
+# convert global radiation to PAR
 # see Papaioannou et al. (1993)
 val["PAR_i"] = val["gr"] * 0.473
 
@@ -97,7 +99,4 @@ val.tail()
 
 # %%
 # save as a CSV file
-val.to_csv(
-    os.path.join(DATA_DRIVE, "grass-growth", "modvege", "valentia.csv"),
-    index=False
-)
+val.to_csv(os.path.join(SUB_DIR, "valentia.csv"), index=False)

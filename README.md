@@ -22,42 +22,22 @@ To update the environment:
 conda env update --name ClimAg --file environment.yml
 ```
 
-`environment.yml`:
-
-```yml
-name: ClimAg
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - python=3.10
-  - dask
-  - matplotlib
-  - rioxarray
-  - geopandas
-  - intake-esm
-  - cartopy
-  - nc-time-axis
-  - jupyterlab
-  - flake8
-  - pylint
-  - aiohttp
-  - odfpy
-  - black
-  - seaborn
-  - cfgrib
-  - pygrib
-  - metpy
-  - python-cdo
-  - regionmask
-```
-
 ## Notebooks
+
+### Main
 
 Notebook | Link
 --- | ---
 ***Boundary***
 Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/ireland-boundary-nuts.ipynb)
+***Meteorological data***
+Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/sample-met-data.ipynb)
+
+### Other
+
+Notebook | Link
+--- | ---
+***Boundary***
 Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/ireland-boundary.ipynb)
 ***Land use and soil***
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/clc-2018.ipynb)
@@ -75,6 +55,7 @@ ModVege grass growth model (Jouven et al. 2006) | [nbviewer](https://nbviewer.or
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/grasscheck.ipynb)
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/pasturebase.ipynb)
 Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/grass10.ipynb)
+Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/sample-met-data.ipynb)
 ***Climatic regions***
 Seasonality map from EPA phenology study by Scarrott et al. (2010) | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/seasonality-map-epa.ipynb)
 Agro-environmental regions based on February rainfall by Holden and Brereton (2004) | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/agro-environmental-regions.ipynb)
