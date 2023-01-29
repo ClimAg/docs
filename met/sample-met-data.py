@@ -69,12 +69,12 @@ val["T"] = val[["maxtp", "mintp"]].mean(axis=1)
 # %%
 # convert global radiation units to MJ m-2 from J cm-2
 # see Allen et al. (1998)
-val["gr"] = val["glorad"].astype(float) / 100
+val["RG"] = val["glorad"].astype(float) / 100.0
 
 # %%
 # convert global radiation to PAR
 # see Papaioannou et al. (1993)
-val["PAR_i"] = val["gr"] * 0.473
+val["PAR"] = val["RG"] * 0.473
 
 # %%
 # rainfall
@@ -89,7 +89,7 @@ val["time"] = val["date"]
 
 # %%
 # keep only relevant columns
-val = val[["time", "T", "PAR_i", "PET", "PP"]]
+val = val[["time", "T", "PAR", "PET", "PP", "RG"]]
 
 # %%
 val.head()

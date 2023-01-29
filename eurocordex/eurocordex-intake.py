@@ -17,14 +17,14 @@ import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 import xarray as xr
+import pooch
 import climag.plot_configs as cplt
-from climag.download_data import download_data
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DRIVE = "/run/media/nms/Elements"
+DATA_DRIVE = "data"
 
 # %%
 DATA_DIR_BASE = os.path.join(DATA_DRIVE, "EURO-CORDEX")
@@ -39,8 +39,8 @@ LAT = 51.84722
 
 # %%
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+GPKG_BOUNDARY = os.path.join("data", "NUTS2021", "NUTS_2021.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # %%
 timerange = [
@@ -63,7 +63,7 @@ timerange = [
 timerange = timerange + [t.replace("1231", "1230") for t in timerange]
 
 # %%
-variables = ["evspsblpot", "mrso", "pr", "rsds", "rsus", "tas"]
+variables = ["evspsblpot", "pr", "rsds", "tas"]
 
 # %%
 driving_model_id = [
@@ -92,8 +92,25 @@ dkrz_cordex = intake.open_esm_datastore(
 )
 
 # %%
-# download JSON catalogue from DKRZ's GitLab
-download_data(server=server, dl_dir=DATA_DIR_BASE)
+# download data if necessary
+FILE_NAME = "dkrz_cordex_disk.json"
+KNOWN_HASH = None
+if not os.path.isfile(os.path.join(DATA_DIR_BASE, FILE_NAME)):
+    pooch.retrieve(
+        url=server,
+        known_hash=KNOWN_HASH,
+        fname=FILE_NAME,
+        path=DATA_DIR_BASE
+    )
+
+    with open(
+        os.path.join(DATA_DIR_BASE, f"{FILE_NAME[:-5]}.txt"),
+        "w", encoding="utf-8"
+    ) as outfile:
+        outfile.write(
+            f"Data downloaded on: {datetime.now(tz=timezone.utc)}\n"
+            f"Download URL: {server}"
+        )
 
 # %%
 # keep data for the relevant variables and time ranges
@@ -260,7 +277,7 @@ cordex_eur11_cat.df.head()
 query = dict(
     experiment_id="rcp85",
     variable_id="pr",
-    driving_model_id="MPI-M-MPI-ESM-LR",
+    driving_model_id="ICHEC-EC-EARTH"
 )
 
 # %%
@@ -299,8 +316,8 @@ pr_50 = pr.sel(time="2055-06-21T12:00:00.000000000")
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_50)
 data_var = pr_50["pr"]  # variable name
-plot_data = data_var * 60 * 60 * 24  # convert to mm/day
-cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
+plot_data = data_var * 60 * 60 * 24  # convert to mm day⁻¹
+cbar_label = data_var.attrs["long_name"] + " [mm day⁻¹]"  # colorbar label
 
 plt.figure(figsize=(20, 10))
 ax = plt.axes(projection=plot_transform)
@@ -349,7 +366,7 @@ plt.plot(
     pr_ca["pr"].values[0] * 60 * 60 * 24
 )
 plt.xlabel(pr_ca["time"].attrs["standard_name"])
-plt.ylabel(pr_ca["pr"].attrs["long_name"] + " [mm/day]")
+plt.ylabel(pr_ca["pr"].attrs["long_name"] + " [mm day⁻¹]")
 plt.title(cplt.cordex_plot_title(pr_ca, lon=LON, lat=LAT))
 plt.tight_layout()
 plt.show()
@@ -364,8 +381,8 @@ pr_ie = pr_50.rio.clip(ie.buffer(500).to_crs(pr_50.rio.crs))
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_ie)
 data_var = pr_ie["pr"]  # extract variable name
-plot_data = data_var * 60 * 60 * 24  # convert to mm/day
-cbar_label = data_var.attrs["long_name"] + " [mm/day]"  # colorbar label
+plot_data = data_var * 60 * 60 * 24  # convert to mm day⁻¹
+cbar_label = data_var.attrs["long_name"] + " [mm day⁻¹]"  # colorbar label
 
 plt.figure(figsize=(7, 7))
 ax = plt.axes(projection=cplt.plot_projection)
