@@ -32,6 +32,11 @@ Notebook | Link
 Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/ireland-boundary-nuts.ipynb)
 ***Meteorological data***
 Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/sample-met-data.ipynb)
+***EURO-CORDEX***
+EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/eurocordex-intake.ipynb)
+EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/eurocordex-ie.ipynb)
+***Grass growth***
+ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/modvege-valentia.ipynb)
 
 ### Other
 
@@ -47,9 +52,6 @@ Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afc
 Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/mera-data.ipynb)
 ***HiResIreland***
 HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/hiresireland.ipynb)
-***EURO-CORDEX***
-EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/eurocordex-ie.ipynb)
-Loading EURO-CORDEX data using intake-esm | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/eurocordex-intake.ipynb)
 ***Grass growth***
 ModVege grass growth model (Jouven et al. 2006) | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/modvege.ipynb)
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/grasscheck.ipynb)
