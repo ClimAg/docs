@@ -37,6 +37,7 @@ EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/6
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/eurocordex-ie.ipynb)
 ***Grass growth***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/modvege-valentia.ipynb)
+ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/modvege.ipynb)
 
 ### Other
 
@@ -53,7 +54,6 @@ Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afc
 ***HiResIreland***
 HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/hiresireland.ipynb)
 ***Grass growth***
-ModVege grass growth model (Jouven et al. 2006) | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/modvege.ipynb)
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/grasscheck.ipynb)
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/pasturebase.ipynb)
 Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/6afcd31bfe1c328d05056d031d1ba8f5/grass10.ipynb)
