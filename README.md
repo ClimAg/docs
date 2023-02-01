@@ -29,14 +29,14 @@ conda env update --name ClimAg --file environment.yml
 Notebook | Link
 --- | ---
 ***Boundary***
-Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary-nuts.ipynb)
+Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_nuts.ipynb)
 ***Meteorological data***
-Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample-met-data.ipynb)
+Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample_met_data.ipynb)
 ***EURO-CORDEX***
-EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex-intake.ipynb)
-EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex-ie.ipynb)
+EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_intake.ipynb)
+EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_ie.ipynb)
 ***Grass growth***
-ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege-valentia.ipynb)
+ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege.ipynb)
 ***Livestock units***
 Census of Agriculture 2020, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_cso.ipynb)
