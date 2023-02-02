@@ -16,7 +16,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %%
 DATA_DRIVE = "data"
 URL = "https://cli.fusio.net/cli/climate_data/webdata/dly2275.csv"
-SUB_DIR = os.path.join(DATA_DRIVE, "MetEireann")
+SUB_DIR = os.path.join(DATA_DRIVE, "met", "MetEireann")
 KNOWN_HASH = None
 os.makedirs(SUB_DIR, exist_ok=True)
 FILE_NAME = "dly2275.csv"

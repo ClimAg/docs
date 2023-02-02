@@ -19,7 +19,7 @@ URL = (
 )
 KNOWN_HASH = None
 FILE_NAME = "COA_2020_AVA42.csv"
-SUB_DIR = os.path.join("data", "AgriculturalCensus", "CSO")
+SUB_DIR = os.path.join("data", "agricultural_census", "CSO")
 DATA_FILE = os.path.join(SUB_DIR, FILE_NAME)
 os.makedirs(SUB_DIR, exist_ok=True)
 

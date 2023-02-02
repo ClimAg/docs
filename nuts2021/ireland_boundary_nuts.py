@@ -20,7 +20,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # %%
 # base data download directory
 DATA_DRIVE = "data"
-SUB_DIR = os.path.join(DATA_DRIVE, "NUTS2021")
+SUB_DIR = os.path.join(DATA_DRIVE, "boundaries", "NUTS2021")
 os.makedirs(SUB_DIR, exist_ok=True)
 
 URL = (
