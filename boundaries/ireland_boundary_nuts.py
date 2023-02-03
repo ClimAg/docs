@@ -95,17 +95,18 @@ nuts0 = nuts0[nuts0["CNTR_CODE"].isin(["IE", "UK"])]
 nuts0
 
 # %%
-base = nuts0.plot(color="navajowhite", figsize=(9, 9))
+base = nuts0.plot(color="navajowhite", figsize=(7.5, 7.5))
 nuts0.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("NUTS0 Regions of Ireland and UK")
-plt.xlabel("Longitude")
-plt.ylabel("Latitude")
+# plt.xlabel("Longitude")
+# plt.ylabel("Latitude")
 plt.text(
     -8.75, 49.5,
     "© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -135,7 +136,7 @@ nuts1 = nuts1[nuts1["NUTS_ID"].isin(["IE0", "UKN"])]
 nuts1
 
 # %%
-base = nuts1.plot(color="navajowhite", figsize=(9, 9))
+base = nuts1.plot(color="navajowhite", figsize=(7.5, 7.5))
 nuts1.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
@@ -147,7 +148,7 @@ plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -172,7 +173,7 @@ nuts2
 nuts2.total_bounds.round(2)
 
 # %%
-base = nuts2.plot(color="navajowhite", figsize=(9, 9))
+base = nuts2.plot(color="navajowhite", figsize=(7.5, 7.5))
 nuts2.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
@@ -184,7 +185,7 @@ plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -206,7 +207,7 @@ nuts3 = nuts3[nuts3["NUTS_ID"].str.contains("IE|UKN")]
 nuts3
 
 # %%
-base = nuts3.plot(color="navajowhite", figsize=(9, 9))
+base = nuts3.plot(color="navajowhite", figsize=(7.5, 7.5))
 nuts3.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
@@ -218,7 +219,7 @@ plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %% [markdown]
@@ -251,7 +252,7 @@ ie = ie.assign(DESCRIPTION=DESCRIPTION)
 ie
 
 # %%
-base = ie.plot(color="navajowhite", figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(7.5, 7.5))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
@@ -263,7 +264,7 @@ plt.text(
     -8.75, 51.275,
     "© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %%
@@ -285,21 +286,22 @@ ie.to_crs(2157, inplace=True)
 ie
 
 # %%
-base = ie.plot(color="navajowhite", figsize=(9, 9))
+base = ie.plot(color="navajowhite", figsize=(7.5, 7.5))
 ie.boundary.plot(ax=base, color="darkslategrey", linewidth=.4)
 
-plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+# base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("Boundary of Ireland")
-plt.xlabel("Easting (m)")
-plt.ylabel("Northing (m)")
+# plt.xlabel("Easting (m)")
+# plt.ylabel("Northing (m)")
 plt.text(
     550000, 505000,
     str(ie.crs).upper() +
     "\n© EuroGeographics for the administrative boundaries"
 )
-
+plt.tight_layout()
 plt.show()
 
 # %%

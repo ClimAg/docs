@@ -56,9 +56,11 @@ data.head()
 data.crs
 
 # %%
-base = data.plot(color="navajowhite", figsize=(9, 9))
+base = data.plot(color="navajowhite", figsize=(7.5, 7.5))
 data.boundary.plot(ax=base, color="darkslategrey", linewidth=.2)
-plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+plt.tick_params(labelbottom=False, labelleft=False)
+plt.tight_layout()
 plt.show()
 
 # %%

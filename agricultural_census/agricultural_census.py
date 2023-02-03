@@ -185,7 +185,7 @@ data_ie.head()
 data_ie.shape
 
 # %%
-fig, axs = plt.subplots(1, 3, figsize=(15, 15), sharey=True)
+fig, axs = plt.subplots(1, 3, figsize=(15, 15))
 cols = [
     ("total_cattle", "Total cattle"),
     ("total_sheep", "Total sheep"),
@@ -199,7 +199,8 @@ for i, ax in enumerate(axs.flat):
             "loc": "upper left", "fmt": "{:.0f}", "title": cols[i][1]
         }
     )
-    ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    ax.tick_params(labelbottom=False, labelleft=False)
     for legend_handle in ax.get_legend().legendHandles:
         legend_handle.set_markeredgewidth(.2)
         legend_handle.set_markeredgecolor("darkslategrey")
@@ -262,7 +263,8 @@ for i, ax in enumerate(axs.flat):
             "loc": "upper left", "fmt": "{:.0f}", "title": cols[i][1]
         }
     )
-    ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    ax.tick_params(labelbottom=False, labelleft=False)
     for legend_handle in ax.get_legend().legendHandles:
         legend_handle.set_markeredgewidth(.2)
         legend_handle.set_markeredgecolor("darkslategrey")
@@ -319,7 +321,8 @@ for i, ax in enumerate(axs.flat):
             "loc": "upper left", "fmt": "{:.0f}", "title": cols[i][1]
         }
     )
-    ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
+    ax.tick_params(labelbottom=False, labelleft=False)
     for legend_handle in ax.get_legend().legendHandles:
         legend_handle.set_markeredgewidth(.2)
         legend_handle.set_markeredgecolor("darkslategrey")
@@ -345,7 +348,7 @@ data["stocking_rate"].min()
 # %%
 axs = data.plot(
     column="stocking_rate", cmap="Spectral_r", scheme="equal_interval",
-    edgecolor="darkslategrey", linewidth=.2, figsize=(9, 9), legend=True,
+    edgecolor="darkslategrey", linewidth=.2, figsize=(7.5, 7.5), legend=True,
     legend_kwds={
         "loc": "upper left", "fmt": "{:.2f}", "title": "Stocking rate"
     }
@@ -354,6 +357,8 @@ plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 for legend_handle in axs.get_legend().legendHandles:
     legend_handle.set_markeredgewidth(.2)
     legend_handle.set_markeredgecolor("darkslategrey")
+axs.tick_params(labelbottom=False, labelleft=False)
+plt.tight_layout()
 plt.show()
 
 # %%
