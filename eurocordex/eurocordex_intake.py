@@ -381,6 +381,12 @@ plt.show()
 pr_ie = pr_50.rio.clip(ie.buffer(500).to_crs(pr_50.rio.crs))
 
 # %%
+# find number of grid cells with data
+len(
+    pr_ie["pr"].values.flatten()[np.isfinite(pr_ie["pr"].values.flatten())]
+)
+
+# %%
 plot_transform = cplt.rotated_pole_transform(pr_ie)
 data_var = pr_ie["pr"]  # extract variable name
 plot_data = data_var * 60 * 60 * 24  # convert to mm day⁻¹
