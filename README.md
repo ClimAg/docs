@@ -30,6 +30,8 @@ Notebook | Link
 --- | ---
 ***Boundary***
 Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_nuts.ipynb)
+Ireland Electoral Divisions | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/electoral_divisions.ipynb)
+Northern Ireland Electoral Wards | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ni_wards.ipynb)
 ***Meteorological data***
 Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample_met_data.ipynb)
 ***EURO-CORDEX***
@@ -40,12 +42,14 @@ ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nms
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege.ipynb)
 ***Livestock units***
 Census of Agriculture 2020, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_cso.ipynb)
+Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_daera.ipynb)
+Census of Agriculture geospatial data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census.ipynb)
 
 ### Other
 
 Notebook | Link
 --- | ---
-***Boundary***
+***Boundaries***
 Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary.ipynb)
 ***Land use and soil***
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/clc-2018.ipynb)

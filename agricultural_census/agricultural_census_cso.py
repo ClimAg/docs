@@ -108,7 +108,7 @@ URL = (
 )
 KNOWN_HASH = None
 FILE_NAME = "COA_2020_AVA44.csv"
-SUB_DIR = os.path.join("data", "AgriculturalCensus", "CSO")
+SUB_DIR = os.path.join("data", "agricultural_census", "CSO")
 DATA_FILE = os.path.join(SUB_DIR, FILE_NAME)
 os.makedirs(SUB_DIR, exist_ok=True)
 
@@ -174,6 +174,17 @@ data = pd.merge(coa, land, on=["C03904V04656", "electoral_division"])
 
 # %%
 data.head()
+
+# %%
+# check for missing data
+data.index[data.isnull().any(axis=1)]
+
+# %%
+# fill with zero
+data.fillna(0, inplace=True)
+
+# %%
+data.index[data.isnull().any(axis=1)]
 
 # %%
 # save as a CSV file
