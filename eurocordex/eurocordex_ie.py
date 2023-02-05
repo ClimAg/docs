@@ -135,11 +135,6 @@ for v in data.data_vars:
         # Allen et al. (1998) - FAO Irrigation and Drainage Paper No. 56
         # (p. 45) (per second to per day; then convert to mega)
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
-        var_attrs["note"] = (
-            f"Original name is '{v}'; converted from W m⁻² to MJ m⁻² day⁻¹ "
-            "by multiplying 0.0864 based on the FAO Irrigation and Drainage "
-            "Paper No. 56 (Allen et al., 1998, p. 45)"
-        )
         if v == "par":
             var_attrs["long_name"] = (
                 "Surface Photosynthetically Active Radiation"
@@ -150,6 +145,13 @@ for v in data.data_vars:
                 "W m⁻² to MJ m⁻² day⁻¹ by multiplying 0.0864 based on the FAO"
                 " Irrigation and Drainage Paper No. 56 (Allen et al., 1998, "
                 "p. 45)"
+            )
+        else:
+            var_attrs["note"] = (
+                f"Original name is '{v}'; converted from W m⁻² to "
+                "MJ m⁻² day⁻¹ by multiplying 0.0864 based on the FAO "
+                "Irrigation and Drainage Paper No. 56 "
+                "(Allen et al., 1998, p. 45)"
             )
     elif v in ("pr", "evspsblpot"):
         var_attrs["units"] = "mm day⁻¹"  # convert kg m-2 s-1 to mm day-1
