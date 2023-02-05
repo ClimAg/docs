@@ -37,9 +37,12 @@ Sample met data (Valentia Observatory) for model development | [nbviewer](https:
 ***EURO-CORDEX***
 EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_intake.ipynb)
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_ie.ipynb)
+***HiResIreland***
+HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland.ipynb)
 ***Grass growth***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_valentia.ipynb)
-ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege.ipynb)
+ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_eurocordex.ipynb)
+ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_hiresireland.ipynb)
 ***Livestock units***
 Census of Agriculture, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_cso.ipynb)
 Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_daera.ipynb)
@@ -58,8 +61,6 @@ Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a
 ***Meteorological data***
 Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/met-stations.ipynb)
 Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/mera-data.ipynb)
-***HiResIreland***
-HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland.ipynb)
 ***Grass growth***
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/grasscheck.ipynb)
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/pasturebase.ipynb)

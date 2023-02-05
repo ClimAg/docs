@@ -8,7 +8,6 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-import numpy as np
 import xarray as xr
 import climag.plot_configs as cplt
 
