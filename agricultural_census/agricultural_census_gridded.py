@@ -1,6 +1,7 @@
 # %% [markdown]
 # # Gridding agricultural census data
 #
+# Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
 # %%
@@ -73,6 +74,9 @@ grid_cells.shape
 # %%
 grid_cells.head()
 
+# %%
+grid_cells.crs
+
 # %% [markdown]
 # ## Subset climate data to visualise the cells
 
@@ -90,7 +94,7 @@ len(
 
 # %%
 plot_transform = cplt.rotated_pole_transform(data_)
-plt.figure(figsize=(9, 7))
+# plt.figure(figsize=(9, 7))
 axs = plt.axes(projection=cplt.plot_projection)
 
 # plot data for the variable
@@ -112,31 +116,110 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
+# ## Drop grid cells without climate data
+
+# %%
+grid_centroids = {
+    "wkt": [],
+    "rlon": [],
+    "rlat": []
+}
+
+for rlon, rlat in itertools.product(
+    range(len(data.coords["rlon"])),
+    range(len(data.coords["rlat"]))
+):
+    data__ = data.isel(rlon=rlon, rlat=rlat)
+
+    # ignore null cells
+    if not data__["T"].isnull().all():
+        grid_centroids["wkt"].append(
+            f"POINT ({float(data__['rlon'].values)} "
+            f"{float(data__['rlat'].values)})"
+        )
+        grid_centroids["rlon"].append(float(data__["rlon"].values))
+        grid_centroids["rlat"].append(float(data__["rlat"].values))
+
+# %%
+grid_centroids = gpd.GeoDataFrame(
+    grid_centroids,
+    geometry=gpd.GeoSeries.from_wkt(grid_centroids["wkt"], crs=crs)
+)
+
+# %%
+grid_centroids.head()
+
+# %%
+grid_centroids.shape
+
+# %%
+grid_centroids.crs
+
+# %%
+grid_cells = gpd.sjoin(grid_cells, grid_centroids.to_crs(grid_cells.crs))
+
+# %%
+grid_cells.drop(columns=["wkt", "index_right"], inplace=True)
+
+# %%
+grid_cells.head()
+
+# %%
+grid_cells.shape
+
+# %%
+# plt.figure(figsize=(9, 7))
+axs = plt.axes(projection=cplt.plot_projection)
+
+# plot data for the variable
+data_["T"].plot(
+    ax=axs,
+    cmap="Spectral_r",
+    x="rlon",
+    y="rlat",
+    robust=True,
+    transform=plot_transform
+)
+
+grid_cells.to_crs(cplt.plot_projection).plot(
+    ax=axs, edgecolor="darkslategrey", facecolor="none", linewidth=.5
+)
+
+grid_centroids.to_crs(cplt.plot_projection).plot(
+    ax=axs, color="darkslategrey", markersize=2.5
+)
+
+axs.set_title(None)
+plt.axis("equal")
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
 # ## Read stocking rate data
 
 # %%
-sr = gpd.read_file(
+stocking_rate = gpd.read_file(
     os.path.join("data", "agricultural_census", "agricultural_census.gpkg"),
     layer="stocking_rate"
 )
 
 # %%
-sr.crs
+stocking_rate.crs
 
 # %%
-sr.head()
+stocking_rate.head()
 
 # %%
-sr.shape
+stocking_rate.shape
 
 # %%
-sr["stocking_rate"].max()
+stocking_rate["stocking_rate"].max()
 
 # %%
-sr["stocking_rate"].min()
+stocking_rate["stocking_rate"].min()
 
 # %%
-sr.plot(column="stocking_rate", cmap="Spectral_r")
+stocking_rate.plot(column="stocking_rate", cmap="Spectral_r")
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.show()
 
@@ -145,14 +228,14 @@ plt.show()
 
 # %%
 # use a projected CRS (e.g. 2157) instead of a geographical CRS (e.g. 4326)
-grid_cells = grid_cells.to_crs(sr.crs)
+grid_cells = grid_cells.to_crs(stocking_rate.crs)
 
 # %%
 grid_cells.head()
 
 # %%
-axs = sr.plot(column="stocking_rate", cmap="Spectral_r")
-grid_cells.boundary.plot(color="darkslategrey", linewidth=.2, ax=axs)
+axs = stocking_rate.plot(column="stocking_rate", cmap="Spectral_r")
+grid_cells.boundary.plot(color="darkslategrey", linewidth=.5, ax=axs)
 axs.tick_params(labelbottom=False, labelleft=False)
 plt.show()
 
@@ -160,7 +243,7 @@ plt.show()
 # ## Create gridded stocking rate data
 
 # %%
-merged = gpd.sjoin(sr, grid_cells, how="left")
+merged = gpd.sjoin(stocking_rate, grid_cells, how="left")
 
 # %%
 merged.head()
@@ -170,7 +253,7 @@ merged.shape
 
 # %%
 axs = merged.plot(column="stocking_rate", cmap="Spectral_r")
-grid_cells.boundary.plot(color="darkslategrey", linewidth=.2, ax=axs)
+grid_cells.boundary.plot(color="darkslategrey", linewidth=.5, ax=axs)
 axs.tick_params(labelbottom=False, labelleft=False)
 plt.show()
 
@@ -254,85 +337,7 @@ plt.axis("equal")
 plt.tight_layout()
 plt.show()
 
-# %% [markdown]
-# ## Find stocking rate for each EURO-CORDEX grid cell
-
 # %%
-grid_centroids = {
-    "wkt": [],
-    "rlon": [],
-    "rlat": []
-}
-
-for rlon, rlat in itertools.product(
-    range(len(data.coords["rlon"])),
-    range(len(data.coords["rlat"]))
-):
-    data__ = data.isel(rlon=rlon, rlat=rlat)
-
-    # ignore null cells
-    if not data__["T"].isnull().all():
-        grid_centroids["wkt"].append(
-            f"POINT ({float(data__['rlon'].values)} "
-            f"{float(data__['rlat'].values)})"
-        )
-        grid_centroids["rlon"].append(float(data__["rlon"].values))
-        grid_centroids["rlat"].append(float(data__["rlat"].values))
-
-# %%
-grid_centroids = gpd.GeoDataFrame(
-    grid_centroids,
-    geometry=gpd.GeoSeries.from_wkt(grid_centroids["wkt"], crs=crs)
+grid_cells.to_file(
+    os.path.join("data", "ModVege", "params.gpkg"), layer="stocking_rate"
 )
-
-# %%
-grid_centroids.head()
-
-# %%
-grid_centroids.crs
-
-# %%
-grid_centroids.shape
-
-# %%
-plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
-
-# plot data for the variable
-data_["T"].plot(
-    ax=axs,
-    cmap="Spectral_r",
-    x="rlon",
-    y="rlat",
-    robust=True,
-    transform=plot_transform
-)
-
-grid_cells.to_crs(cplt.plot_projection).plot(
-    column="stocking_rate", ax=axs, edgecolor="darkslategrey",
-    facecolor="none", linewidth=.5
-)
-
-grid_centroids.to_crs(cplt.plot_projection).plot(
-    ax=axs, color="darkslategrey", markersize=5
-)
-
-axs.set_title(None)
-plt.axis("equal")
-plt.tight_layout()
-plt.show()
-
-# %%
-grid_cells = gpd.sjoin(grid_cells, grid_centroids.to_crs(grid_cells.crs))
-
-# %%
-grid_cells.drop(columns=["wkt", "index_right"], inplace=True)
-
-# %%
-grid_cells.head()
-
-# %%
-grid_cells.crs
-
-# %%
-grid_cells.shape
