@@ -1,9 +1,12 @@
 # %% [markdown]
 # # Nitrogen nutritional index
 #
-# Soil chemical properties based on LUCAS topsoil data (Ballabio et al., 2019; European Commission, n.d.; Panagos et al., 2022; Panagos et al., 2012): https://esdac.jrc.ec.europa.eu/content/chemical-properties-european-scale-based-lucas-topsoil-data
+# Soil chemical properties based on LUCAS topsoil data (Ballabio et al., 2019;
+# European Commission, n.d.; Panagos et al., 2022; Panagos et al., 2012):
+# https://esdac.jrc.ec.europa.eu/content/chemical-properties-european-scale-based-lucas-topsoil-data
 
 # %%
+import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from zipfile import BadZipFile, ZipFile
@@ -11,7 +14,10 @@ import rioxarray as rxr
 from rasterstats import zonal_stats
 
 # %%
-DATA_DIR = os.path.join("data", "soil", "chemical-properties-european-scale-based-lucas-topsoil-data")
+DATA_DIR = os.path.join(
+    "data", "soil",
+    "chemical-properties-european-scale-based-lucas-topsoil-data"
+)
 
 # %%
 ZIP_FILE = os.path.join(DATA_DIR, "N.zip")
@@ -73,7 +79,9 @@ fig = data.plot(
     robust=True, cmap="viridis_r", figsize=(7, 7),
     cbar_kwargs=dict(label="Topsoil nitrogen content [g kg⁻¹]")
 )
-ie.to_crs(data.rio.crs).boundary.plot(ax=fig.axes, color="darkslategrey", linewidth=1)
+ie.to_crs(data.rio.crs).boundary.plot(
+    ax=fig.axes, color="darkslategrey", linewidth=1
+)
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.xlabel("")
@@ -91,8 +99,8 @@ data.rio.to_raster(os.path.join(DATA_DIR, "IE_N.tif"))
 
 # %%
 grid_cells = gpd.read_file(
-    os.path.join("data", "ModVege", "params_eurocordex.gpkg"),
-    layer="stocking_rate"
+    os.path.join("data", "ModVege", "params.gpkg"),
+    layer="eurocordex"
 )
 
 # %%
@@ -109,7 +117,9 @@ fig = data.plot(
     robust=True, cmap="viridis_r", figsize=(7, 7),
     cbar_kwargs=dict(label="Topsoil nitrogen content [g kg⁻¹]")
 )
-grid_cells.to_crs(data.rio.crs).boundary.plot(ax=fig.axes, color="darkslategrey", linewidth=1)
+grid_cells.to_crs(data.rio.crs).boundary.plot(
+    ax=fig.axes, color="darkslategrey", linewidth=1
+)
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.xlabel("")
@@ -122,38 +132,39 @@ plt.show()
 # ## Zonal stats
 
 # %%
-stats = gpd.GeoDataFrame(zonal_stats(vectors=grid_cells.to_crs(data.rio.crs), raster=os.path.join(DATA_DIR, "IE_N.tif"), stats=["count", "mean"]))
-
-# %%
-stats.head()
-
-# %%
-stats.shape
-
-# %%
-stats["mean"].min()
-
-# %%
-stats["mean"].max()
-
-# %%
-stats["count"].min()
-
-# %%
-stats["count"].max()
-
-# %%
-stats[stats["count"] == 0]
-
-# %%
-grid_cells["mean_topsoil_n"] = stats["mean"]
+grid_cells = gpd.GeoDataFrame.from_features(
+    zonal_stats(
+        vectors=grid_cells.to_crs(data.rio.crs),
+        raster=os.path.join(DATA_DIR, "IE_N.tif"),
+        stats=["count", "mean"],
+        geojson_out=True
+    ), crs=data.rio.crs
+).to_crs(grid_cells.crs)
 
 # %%
 grid_cells.head()
 
 # %%
+grid_cells.shape
+
+# %%
+grid_cells["mean"].min()
+
+# %%
+grid_cells["mean"].max()
+
+# %%
+grid_cells["count"].min()
+
+# %%
+grid_cells["count"].max()
+
+# %%
+grid_cells[grid_cells["count"] == 0]
+
+# %%
 axs = grid_cells.plot(
-    column="mean_topsoil_n", cmap="Spectral_r", scheme="equal_interval",
+    column="mean", cmap="Spectral_r", scheme="equal_interval",
     edgecolor="darkslategrey", linewidth=.2, figsize=(6, 7),
     legend=True, legend_kwds={
         "loc": "upper left", "fmt": "{:.2f}", "title": "Topsoil N [g kg⁻¹]"
@@ -176,7 +187,13 @@ plt.show()
 
 # %%
 # normalise between 1.0 and 0.35
-grid_cells["ni"] = 0.35 + ((grid_cells["mean_topsoil_n"] - float(grid_cells["mean_topsoil_n"].min())) * (1.0 - 0.35)) / (float(grid_cells["mean_topsoil_n"].max()) - float(grid_cells["mean_topsoil_n"].min()))
+grid_cells["ni"] = (
+    0.35 + (
+        (grid_cells["mean"] - float(grid_cells["mean"].min())) * (1.0 - 0.35)
+    ) / (
+        float(grid_cells["mean"].max()) - float(grid_cells["mean"].min())
+    )
+)
 
 # %%
 grid_cells.head()
@@ -208,6 +225,7 @@ plt.tight_layout()
 plt.show()
 
 # %%
+# fill no data with min value
 grid_cells["ni"] = grid_cells["ni"].fillna(0.35)
 
 # %%
@@ -231,7 +249,7 @@ plt.tight_layout()
 plt.show()
 
 # %%
-grid_cells.drop(columns="mean_topsoil_n", inplace=True)
+grid_cells.drop(columns=["mean", "count"], inplace=True)
 
 # %%
 grid_cells.to_file(

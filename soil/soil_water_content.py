@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Soil water-holding capacity
 #
-# European soil database derived data – total available water content (TAWC)
+# European soil database derived data - total available water content (TAWC)
 # for the topsoil [mm] (European Commission, n.d.; Hiederer, 2013a;
 # Hiederer, 2013b):
 # https://esdac.jrc.ec.europa.eu/content/european-soil-database-derived-data
