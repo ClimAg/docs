@@ -20,9 +20,7 @@ import climag.plot_configs as cplt
 
 # %%
 TS_FILE = os.path.join(
-    "data", "EURO-CORDEX", "IE",
-    "IE_EUR-11_ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4_v1_day_"
-    "20410101-20701231.nc"
+    "data", "HiResIreland", "IE", "IE_COSMO5_MPI-ESM-LR_rcp45_4km.nc"
 )
 
 # %%
@@ -81,7 +79,7 @@ grid_cells.crs
 # ## Subset climate data to visualise the cells
 
 # %%
-data_ = data.sel(time="2041-06-21T12:00:00.000000000")
+data_ = data.sel(time="2041-06-21")
 
 # %%
 data_
@@ -339,5 +337,6 @@ plt.show()
 
 # %%
 grid_cells.to_file(
-    os.path.join("data", "ModVege", "params.gpkg"), layer="stocking_rate"
+    os.path.join("data", "ModVege", "params_hiresireland.gpkg"),
+    layer="stocking_rate"
 )

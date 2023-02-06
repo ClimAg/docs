@@ -47,7 +47,8 @@ ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nm
 Census of Agriculture, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_cso.ipynb)
 Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_daera.ipynb)
 Census of Agriculture - geospatial data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census.ipynb)
-Census of Agriculture - gridded data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_gridded.ipynb)
+Census of Agriculture - gridded data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_gridded_eurocordex.ipynb)
+Census of Agriculture - gridded data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_gridded_hiresireland.ipynb)
 
 ### Other
 
