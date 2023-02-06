@@ -274,9 +274,7 @@ len(dissolve.index.unique())
 
 # %%
 # merge with cell data
-grid_cells.loc[dissolve.index, "stocking_rate"] = (
-    dissolve["stocking_rate"].values
-)
+grid_cells.loc[dissolve.index, "sr"] = dissolve["stocking_rate"].values
 
 # %%
 # drop rows with missing values
@@ -292,10 +290,10 @@ grid_cells.shape
 len(grid_cells["geometry"].unique())
 
 # %%
-grid_cells["stocking_rate"].max()
+grid_cells["sr"].max()
 
 # %%
-grid_cells["stocking_rate"].min()
+grid_cells["sr"].min()
 
 # %%
 plt.figure(figsize=(9, 7))
@@ -312,7 +310,7 @@ data_["T"].plot(
 )
 
 grid_cells.to_crs(cplt.plot_projection).plot(
-    column="stocking_rate", ax=axs, edgecolor="darkslategrey",
+    column="sr", ax=axs, edgecolor="darkslategrey",
     facecolor="none", linewidth=.5
 )
 
@@ -323,10 +321,11 @@ plt.show()
 
 # %%
 axs = grid_cells.plot(
-    column="stocking_rate", cmap="Spectral_r", scheme="equal_interval",
+    column="sr", cmap="Spectral_r", scheme="equal_interval",
     edgecolor="darkslategrey", linewidth=.2, figsize=(6, 7),
     legend=True, legend_kwds={
-        "loc": "upper left", "fmt": "{:.2f}", "title": "Stocking rate"
+        "loc": "upper left", "fmt": "{:.2f}",
+        "title": "Stocking rate [LU ha⁻¹]"
     }
 )
 for legend_handle in axs.get_legend().legendHandles:
@@ -339,6 +338,5 @@ plt.show()
 
 # %%
 grid_cells.to_file(
-    os.path.join("data", "ModVege", "params_eurocordex.gpkg"),
-    layer="stocking_rate"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
 )
