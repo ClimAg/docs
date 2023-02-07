@@ -1,5 +1,7 @@
 # %% [markdown]
-# # ONS Geography
+# # Northern Ireland electoral wards
+#
+# Downloaded from ONS Geography
 
 # %%
 import os
@@ -60,8 +62,8 @@ data.crs
 
 # %%
 data.to_file(
-    os.path.join(SUB_DIR, "ons_geography.gpkg"),
-    layer="ni_wards_12_2022_27700"
+    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    layer="ONS_NI_wards_12_2022_27700"
 )
 
 # %%
@@ -81,6 +83,6 @@ plt.show()
 
 # %%
 data.to_file(
-    os.path.join(SUB_DIR, "ons_geography.gpkg"),
-    layer="ni_wards_12_2022_2157"
+    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    layer="ONS_NI_wards_12_2022_2157"
 )

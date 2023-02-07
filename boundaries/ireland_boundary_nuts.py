@@ -19,8 +19,7 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 # base data download directory
-DATA_DRIVE = "data"
-SUB_DIR = os.path.join(DATA_DRIVE, "boundaries", "NUTS2021")
+SUB_DIR = os.path.join("data", "boundaries", "NUTS2021")
 os.makedirs(SUB_DIR, exist_ok=True)
 
 URL = (
@@ -31,7 +30,7 @@ KNOWN_HASH = None
 FILE_NAME = "ref-nuts-2021-01m.shp.zip"
 
 # file name for the GeoPackage where the boundary vector layers will be saved
-GPKG_BOUNDARY = os.path.join(SUB_DIR, "NUTS_2021.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 
 DATA_DIR_TEMP = os.path.join(SUB_DIR, "temp")
 

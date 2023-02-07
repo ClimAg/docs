@@ -66,5 +66,5 @@ plt.show()
 # %%
 data.to_file(
     os.path.join(SUB_DIR, "osi_national_statutory_boundaries.gpkg"),
-    layer="electoral-divisions-2019"
+    layer="OSi_IE_electoral_divisions_2019"
 )
