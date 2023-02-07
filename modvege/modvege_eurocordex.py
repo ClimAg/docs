@@ -36,6 +36,7 @@ DATA_DIR = os.path.join("data", "ModVege")
 
 # define the name of the input params file
 PARAMS_FILE = os.path.join(DATA_DIR, "params.csv")
+PARAMS_GPKG_FILE = os.path.join(DATA_DIR, "params.gpkg")
 
 # %%
 # Ireland boundary
@@ -45,9 +46,14 @@ GPKG_BOUNDARY = os.path.join(
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # %%
-# Valentia Observatory met station coords
-LON = -10.24333
-LAT = 51.93806
+# met station coords
+LON_VAL, LAT_VAL = -10.24333, 51.93806  # Valentia Observatory
+LON_ROC, LAT_ROC = -8.24444, 51.79306  # Roche's Point
+LON_JOH, LAT_JOH = -6.5, 52.29167  # Johnstown Castle
+LON_MUL, LAT_MUL = -7.36222, 53.53722  # Mullingar
+
+# %% [markdown]
+# ## Outputs
 
 # %%
 # define the name of the input time series file
@@ -58,11 +64,12 @@ TS_FILE = os.path.join(
 )
 
 # %%
-# run the main function using the example data
+# run the main function
 run_modvege(
     input_params_file=PARAMS_FILE,
     input_timeseries_file=TS_FILE,
-    out_dir=DATA_DIR
+    out_dir=DATA_DIR,
+    input_params_vector=PARAMS_GPKG_FILE
 )
 
 # %%
@@ -85,7 +92,7 @@ data
 # %%
 data_ie = data.sel(
     time=[
-        f"2056-{month}-15T12:00:00.000000000" for month in sorted(
+        f"2055-{month}-15T12:00:00.000000000" for month in sorted(
             list(set(data["time"].dt.month.values))
         )
     ]
@@ -103,19 +110,13 @@ cplt.plot_facet_map_variables(data_ie, ie)
 # %% [markdown]
 # ## Point subset
 
-# %%
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+# %% [markdown]
+# ### Valentia Observatory
 
 # %%
+cds = cplt.rotated_pole_point(data=data, lon=LON_VAL, lat=LAT_VAL)
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
-# %%
-data_ie
-
-# %% [markdown]
-# ### Cork Airport met station
-
-# %%
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
@@ -130,7 +131,7 @@ for var in data_ie.data_vars:
     )
 
 data_ie_df.plot(
-    subplots=True, layout=(5, 3), figsize=(15, 10),
+    subplots=True, layout=(5, 3), figsize=(15, 11),
     legend=False, xlabel="", title=plot_title
 )
 
@@ -138,10 +139,10 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Near Derry, NI
+# ### Roche's Point
 
 # %%
-cds = cplt.rotated_pole_point(data=data, lon=-7.297, lat=54.976)
+cds = cplt.rotated_pole_point(data=data, lon=LON_ROC, lat=LAT_ROC)
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
@@ -158,7 +159,63 @@ for var in data_ie.data_vars:
     )
 
 data_ie_df.plot(
-    subplots=True, layout=(5, 3), figsize=(15, 10),
+    subplots=True, layout=(5, 3), figsize=(15, 11),
+    legend=False, xlabel="", title=plot_title
+)
+
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Johnstown Castle
+
+# %%
+cds = cplt.rotated_pole_point(data=data, lon=LON_JOH, lat=LAT_JOH)
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
+
+# configure plot title
+plot_title = []
+for var in data_ie.data_vars:
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.plot(
+    subplots=True, layout=(5, 3), figsize=(15, 11),
+    legend=False, xlabel="", title=plot_title
+)
+
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ### Mullingar
+
+# %%
+cds = cplt.rotated_pole_point(data=data, lon=LON_MUL, lat=LAT_MUL)
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
+
+# configure plot title
+plot_title = []
+for var in data_ie.data_vars:
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.plot(
+    subplots=True, layout=(5, 3), figsize=(15, 11),
     legend=False, xlabel="", title=plot_title
 )
 

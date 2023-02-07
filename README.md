@@ -49,6 +49,11 @@ Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran
 Census of Agriculture - geospatial data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census.ipynb)
 Census of Agriculture - gridded data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_gridded_eurocordex.ipynb)
 Census of Agriculture - gridded data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/agricultural_census_gridded_hiresireland.ipynb)
+***Soil***
+Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/nitrogen_lucas_topsoil_eurocordex.ipynb)
+Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/nitrogen_lucas_topsoil_hiresireland.ipynb)
+Soil water-holding capacity based on European soil database derived data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/soil_water_content_eurocordex.ipynb)
+Soil water-holding capacity based on European soil database derived data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/soil_water_content_hiresireland.ipynb)
 
 ### Other
 
