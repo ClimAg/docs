@@ -7,9 +7,9 @@
 
 # %%
 import os
+from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from zipfile import BadZipFile, ZipFile
 import rioxarray as rxr
 from rasterstats import zonal_stats
 
@@ -51,9 +51,7 @@ data.rio.resolution()
 
 # %%
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join(
-    "data", "boundaries", "NUTS2021", "NUTS_2021.gpkg"
-)
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # %%
@@ -76,8 +74,8 @@ data.min().values
 
 # %%
 fig = data.plot(
-    robust=True, cmap="viridis_r", figsize=(7, 7),
-    cbar_kwargs=dict(label="Topsoil nitrogen content [g kg⁻¹]")
+    robust=True, cmap="viridis_r", figsize=(7, 7), levels=6,
+    cbar_kwargs={"label": "Topsoil nitrogen content [g kg⁻¹]"}
 )
 ie.to_crs(data.rio.crs).boundary.plot(
     ax=fig.axes, color="darkslategrey", linewidth=1
@@ -99,8 +97,7 @@ data.rio.to_raster(os.path.join(DATA_DIR, "IE_N.tif"))
 
 # %%
 grid_cells = gpd.read_file(
-    os.path.join("data", "ModVege", "params.gpkg"),
-    layer="eurocordex"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
 )
 
 # %%
@@ -114,8 +111,8 @@ grid_cells.shape
 
 # %%
 fig = data.plot(
-    robust=True, cmap="viridis_r", figsize=(7, 7),
-    cbar_kwargs=dict(label="Topsoil nitrogen content [g kg⁻¹]")
+    robust=True, cmap="viridis_r", figsize=(7, 7), levels=6,
+    cbar_kwargs={"label": "Topsoil nitrogen content [g kg⁻¹]"}
 )
 grid_cells.to_crs(data.rio.crs).boundary.plot(
     ax=fig.axes, color="darkslategrey", linewidth=1

@@ -54,6 +54,8 @@ Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX | [nbviewer
 Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/nitrogen_lucas_topsoil_hiresireland.ipynb)
 Soil water-holding capacity based on European soil database derived data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/soil_water_content_eurocordex.ipynb)
 Soil water-holding capacity based on European soil database derived data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/soil_water_content_hiresireland.ipynb)
+***Met Éireann Reanalysis***
+Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/mera_data.ipynb)
 
 ### Other
 
@@ -66,7 +68,6 @@ CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a2
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/irish-soil-information-system.ipynb)
 ***Meteorological data***
 Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/met-stations.ipynb)
-Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/mera-data.ipynb)
 ***Grass growth***
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/grasscheck.ipynb)
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/pasturebase.ipynb)

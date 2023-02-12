@@ -40,9 +40,7 @@ PARAMS_GPKG_FILE = os.path.join(DATA_DIR, "params.gpkg")
 
 # %%
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join(
-    "data", "boundaries", "NUTS2021", "NUTS_2021.gpkg"
-)
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # %%

@@ -88,9 +88,7 @@ data_
 
 # %%
 # find number of grid cells with data
-len(
-    data_["T"].values.flatten()[np.isfinite(data_["T"].values.flatten())]
-)
+len(data_["T"].values.flatten()[np.isfinite(data_["T"].values.flatten())])
 
 # %%
 plot_transform = cplt.rotated_pole_transform(data_)
