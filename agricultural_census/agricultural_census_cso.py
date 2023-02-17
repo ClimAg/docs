@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Census of Agriculture
+# # Census of Agriculture - CSO, Ireland
 
 # %%
 import os
@@ -151,17 +151,14 @@ land.head()
 land.rename(
     columns={
         "Electoral Division": "electoral_division",
-        "VALUE": "all_grassland_hectares"
+        "VALUE": "total_grass_hectares"
     },
     inplace=True
 )
 
 # %%
-land
-
-# %%
 # keep only necessary columns
-land = land[["C03904V04656", "electoral_division", "all_grassland_hectares"]]
+land = land[["C03904V04656", "electoral_division", "total_grass_hectares"]]
 
 # %%
 land.head()

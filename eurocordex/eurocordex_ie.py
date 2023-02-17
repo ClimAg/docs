@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
+import pandas as pd
 import xarray as xr
 import climag.plot_configs as cplt
 
@@ -23,9 +24,8 @@ DATA_DIR = os.path.join(DATA_DIR_BASE, "IE")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # %%
-# Cork Airport met station coords
-LON = -8.48611
-LAT = 51.84722
+# Valentia Observatory met station coords
+LON, LAT = -10.24333, 51.93806
 
 # %%
 # Ireland boundary
@@ -56,11 +56,11 @@ cordex_eur11_cat.df.shape
 cordex_eur11_cat.df.head()
 
 # %% [markdown]
-# ## Read a subset (rcp85)
+# ## Read a subset (rcp45)
 
 # %%
 cordex_eur11 = cordex_eur11_cat.search(
-    experiment_id="rcp85",
+    experiment_id="rcp45",
     driving_model_id="ICHEC-EC-EARTH"
 )
 
@@ -110,7 +110,7 @@ data
 
 # %%
 # Papaioannou et al. (1993) - irradiance ratio
-data = data.assign(par=(data["rsds"] * 0.473))
+data = data.assign(par=data["rsds"] * 0.473)
 
 # %%
 data
@@ -167,6 +167,14 @@ data = data.rename({
 })
 
 # %%
+# assign dataset name
+for x in ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]:
+    if x in data.attrs["driving_model_id"]:
+        data.attrs["dataset"] = (
+            f"IE_EURO-CORDEX_RCA4_{x}_{data.attrs['experiment_id']}"
+        )
+
+# %%
 # assign attributes for the data
 data.attrs["comment"] = (
     "This dataset has been clipped with the Island of Ireland's boundary and "
@@ -190,32 +198,31 @@ data.rio.crs
 
 # %%
 # export to NetCDF
-FILE_NAME = cplt.cordex_ncfile_name(data)
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+data.to_netcdf(os.path.join(DATA_DIR, f"{data.attrs['dataset']}.nc"))
 
 # %% [markdown]
-# ### Time subset
+# ### Monthly averages
 
 # %%
-data_ie = data.sel(
-    time=[
-        str(year) + "-06-21T12:00:00.000000000" for year in sorted(
-            list(set(data["time"].dt.year.values))
-        )
-    ]
-)
+for var in ["T", "PP", "PET", "PAR"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=12
+    )
+
+# %% [markdown]
+# ### Seasonal averages
 
 # %%
-data_ie
-
-# %%
-cplt.plot_facet_map_variables(data_ie, ie)
+for var in ["T", "PP", "PET", "PAR"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="season", boundary_data=ie, cbar_levels=12
+    )
 
 # %% [markdown]
 # ### Point subset
 
 # %%
-# using Cork Airport met station coordinates
+# using Valentia Observatory met station coordinates
 cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
@@ -225,13 +232,46 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-for v in data_ie.data_vars:
+for var in ["T", "PP", "PET", "PAR"]:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
-    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
-    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    plt.plot(data_ie["time"], data_ie[var], linewidth=.5)
+    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
     plt.ylabel(
-        f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
     )
     plt.tight_layout()
     plt.show()
+
+# %%
+data_ie = data_ie.sel(time=slice("2054", "2056"))
+
+# %%
+for var in ["T", "PP", "PET", "PAR"]:
+    plt.figure(figsize=(12, 4))
+    plt.plot(data_ie["time"], data_ie[var], linewidth=1)
+    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
+    plt.ylabel(
+        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+    )
+    plt.tight_layout()
+    plt.show()
+
+# %%
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["T", "PP", "PET", "PAR"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True, layout=(4, 1), figsize=(9, 11),
+    legend=False, xlabel="", title=plot_title
+)
+
+plt.tight_layout()
+plt.show()

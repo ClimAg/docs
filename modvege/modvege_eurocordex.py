@@ -26,17 +26,12 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import xarray as xr
 import climag.plot_configs as cplt
-from climag.modvege_run import run_modvege
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
 DATA_DIR = os.path.join("data", "ModVege")
-
-# define the name of the input params file
-PARAMS_FILE = os.path.join(DATA_DIR, "params.csv")
-PARAMS_GPKG_FILE = os.path.join(DATA_DIR, "params.gpkg")
 
 # %%
 # Ireland boundary
@@ -51,30 +46,13 @@ LON_JOH, LAT_JOH = -6.5, 52.29167  # Johnstown Castle
 LON_MUL, LAT_MUL = -7.36222, 53.53722  # Mullingar
 
 # %% [markdown]
-# ## Outputs
-
-# %%
-# define the name of the input time series file
-TS_FILE = os.path.join(
-    "data", "EURO-CORDEX", "IE",
-    "IE_EUR-11_ICHEC-EC-EARTH_rcp85_r12i1p1_SMHI-RCA4_v1_day_"
-    "20410101-20701231.nc"
-)
-
-# %%
-# run the main function
-run_modvege(
-    input_params_file=PARAMS_FILE,
-    input_timeseries_file=TS_FILE,
-    out_dir=DATA_DIR,
-    input_params_vector=PARAMS_GPKG_FILE
-)
+# ## rcp45
 
 # %%
 data = xr.open_mfdataset(
     glob.glob(
         os.path.join(
-            DATA_DIR, "EURO-CORDEX", "rcp85", "ICHEC-EC-EARTH", "*.nc"
+            DATA_DIR, "EURO-CORDEX", "rcp45", "ICHEC-EC-EARTH", "*.nc"
         )
     ),
     chunks="auto",
@@ -84,49 +62,52 @@ data = xr.open_mfdataset(
 # %%
 data
 
+# %%
+# remove the spin-up year
+data = data.sel(time=slice("2042", "2070"))
+
 # %% [markdown]
-# ## Time subset
+# ### Monthly averages
 
 # %%
-data_ie = data.sel(
-    time=[
-        f"2055-{month}-15T12:00:00.000000000" for month in sorted(
-            list(set(data["time"].dt.month.values))
-        )
-    ]
-)
+for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "aet"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=12
+    )
+
+# %% [markdown]
+# ### Seasonal averages
 
 # %%
-data_ie
+for var in ["gro", "bm", "pgro", "aet"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="season", boundary_data=ie, cbar_levels=12
+    )
 
 # %% [markdown]
-# ### Results
-
-# %%
-cplt.plot_facet_map_variables(data_ie, ie)
+# ### Point subset
 
 # %% [markdown]
-# ## Point subset
-
-# %% [markdown]
-# ### Valentia Observatory
+# #### Valentia Observatory
 
 # %%
 cds = cplt.rotated_pole_point(data=data, lon=LON_VAL, lat=LAT_VAL)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+).sel(time=slice("2054", "2056"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
+
 for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
+
+data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True, layout=(5, 3), figsize=(15, 11),
@@ -137,24 +118,26 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Roche's Point
+# #### Roche's Point
 
 # %%
 cds = cplt.rotated_pole_point(data=data, lon=LON_ROC, lat=LAT_ROC)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+).sel(time=slice("2054", "2056"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
+
 for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
+
+data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True, layout=(5, 3), figsize=(15, 11),
@@ -165,24 +148,26 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Johnstown Castle
+# #### Johnstown Castle
 
 # %%
 cds = cplt.rotated_pole_point(data=data, lon=LON_JOH, lat=LAT_JOH)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+).sel(time=slice("2054", "2056"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
+
 for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
+
+data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True, layout=(5, 3), figsize=(15, 11),
@@ -193,24 +178,26 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Mullingar
+# #### Mullingar
 
 # %%
 cds = cplt.rotated_pole_point(data=data, lon=LON_MUL, lat=LAT_MUL)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+).sel(time=slice("2054", "2056"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
+
 for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
+
+data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True, layout=(5, 3), figsize=(15, 11),

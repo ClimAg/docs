@@ -9,6 +9,7 @@ import os
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import pandas as pd
 import xarray as xr
 import climag.plot_configs as cplt
 
@@ -24,9 +25,8 @@ DATA_DIR = os.path.join(DATA_DIR_BASE, "IE")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # %%
-# Cork Airport met station coords
-LON = -8.48611
-LAT = 51.84722
+# Valentia Observatory met station coords
+LON, LAT = -10.24333, 51.93806
 
 # %%
 # Ireland boundary
@@ -40,7 +40,7 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 data = xr.open_mfdataset(
     list(itertools.chain(*list(
         glob.glob(os.path.join(
-            DATA_DIR_BASE, "COSMO5-CLM", "rcp45", "MPI-ESM-LR", e
+            DATA_DIR_BASE, "COSMO5-CLM", "rcp45", "EC-EARTH", e
         ))
         for e in ["*mean_T_2M*.nc", "*ASOB_S*.nc", "*ET*.nc", "*TOT_PREC*.nc"]
     ))),
@@ -81,7 +81,7 @@ data
 
 # %%
 # Papaioannou et al. (1993) - irradiance ratio
-data = data.assign(par=(data["ASOB_S"] * 0.473))
+data = data.assign(par=data["ASOB_S"] * 0.473)
 
 # %%
 data
@@ -143,6 +143,14 @@ data = data.rename({
 })
 
 # %%
+# remove dataset history
+del data.attrs["history"]
+
+# %%
+# assign dataset name
+data.attrs["dataset"] = f"IE_HiResIreland_{data.attrs['title'][:-4]}"
+
+# %%
 # assign attributes for the data
 data.attrs["comment"] = (
     "This dataset has been clipped with the Island of Ireland's boundary and "
@@ -150,10 +158,6 @@ data.attrs["comment"] = (
     "Last updated: " + str(datetime.now(tz=timezone.utc)) +
     " by nstreethran@ucc.ie."
 )
-
-# %%
-# remove dataset history
-del data.attrs["history"]
 
 # %%
 data
@@ -170,31 +174,31 @@ data.rio.crs
 
 # %%
 # export to NetCDF
-FILE_NAME = "IE_" + data.attrs["title"] + ".nc"
-data.to_netcdf(os.path.join(DATA_DIR, FILE_NAME))
+data.to_netcdf(os.path.join(DATA_DIR, f"{data.attrs['dataset']}.nc"))
 
 # %% [markdown]
-# ### Time subset
+# ### Monthly averages
 
 # %%
-data_ie = data.sel(
-    time=[
-        str(year) + "-06-15T10:30:00.000000000" for year in sorted(
-            list(set(data["time"].dt.year.values))
-        )
-    ]
-)
+for var in ["T", "PP", "PET", "PAR"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=16
+    )
+
+# %% [markdown]
+# ### Seasonal averages
 
 # %%
-data_ie
-
-# %%
-cplt.plot_facet_map_variables(data_ie, ie)
+for var in ["T", "PP", "PET", "PAR"]:
+    cplt.plot_averages(
+        data=data, var=var, averages="season", boundary_data=ie, cbar_levels=14
+    )
 
 # %% [markdown]
 # ### Point subset
 
 # %%
+# using Valentia Observatory met station coordinates
 cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
@@ -204,13 +208,46 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 data_ie
 
 # %%
-for v in data_ie.data_vars:
+for var in ["T", "PP", "PET", "PAR"]:
     plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[v], linewidth=.5)
-    # plt.xlabel(data_ie["time"].attrs["standard_name"].capitalize())
-    # plt.title(cplt.cordex_plot_title(data_ie, lon=LON, lat=LAT))
+    plt.plot(data_ie["time"], data_ie[var], linewidth=.5)
+    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
     plt.ylabel(
-        f"{data_ie[v].attrs['long_name']}\n[{data_ie[v].attrs['units']}]"
+        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
     )
     plt.tight_layout()
     plt.show()
+
+# %%
+data_ie = data_ie.sel(time=slice("2054", "2056"))
+
+# %%
+for var in ["T", "PP", "PET", "PAR"]:
+    plt.figure(figsize=(12, 4))
+    plt.plot(data_ie["time"], data_ie[var], linewidth=1)
+    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
+    plt.ylabel(
+        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+    )
+    plt.tight_layout()
+    plt.show()
+
+# %%
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["T", "PP", "PET", "PAR"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True, layout=(4, 1), figsize=(9, 11),
+    legend=False, xlabel="", title=plot_title
+)
+
+plt.tight_layout()
+plt.show()

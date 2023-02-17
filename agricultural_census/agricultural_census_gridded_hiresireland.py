@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Gridding agricultural census data
+# # Gridding agricultural census data - HiResIreland
 #
 # Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
