@@ -28,9 +28,16 @@ os.makedirs(DATA_DIR, exist_ok=True)
 LON, LAT = -10.24333, 51.93806
 
 # %%
+# using Valentia Observatory met station coordinates
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+
+# %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
+ie_bbox = gpd.read_file(
+    GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"
+)
 
 # %% [markdown]
 # ## Reading the local catalogue
@@ -91,6 +98,13 @@ data_crs = data.rio.crs
 # %%
 data_crs
 
+# %%
+# subset for reference period and spin-up year
+data = data.sel(time=slice("2040", "2070"))
+
+# %%
+data
+
 # %% [markdown]
 # ### Ireland subset
 
@@ -110,7 +124,17 @@ data
 
 # %%
 # Papaioannou et al. (1993) - irradiance ratio
-data = data.assign(par=data["rsds"] * 0.473)
+data = data.assign(PAR=data["rsds"] * 0.473)
+
+# %%
+data
+
+# %% [markdown]
+# ### Calculate net downward shortwave radiation
+
+# %%
+# assume an albedo of 0.23 (Allen et al., 1998)
+data = data.assign(RSN=data["rsds"] * (1 - 0.23))
 
 # %%
 data
@@ -128,12 +152,12 @@ for v in data.data_vars:
             f"Original name is '{v}'; converted from K to °C by subtracting "
             "273.15"
         )
-    elif v in ("par", "rsds"):
+    elif v in ("PAR", "RSN", "rsds"):
         var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
         # Allen et al. (1998) - FAO Irrigation and Drainage Paper No. 56
         # (p. 45) (per second to per day; then convert to mega)
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
-        if v == "par":
+        if v == "PAR":
             var_attrs["long_name"] = (
                 "Surface Photosynthetically Active Radiation"
             )
@@ -144,12 +168,9 @@ for v in data.data_vars:
                 " Irrigation and Drainage Paper No. 56 (Allen et al., 1998, "
                 "p. 45)"
             )
-        else:
-            var_attrs["note"] = (
-                f"Original name is '{v}'; converted from W m⁻² to "
-                "MJ m⁻² day⁻¹ by multiplying 0.0864 based on the FAO "
-                "Irrigation and Drainage Paper No. 56 "
-                "(Allen et al., 1998, p. 45)"
+        elif v == "RSN":
+            var_attrs["long_name"] = (
+                "Surface Net Downward Shortwave Radiation"
             )
     elif v in ("pr", "evspsblpot"):
         var_attrs["units"] = "mm day⁻¹"  # convert kg m-2 s-1 to mm day-1
@@ -163,7 +184,7 @@ for v in data.data_vars:
 # %%
 # rename variables
 data = data.rename({
-    "tas": "T", "rsds": "RG", "pr": "PP", "evspsblpot": "PET", "par": "PAR"
+    "tas": "T", "rsds": "RS", "pr": "PP", "evspsblpot": "PET"
 })
 
 # %%
@@ -186,9 +207,6 @@ data.attrs["comment"] = (
 # %%
 data
 
-# %% [markdown]
-# ### Export data
-
 # %%
 # reassign CRS
 data.rio.write_crs(data_crs, inplace=True)
@@ -196,43 +214,46 @@ data.rio.write_crs(data_crs, inplace=True)
 # %%
 data.rio.crs
 
-# %%
-# export to NetCDF
-data.to_netcdf(os.path.join(DATA_DIR, f"{data.attrs['dataset']}.nc"))
-
 # %% [markdown]
 # ### Monthly averages
 
 # %%
-for var in ["T", "PP", "PET", "PAR"]:
+cplt.plot_averages(
+    data=data.sel(time=slice("2041", "2070")),
+    var="T", averages="month", boundary_data=ie_bbox,
+    cbar_levels=[3 + 1 * n for n in range(13)]
+)
+
+# %%
+for var in data.data_vars:
     cplt.plot_averages(
-        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=12
+        data=data.sel(time=slice("2041", "2070")),
+        var=var, averages="month", boundary_data=ie_bbox, cbar_levels=12
     )
 
 # %% [markdown]
 # ### Seasonal averages
 
 # %%
-for var in ["T", "PP", "PET", "PAR"]:
+for var in data.data_vars:
     cplt.plot_averages(
-        data=data, var=var, averages="season", boundary_data=ie, cbar_levels=12
+        data=data.sel(time=slice("2041", "2070")),
+        var=var, averages="season", boundary_data=ie_bbox, cbar_levels=12
     )
 
 # %% [markdown]
 # ### Point subset
 
 # %%
-# using Valentia Observatory met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
-
-# %%
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+).sel(time=slice("2041", "2070"))
 
 # %%
 data_ie
 
 # %%
-for var in ["T", "PP", "PET", "PAR"]:
+for var in data.data_vars:
     plt.figure(figsize=(12, 4))
     plt.plot(data_ie["time"], data_ie[var], linewidth=.5)
     plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
@@ -246,7 +267,7 @@ for var in ["T", "PP", "PET", "PAR"]:
 data_ie = data_ie.sel(time=slice("2054", "2056"))
 
 # %%
-for var in ["T", "PP", "PET", "PAR"]:
+for var in data.data_vars:
     plt.figure(figsize=(12, 4))
     plt.plot(data_ie["time"], data_ie[var], linewidth=1)
     plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
@@ -255,6 +276,18 @@ for var in ["T", "PP", "PET", "PAR"]:
     )
     plt.tight_layout()
     plt.show()
+
+# %%
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in ["RS", "RSN", "PAR"]:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(figsize=(12, 4), colormap="viridis", xlabel="")
+
+plt.tight_layout()
+plt.show()
 
 # %%
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})

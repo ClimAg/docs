@@ -16,7 +16,6 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-import xarray as xr
 import numpy as np
 import pooch
 import climag.plot_configs as cplt
@@ -25,10 +24,7 @@ import climag.plot_configs as cplt
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-DATA_DRIVE = "data"
-
-# %%
-DATA_DIR_BASE = os.path.join(DATA_DRIVE, "EURO-CORDEX")
+DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX")
 
 # %%
 os.makedirs(DATA_DIR_BASE, exist_ok=True)
@@ -45,12 +41,14 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # %%
 timerange = [
+    "19710101-19751231",
     "19760101-19801231",
     "19810101-19851231",
     "19860101-19901231",
     "19910101-19951231",
     "19960101-20001231",
     "20010101-20051231",
+    "20360101-20401231",
     "20410101-20451231",
     "20460101-20501231",
     "20510101-20551231",
@@ -300,19 +298,16 @@ pr = pr.popitem()[1]
 pr
 
 # %%
-# read one of the data files to extract CRS info
-data_ec = xr.open_dataset(
-    cordex_eur11_pr.df["uri"][0], decode_coords="all", chunks=True
-)
-
-# %%
-pr.rio.write_crs(data_ec.rio.crs, inplace=True)
+pr.rio.crs
 
 # %% [markdown]
 # ### Time subset
 
 # %%
-pr_50 = pr.sel(time="2055-06-21T12:00:00.000000000")
+pr_50 = pr.sel(time="2055-06-21")
+
+# %%
+pr_50
 
 # %%
 plot_transform = cplt.rotated_pole_transform(pr_50)
@@ -347,8 +342,6 @@ plot_data.plot(
 # add boundaries
 ax.coastlines(resolution="50m", color="darkslategrey", linewidth=.5)
 
-ax.set_title(cplt.cordex_plot_title(pr_50))  # set plot title
-
 plt.show()
 
 # %% [markdown]
@@ -368,7 +361,6 @@ plt.plot(
 )
 plt.xlabel(pr_ca["time"].attrs["standard_name"])
 plt.ylabel(pr_ca["pr"].attrs["long_name"] + " [mm day⁻¹]")
-plt.title(cplt.cordex_plot_title(pr_ca, lon=LON, lat=LAT))
 plt.tight_layout()
 plt.show()
 
@@ -397,12 +389,12 @@ ax = plt.axes(projection=cplt.plot_projection)
 # plot data for the variable
 plot_data.plot(
     ax=ax,
-    cmap="GnBu",
+    cmap=cplt.cmap_mako_r,
     transform=plot_transform,
     x="rlon",
     y="rlat",
     cbar_kwargs=dict(label=cbar_label),
-    levels=15,
+    levels=10,
     robust=True
 )
 
@@ -423,7 +415,5 @@ ax.gridlines(
     x_inline=False,
     y_inline=False
 )
-
-ax.set_title(cplt.cordex_plot_title(pr_ie))  # set plot title
 
 plt.show()

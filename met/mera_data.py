@@ -53,6 +53,7 @@
 # import libraries
 import os
 import glob
+from itertools import chain
 from datetime import date, datetime, timezone
 import cartopy.crs as ccrs
 import geopandas as gpd
@@ -60,6 +61,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.units as munits
 import numpy as np
+import pandas as pd
 import pooch
 import xarray as xr
 import climag.plot_configs as cplt
@@ -68,9 +70,8 @@ import climag.plot_configs as cplt
 print("Last updated:", datetime.now(tz=timezone.utc))
 
 # %%
-# Cork Airport met station coords
-LON = -8.48611
-LAT = 51.84722
+# Valentia Observatory met station coords
+LON, LAT = -10.24333, 51.93806
 
 # %%
 # Ireland boundary (derived from NUTS 2021)
@@ -97,7 +98,7 @@ if not os.path.isfile(os.path.join(DATA_DIR, FILE_NAME)):
     )
 
     with open(
-        os.path.join(DATA_DIR, f"{FILE_NAME[:-4]}.txt"), "w", encoding="utf-8"
+        os.path.join(DATA_DIR, f"{FILE_NAME}.txt"), "w", encoding="utf-8"
     ) as outfile:
         outfile.write(
             f"Data downloaded on: {datetime.now(tz=timezone.utc)}\n"
@@ -161,7 +162,14 @@ plt.show()
 # ## Convert GRIB to NetCDF using CDO
 
 # %%
-os.system(f"cdo -f nc copy {BASE_FILE_NAME}.grb {BASE_FILE_NAME}.nc")
+# keep only the third forecast step
+os.system(
+    f"cdo seltimestep,3/{len(data['time']) * 3}/3 "
+    f"{BASE_FILE_NAME}.grb {BASE_FILE_NAME}_.grb"
+)
+
+# %%
+os.system(f"cdo -v -f nc -copy {BASE_FILE_NAME}_.grb {BASE_FILE_NAME}.nc")
 
 # %% [markdown]
 # ## Read data
@@ -176,10 +184,6 @@ data
 
 # %%
 data.rio.crs
-
-# %%
-# save CRS info
-data_crs = data.rio.crs
 
 # %%
 # reassign attributes and rename variables
@@ -245,7 +249,7 @@ plt.show()
 # ## Clip to boundary of Ireland
 
 # %%
-data_ie = data.rio.clip(ie.buffer(1).to_crs(data_crs))
+data_ie = data.rio.clip(ie.buffer(1).to_crs(lambert_conformal))
 
 # %%
 data_ie
@@ -265,7 +269,7 @@ ax.gridlines(
     y_inline=False
 )
 ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-plt.title(f"time={data_ie['t'][0][0]['time'].values}")
+plt.title(f"MERA_FC3hr, time={str(data_ie['t'][0][0]['time'].values)[:19]}")
 plt.xlim(-1.75, 1.5)
 plt.ylim(-2.05, 2.05)
 plt.tight_layout()
@@ -280,7 +284,7 @@ len(
 )
 
 # %% [markdown]
-# ## Time series for a point (Cork Airport met station)
+# ## Time series for a point
 
 # %%
 # transform coordinates from lon/lat to Lambert Conformal Conic
@@ -293,7 +297,7 @@ XLON, YLAT
 
 # %%
 # extract data for the nearest grid cell to the point
-data_ts = data.sel(dict(x=XLON, y=YLAT), method="nearest")
+data_ts = data_ie.sel(dict(x=XLON, y=YLAT), method="nearest")
 
 # %%
 data_ts
@@ -307,75 +311,30 @@ munits.registry[datetime] = converter
 plt.figure(figsize=(12, 4))
 plt.plot(data_ts["time"], (data_ts["t"] - 273.15))
 plt.ylabel("Temperature [°C]")
-plt.title(f"lon={LON}, lat={LAT}")
+plt.title(f"MERA_FC3hr, lon={LON}, lat={LAT}")
 plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ## Facet plots
+# ## FC3hr data - 2 m temperature
 
 # %%
-# subset data at T=12:00
-time_list = []
-for time in data_ie["time"].values:
-    if "12:00" in str(time):
-        time_list.append(time)
+DRIVE = "/run/media/nms/Elements"
 
 # %%
-data_sub = data_ie.sel(time=time_list)
-
-# %%
-data_sub
-
-# %%
-fig = (data_sub["t"] - 273.15).plot(
-    x="x", y="y", col="time", col_wrap=5, transform=lambert_conformal,
-    cmap="Spectral_r", cbar_kwargs=dict(aspect=50, label="Temperature [°C]"),
-    robust=True, subplot_kws=dict(projection=cplt.plot_projection),
-    levels=13
-)
-
-y_ticks = [0, 5, 10, 15, 20, 25]
-x_ticks = [25, 26, 27, 28, 29]
-
-for i, ax in enumerate(fig.axs.flat):
-    ie.to_crs(cplt.plot_projection).boundary.plot(
-        ax=ax, color="darkslategrey", linewidth=.5
+# list of files; 1989 to 1991
+FILE_LIST = list(chain(*list(
+    glob.glob(
+        os.path.join(
+            DRIVE, "MERA", "grib", "11", "105", "2", "0", "FC3hr", e
+        )
     )
-    ax.set_xlim(-1.9, 1.6)
-    ax.set_ylim(-2.1, 2.1)
-    if i in y_ticks:
-        ax.gridlines(
-            draw_labels=["y", "left"],
-            ylocs=range(-90, 90, 1),
-            color="None",
-            linewidth=.5,
-            x_inline=False,
-            y_inline=False
-        )
-    if i in x_ticks:
-        ax.gridlines(
-            draw_labels=["x", "bottom"],
-            xlocs=range(-180, 180, 2),
-            color="None",
-            linewidth=.5,
-            x_inline=False,
-            y_inline=False
-        )
-
-plt.show()
-
-# %% [markdown]
-# ## 1981 ANALYSIS data - 2 m temperature
+    for e in ["*1989*FC3hr", "*1990*FC3hr", "*1991*FC3hr"]
+)))
 
 # %%
 data = xr.open_mfdataset(
-    glob.glob(
-        os.path.join("data", "MERA", "11", "*", "*", "*", "*ANALYSIS")
-    ),
-    chunks="auto",
-    decode_coords="all",
-    engine="cfgrib"
+    FILE_LIST, chunks="auto", decode_coords="all", engine="cfgrib"
 )
 
 # %%
@@ -385,32 +344,27 @@ data
 # copy variable attributes
 t_attrs = data["t"].attrs
 
-# %%
-# convert 0/360 deg to -180/180 deg lon
-long_attrs = data.longitude.attrs
-data = data.assign_coords(longitude=(((data.longitude + 180) % 360) - 180))
-# reassign attributes
-data.longitude.attrs = long_attrs
-
 # %% [markdown]
 # ### Convert to NetCDF
 
 # %%
-for f in glob.glob(
-    os.path.join("data", "MERA", "11", "*", "*", "*", "*ANALYSIS")
-):
-    os.system(f"cdo -f nc copy {f} {f}.nc")
+for f in FILE_LIST:
+    data = xr.open_dataset(
+        f, decode_coords="all", chunks="auto", engine="cfgrib"
+    )
+    # keep only the third forecast step
+    os.system(
+        f"cdo seltimestep,3/{len(data['time']) * 3}/3 "
+        f"{f} {f}.grb"
+    )
+    os.system(f"cdo -f nc copy {f}.grb {f}.nc")
 
 # %% [markdown]
 # ### Read data
 
 # %%
 data = xr.open_mfdataset(
-    glob.glob(
-        os.path.join("data", "MERA", "11", "*", "*", "*", "*ANALYSIS.nc")
-    ),
-    chunks="auto",
-    decode_coords="all"
+    (e + ".nc" for e in FILE_LIST), chunks="auto", decode_coords="all"
 )
 
 # %%
@@ -420,18 +374,20 @@ data
 data.rio.crs
 
 # %%
-# copy CRS
-data_crs = data.rio.crs
+# reassign attributes and rename variables
+data = data.rename({"var11": "T"})
+# convert to deg C
+data["T"] = data["T"] - 273.15
+data["T"].attrs = t_attrs
+data["T"].attrs["units"] = "°C"
 
 # %%
-# reassign attributes and rename variables
-data["var11"].attrs = t_attrs
-data = data.rename({"var11": "t"})
+data
 
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
-(data["t"][1400][0] - 273.15).plot(
+data["T"][4500].plot(
     ax=ax, robust=True, cmap="Spectral_r", x="x", y="y", levels=10,
     transform=lambert_conformal, cbar_kwargs=dict(label="Temperature [°C]")
 )
@@ -443,7 +399,7 @@ ax.gridlines(
     y_inline=False
 )
 ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-plt.title(f"time={data['t'][1400][0]['time'].values}")
+plt.title(f"time={data['T'][4500]['time'].values}")
 plt.tight_layout()
 plt.show()
 
@@ -451,7 +407,11 @@ plt.show()
 # ### Clip to boundary of Ireland
 
 # %%
-data_ie = data.rio.clip(ie.buffer(1).to_crs(data_crs))
+# reassign CRS
+data.rio.write_crs(lambert_conformal, inplace=True)
+
+# %%
+data_ie = data.rio.clip(ie.buffer(1).to_crs(lambert_conformal))
 
 # %%
 data_ie
@@ -459,8 +419,8 @@ data_ie
 # %%
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=cplt.plot_projection)
-(data_ie["t"][1400][0] - 273.15).plot(
-    ax=ax, robust=True, cmap="Spectral_r", x="x", y="y", levels=6,
+data_ie["T"][4500].plot(
+    ax=ax, robust=True, cmap="Spectral_r", x="x", y="y", levels=10,
     transform=lambert_conformal, cbar_kwargs=dict(label="Temperature [°C]")
 )
 ax.gridlines(
@@ -471,80 +431,103 @@ ax.gridlines(
     y_inline=False
 )
 ax.coastlines(resolution="10m", color="darkslategrey", linewidth=.75)
-plt.title(f"time={data_ie['t'][1400][0]['time'].values}")
+plt.title(
+    f"MERA_FC3hr, time={str(data_ie['T'][4500]['time'].values)[:19]}"
+)
 plt.xlim(-1.75, 1.5)
 plt.ylim(-2.05, 2.05)
 plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# ### Time series for a point (Cork Airport met station)
+# ### Monthly and seasonal averages
+
+# %%
+def plot_averages(
+    data, var: str, averages: str, boundary_data, cbar_levels=None
+):
+
+    # calculate the weights by grouping month length by season or month
+    weights = (
+        data.time.dt.days_in_month.groupby(f"time.{averages}") /
+        data.time.dt.days_in_month.groupby(f"time.{averages}").sum()
+    )
+
+    # calculate the weighted average
+    data_weighted = (
+        (data * weights).groupby(f"time.{averages}").sum(dim="time")
+    )
+
+    cbar_label = (
+        f"{data[var].attrs['long_name']} [{data[var].attrs['units']}]"
+    )  # colorbar label
+
+    if averages == "month":
+        columns, aspect = 4, 25
+    else:
+        columns, aspect = 2, 20
+
+    fig = data_weighted[var].where(pd.notnull(data[var][0])).plot(
+        x="x", y="y", col=averages,
+        col_wrap=columns,
+        cmap="Spectral_r",
+        robust=True,
+        cbar_kwargs={"aspect": aspect, "label": cbar_label},
+        transform=lambert_conformal,
+        subplot_kws={"projection": cplt.plot_projection},
+        levels=cbar_levels
+    )
+
+    for i, axs in enumerate(fig.axs.flat):
+        boundary_data.to_crs(cplt.plot_projection).boundary.plot(
+            ax=axs, color="darkslategrey", linewidth=.5
+        )
+        if averages == "month":
+            axs.set_title(
+                datetime.strptime(
+                    str(data_weighted.isel({averages: i})[averages].values),
+                    "%m"
+                ).strftime("%-b").upper()
+            )
+        else:
+            axs.set_title(
+                str(data_weighted.isel({averages: i})[averages].values)
+            )
+        axs.set_xlim(-1.9, 1.6)
+        axs.set_ylim(-2.1, 2.1)
+
+    plt.show()
+
+# %%
+plot_averages(
+    data=data_ie, var="T", averages="month", boundary_data=ie,
+    cbar_levels=[3 + 1 * n for n in range(13)]
+)
+
+# %%
+plot_averages(
+    data=data_ie, var="T", averages="month", boundary_data=ie, cbar_levels=16
+)
+
+# %%
+plot_averages(
+    data=data_ie, var="T", averages="season", boundary_data=ie, cbar_levels=14
+)
+
+# %% [markdown]
+# ### Time series for a point
 
 # %%
 # extract data for the nearest grid cell to the point
-data_ts = data.sel(dict(x=XLON, y=YLAT), method="nearest")
+data_ts = data_ie.sel(dict(x=XLON, y=YLAT), method="nearest")
 
 # %%
 data_ts
 
 # %%
 plt.figure(figsize=(12, 4))
-plt.plot(data_ts["time"], (data_ts["t"] - 273.15))
+plt.plot(data_ts["time"], data_ts["T"], linewidth=.5)
 plt.ylabel("Temperature [°C]")
-plt.title(f"lon={LON}, lat={LAT}")
+plt.title(f"MERA_FC3hr, lon={LON}, lat={LAT}")
 plt.tight_layout()
-plt.show()
-
-# %% [markdown]
-# ### Facet plots
-
-# %%
-# subset data at T=12:00, d=15
-time_list = []
-for time in data_ie["time"].values:
-    if "15T12:00" in str(time):
-        time_list.append(time)
-
-# %%
-data_sub = data_ie.sel(time=time_list)
-
-# %%
-data_sub
-
-# %%
-fig = (data_sub["t"] - 273.15).plot(
-    x="x", y="y", col="time", col_wrap=4, transform=lambert_conformal,
-    cmap="Spectral_r", cbar_kwargs=dict(aspect=25, label="Temperature [°C]"),
-    robust=True, subplot_kws=dict(projection=cplt.plot_projection),
-    levels=20
-)
-
-y_ticks = [0, 4, 8]  # index of subplots with y tick labels
-x_ticks = [8, 9, 10, 11]  # index of subplots with x tick labels
-
-for i, ax in enumerate(fig.axs.flat):
-    ie.to_crs(cplt.plot_projection).boundary.plot(
-        ax=ax, color="darkslategrey", linewidth=.5
-    )
-    ax.set_xlim(-1.9, 1.6)
-    ax.set_ylim(-2.1, 2.1)
-    if i in y_ticks:
-        ax.gridlines(
-            draw_labels=["y", "left"],
-            ylocs=range(-90, 90, 1),
-            color="None",
-            linewidth=.5,
-            x_inline=False,
-            y_inline=False
-        )
-    if i in x_ticks:
-        ax.gridlines(
-            draw_labels=["x", "bottom"],
-            xlocs=range(-180, 180, 2),
-            color="None",
-            linewidth=.5,
-            x_inline=False,
-            y_inline=False
-        )
-
 plt.show()
