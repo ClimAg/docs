@@ -113,16 +113,16 @@ if not os.path.isfile(os.path.join(DATA_DIR_BASE, FILE_NAME)):
 
 # %%
 # keep data for the relevant variables and time ranges
-query = dict(
-    CORDEX_domain="EUR-11",
-    experiment_id=["historical", "rcp45", "rcp85"],
-    frequency="day",
-    variable_id=variables,
-    time_range=timerange,
-    model_id="SMHI-RCA4",
-    driving_model_id=driving_model_id,
-    member=["r1i1p1", "r12i1p1"]
-)
+query = {
+    "CORDEX_domain": "EUR-11",
+    "experiment_id": ["historical", "rcp45", "rcp85"],
+    "frequency": "day",
+    "variable_id": variables,
+    "time_range": timerange,
+    "model_id": "SMHI-RCA4",
+    "driving_model_id": driving_model_id,
+    "member": ["r1i1p1", "r12i1p1"]
+}
 
 # %%
 cordex_eur11 = dkrz_cordex.search(**query)

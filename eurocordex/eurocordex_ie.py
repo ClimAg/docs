@@ -10,10 +10,17 @@ import intake
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
+from dask.distributed import Client
 import climag.plot_configs as cplt
 
 # %%
 print("Last updated:", datetime.now(tz=timezone.utc))
+
+# %%
+client = Client(n_workers=3, threads_per_worker=4, memory_limit="2GB")
+
+# %%
+client
 
 # %%
 DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX")
@@ -26,10 +33,6 @@ os.makedirs(DATA_DIR, exist_ok=True)
 # %%
 # Valentia Observatory met station coords
 LON, LAT = -10.24333, 51.93806
-
-# %%
-# using Valentia Observatory met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
 # Ireland boundary
@@ -83,6 +86,10 @@ data = xr.open_mfdataset(
     chunks="auto",
     decode_coords="all"
 )
+
+# %%
+# using Valentia Observatory met station coordinates
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
 data
@@ -196,7 +203,7 @@ for x in ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]:
         )
 
 # %%
-# assign attributes for the data
+# assign attributes to the data
 data.attrs["comment"] = (
     "This dataset has been clipped with the Island of Ireland's boundary and "
     "units have been converted. "

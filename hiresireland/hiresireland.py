@@ -36,10 +36,6 @@ os.makedirs(DATA_DIR, exist_ok=True)
 LON, LAT = -10.24333, 51.93806
 
 # %%
-# using Valentia Observatory met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
-
-# %%
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
@@ -61,6 +57,10 @@ data = xr.open_mfdataset(
     chunks="auto",
     decode_coords="all"
 )
+
+# %%
+# using Valentia Observatory met station coordinates
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # %%
 data
@@ -117,28 +117,26 @@ data
 for v in data.data_vars:
     var_attrs = data[v].attrs  # extract attributes
     if v == "T_2M":
-        var_attrs["units"] = "°C"  # convert K to deg C
+        var_attrs["units"] = "°C"
         data[v] = data[v] - 273.15
-        var_attrs["note"] = (
-            f"Original name is '{v}'; converted from K to °C by subtracting "
-            "273.15"
-        )
+        var_attrs["note"] = "Converted from K to °C by subtracting 273.15"
         var_attrs["long_name"] = "Near-Surface Air Temperature"
     elif v in ("ASOB_S", "PAR", "RS"):
-        var_attrs["units"] = "MJ m⁻² day⁻¹"  # convert W m-2 to MJ m-2 day-1
-        # Allen (1998) - FAO Irrigation and Drainage Paper No. 56 (p. 45)
-        # (per second to per day; then convert to mega)
+        var_attrs["units"] = "MJ m⁻² day⁻¹"
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
         if v == "PAR":
             var_attrs["long_name"] = (
                 "Surface Photosynthetically Active Radiation"
             )
             var_attrs["note"] = (
-                "Calculated by multiplying ASOB_S with an irradiance ratio of"
-                " 0.473 based on Papaioannou et al. (1993); converted from "
-                "W m⁻² to MJ m⁻² day⁻¹ by multiplying 0.0864 based on the FAO"
-                " Irrigation and Drainage Paper No. 56 (Allen et al., 1998, "
-                "p. 45)"
+                "Calculated by dividing the surface net downward "
+                "shortwave radiation with (1 - 0.23), where 0.23 is"
+                " assumed to be the albedo of grass (Allen et al., 1998),"
+                " then multiplying it with an irradiance ratio of 0.473"
+                " based on Papaioannou et al. (1993); converted from "
+                "W m⁻² to MJ m⁻² day⁻¹ by multiplying 0.0864 as "
+                "documented in the FAO Irrigation and Drainage Paper No. "
+                "56 (Allen et al., 1998, p. 45)"
             )
         elif v == "RS":
             var_attrs["long_name"] = (
@@ -149,10 +147,10 @@ for v in data.data_vars:
                 "Surface Net Downward Shortwave Radiation"
             )
     elif v in ("TOT_PREC", "w"):
-        var_attrs["units"] = "mm day⁻¹"  # kg m-2 is the same as mm day-1
+        var_attrs["units"] = "mm day⁻¹"
         var_attrs["note"] = (
-            f"Original name is '{v}'; kg m⁻² is equivalent to mm day⁻¹, "
-            "assuming a water density of 1,000 kg m⁻³"
+            "kg m⁻² is equivalent to mm day⁻¹, assuming a water density "
+            "of 1,000 kg m⁻³"
         )
         if v == "w":
             var_attrs["long_name"] = "Potential Evapotranspiration"
@@ -175,7 +173,7 @@ del data.attrs["history"]
 data.attrs["dataset"] = f"IE_HiResIreland_{data.attrs['title'][:-4]}"
 
 # %%
-# assign attributes for the data
+# assign attributes to the data
 data.attrs["comment"] = (
     "This dataset has been clipped with the Island of Ireland's boundary and "
     "units have been converted. "
@@ -390,40 +388,3 @@ plt.show()
 
 # %%
 data.rio.crs
-
-# %% [markdown]
-# ### Save data
-
-# %%
-# keep only relevant variables
-data = data.drop_vars(["RS", "RSN"])
-
-# %%
-data.to_netcdf(os.path.join(DATA_DIR, f"{data.attrs['dataset']}.nc"))
-
-# %%
-# test if the data can be read without issues
-data = xr.open_dataset(
-    os.path.join(DATA_DIR, f"{data.attrs['dataset']}.nc"),
-    chunks="auto",
-    decode_coords="all"
-)
-
-# %%
-data
-
-# %%
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("2040", "2044")
-)
-
-# %%
-# spin-up year and first year should be identical
-plt.figure(figsize=(12, 4))
-plt.plot(data_ie["time"], data_ie["T"], linewidth=1)
-plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-plt.ylabel(
-    f"{data_ie['T'].attrs['long_name']}\n[{data_ie['T'].attrs['units']}]"
-)
-plt.tight_layout()
-plt.show()
