@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege grass growth model (Jouven et al. 2006) with EURO-CORDEX data
+# # ModVege grass growth model (Jouven et al. 2006) with HiResIreland data
 #
 # - Jouven, M., Carrère, P., and Baumont, R. (2006a). 'Model predicting
 #   dynamics of biomass, structure and digestibility of herbage in managed
@@ -52,9 +52,7 @@ LON_MUL, LAT_MUL = -7.36222, 53.53722  # Mullingar
 
 data = xr.open_mfdataset(
     glob.glob(
-        os.path.join(
-            DATA_DIR, "EURO-CORDEX", "rcp45", "ICHEC-EC-EARTH", "*.nc"
-        )
+        os.path.join(DATA_DIR, "HiResIreland", "rcp45", "EC-EARTH", "*.nc")
     ),
     chunks="auto",
     decode_coords="all",
@@ -134,17 +132,17 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
-
 for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-
-data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True,
@@ -166,17 +164,17 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
-
 for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-
-data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True,
@@ -198,17 +196,17 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
-
 for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-
-data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True,
@@ -230,17 +228,17 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
 
 # configure plot title
 plot_title = []
-
 for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-
-data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(
     subplots=True,

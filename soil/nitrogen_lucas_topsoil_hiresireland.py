@@ -8,7 +8,6 @@
 # https://esdac.jrc.ec.europa.eu/content/chemical-properties-european-scale-based-lucas-topsoil-data
 
 import os
-from zipfile import BadZipFile, ZipFile
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import rioxarray as rxr
@@ -20,19 +19,7 @@ DATA_DIR = os.path.join(
     "chemical-properties-european-scale-based-lucas-topsoil-data",
 )
 
-ZIP_FILE = os.path.join(DATA_DIR, "N.zip")
-
-# list of files/folders in the ZIP archive
-ZipFile(ZIP_FILE).namelist()
-
-# extract the archive
-try:
-    z = ZipFile(ZIP_FILE)
-    z.extractall(DATA_DIR)
-except BadZipFile:
-    print("There were issues with the file", ZIP_FILE)
-
-DATA_FILE = os.path.join(DATA_DIR, "N.tif")
+DATA_FILE = os.path.join(DATA_DIR, "IE_N.tif")
 
 data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True)
 
@@ -47,13 +34,6 @@ GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 ie.crs
-
-# clip raster to Ireland's boundary
-data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True).rio.clip(
-    ie.to_crs(data.rio.crs)["geometry"]
-)
-
-data
 
 data.max().values
 
@@ -71,19 +51,16 @@ ie.to_crs(data.rio.crs).boundary.plot(
 )
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
-plt.xlabel("")
-plt.ylabel("")
+plt.xlabel(None)
+plt.ylabel(None)
 plt.tight_layout()
 plt.axis("equal")
 plt.show()
 
-# export to GeoTIFF
-data.rio.to_raster(os.path.join(DATA_DIR, "IE_N.tif"))
-
 # ## Grid cells
 
 grid_cells = gpd.read_file(
-    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="hiresireland"
 )
 
 grid_cells.head()
@@ -104,8 +81,8 @@ grid_cells.to_crs(data.rio.crs).boundary.plot(
 )
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
-plt.xlabel("")
-plt.ylabel("")
+plt.xlabel(None)
+plt.ylabel(None)
 plt.tight_layout()
 plt.axis("equal")
 plt.show()
@@ -228,5 +205,5 @@ plt.show()
 grid_cells.drop(columns=["mean", "count"], inplace=True)
 
 grid_cells.to_file(
-    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="hiresireland"
 )

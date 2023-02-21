@@ -9,7 +9,6 @@
 # https://esdac.jrc.ec.europa.eu/content/european-soil-database-derived-data
 
 import os
-from zipfile import BadZipFile, ZipFile
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import rioxarray as rxr
@@ -17,19 +16,7 @@ from rasterstats import zonal_stats
 
 DATA_DIR = os.path.join("data", "soil", "european-soil-database-derived-data")
 
-ZIP_FILE = os.path.join(DATA_DIR, "STU_EU_Layers.zip")
-
-# list of files/folders in the ZIP archive
-ZipFile(ZIP_FILE).namelist()
-
-# extract the archive
-try:
-    z = ZipFile(ZIP_FILE)
-    z.extractall(DATA_DIR)
-except BadZipFile:
-    print("There were issues with the file", ZIP_FILE)
-
-DATA_FILE = os.path.join(DATA_DIR, "STU_EU_T_TAWC.rst")
+DATA_FILE = os.path.join(DATA_DIR, "IE_TAWC.tif")
 
 data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True)
 
@@ -52,13 +39,6 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 ie.crs
 
-# clip raster to Ireland's boundary
-data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True).rio.clip(
-    ie.to_crs(data_crs)["geometry"]
-)
-
-data
-
 data.max().values
 
 data.min().values
@@ -75,19 +55,16 @@ ie.to_crs(data_crs).boundary.plot(
 )
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
-plt.xlabel("")
-plt.ylabel("")
+plt.xlabel(None)
+plt.ylabel(None)
 plt.tight_layout()
 plt.axis("equal")
 plt.show()
 
-# export to GeoTIFF
-data.rio.to_raster(os.path.join(DATA_DIR, "IE_TAWC.tif"))
-
 # ## Grid cells
 
 grid_cells = gpd.read_file(
-    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="hiresireland"
 )
 
 grid_cells.head()
@@ -108,8 +85,8 @@ grid_cells.to_crs(data_crs).boundary.plot(
 )
 plt.title(None)
 fig.axes.tick_params(labelbottom=False, labelleft=False)
-plt.xlabel("")
-plt.ylabel("")
+plt.xlabel(None)
+plt.ylabel(None)
 plt.tight_layout()
 plt.axis("equal")
 plt.show()
@@ -143,7 +120,7 @@ grid_cells[grid_cells["count"] == 0]
 
 axs = grid_cells.plot(
     column="mean",
-    cmap="Spectral_r",
+    cmap="Spectral",
     scheme="equal_interval",
     edgecolor="darkslategrey",
     linewidth=0.2,
@@ -171,5 +148,5 @@ grid_cells.drop(columns=["mean", "count"], inplace=True)
 grid_cells.head()
 
 grid_cells.to_file(
-    os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
+    os.path.join("data", "ModVege", "params.gpkg"), layer="hiresireland"
 )
