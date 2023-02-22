@@ -1,4 +1,6 @@
-# %% [markdown]
+#!/usr/bin/env python
+# coding: utf-8
+
 # # Seasonality map of Ireland
 #
 # MODIS-EVI-derived Irish landcover seasonality dataset for 2006
@@ -29,7 +31,6 @@
 #   https://www.epa.ie/publications/research/climate-change/climate-change-impacts-on-phenology-implications-for-terrestrial-ecosystems.php
 #   (Accessed 19 August 2022).
 
-# %%
 # import libraries
 import os
 from datetime import datetime, timezone
@@ -39,48 +40,40 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import ticker
+from dask.distributed import Client
 
-# %%
 print("Last updated:", datetime.now(tz=timezone.utc))
 
-# %%
-# define data directory
-DATA_DIR_BASE = os.path.join(
-    "data", "climatic-regions", "seasonality-map-epa"
-)
+client = Client(n_workers=3, threads_per_worker=4, memory_limit="2GB")
 
-# %%
+client
+
+# define data directory
+DATA_DIR_BASE = os.path.join("data", "climatic-regions", "seasonality-map-epa")
+
 # the ZIP file containing the CLC 2018 data should be moved to this folder
 DATA_DIR = os.path.join(DATA_DIR_BASE, "raw")
 
-# %%
 os.listdir(DATA_DIR)
 
-# %%
 ZIP_FILE = os.path.join(
     DATA_DIR, "2006IESeasonalityDataset_FinalProductPackage.zip"
 )
 
-# %%
 # list of files/folders in the ZIP archive
 ZipFile(ZIP_FILE).namelist()
 
-# %%
 data = gpd.read_file(
     f"zip://{ZIP_FILE}!2006IESeasonalityDataset_FinalProductPackage/"
     "IrishSeasonalityMap2006_38Clusters_ScarrottEtAl2010.shp"
 )
 
-# %%
 data.shape
 
-# %%
 data.crs
 
-# %%
 data
 
-# %%
 # assign clusters to groups as defined in a draft paper by Scarrott et al.
 groups = {
     1: 6,
@@ -120,65 +113,61 @@ groups = {
     35: 10,
     36: 10,
     37: 10,
-    38: 10
+    38: 10,
 }
 
-# %%
 data["Group"] = data["Class"].map(groups)
 
-# %%
 # convert column to string for plotting
 data["plot_class"] = data["Class"].astype(str).str.zfill(2)
 data["Group"] = data["Group"].astype(str).str.zfill(2)
 
-# %%
 data
 
-# %%
 # new colour map
 # https://stackoverflow.com/a/31052741
 # sample the colormaps that you want to use. Use 20 from each so we get 40
-# colors in total
-colors1 = plt.cm.tab20b(np.linspace(0., 1, 20))
+# colours in total
+colors1 = plt.cm.tab20b(np.linspace(0.0, 1, 20))
 colors2 = plt.cm.tab20c(np.linspace(0, 1, 20))
 
 # combine them and build a new colormap
 colors = np.vstack((colors1, colors2))
 
-# %%
-base = data.plot(
+fig = data.to_crs(2157).plot(
     column="plot_class",
     # legend=True,
     figsize=(9, 9),
-    cmap=mcolors.ListedColormap(colors),
+    cmap="Spectral_r",
     # legend_kwds=dict(loc="upper right", bbox_to_anchor=(1.18, 1.07))
 )
-plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
-plt.text(
-    5.6e5, 5.68e6,
-    str(data.crs).upper() +
-    "\nScarrott et al. (2010), O'Connor et al. (2013)"
-)
+# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+# fig.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+# plt.text(
+#     5.6e5, 5.68e6,
+#     str(data.crs).upper() +
+#     "\nScarrott et al. (2010), O'Connor et al. (2013)"
+# )
+fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.title("MODIS-EVI-derived Irish landcover seasonality dataset for 2006")
 plt.show()
 
-# %%
 # see the excerpt of a draft paper by Scarrott et al. for more information
 # about these groupings
-base = data.plot(
+fig = data.to_crs(2157).plot(
     column="Group",
     legend=True,
     figsize=(9, 9),
-    cmap="viridis_r",
-    legend_kwds=dict(loc="upper left")
+    cmap="Spectral_r",
+    legend_kwds=dict(loc="upper left"),
 )
-plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
-plt.text(
-    5.6e5, 5.68e6,
-    str(data.crs).upper() +
-    "\nScarrott et al. (2010), O'Connor et al. (2013)"
-)
+# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
+# fig.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
+# plt.text(
+#     5.6e5, 5.68e6,
+#     str(data.crs).upper() +
+#     "\nScarrott et al. (2010), O'Connor et al. (2013)"
+# )
+fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.title("Cluster groupings of the MODIS-EVI-derived seasonality dataset")
 plt.show()
