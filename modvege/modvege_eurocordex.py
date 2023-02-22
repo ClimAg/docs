@@ -40,7 +40,9 @@ DATA_DIR = os.path.join("data", "ModVege")
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 # ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF")
+ie_bbox = gpd.read_file(
+    GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"
+)
 
 # met station coords
 LON_VAL, LAT_VAL = -10.24333, 51.93806  # Valentia Observatory
@@ -65,7 +67,11 @@ data
 # ### Annual averages
 
 cplt.plot_averages(
-    data=data, var="gro", averages="year", boundary_data=ie, cbar_levels=12
+    data=data,
+    var="gro",
+    averages="year",
+    boundary_data=ie_bbox,
+    cbar_levels=12,
 )
 
 # remove the spin-up year
@@ -77,20 +83,28 @@ cplt.plot_averages(
     data=data,
     var="gro",
     averages="month",
-    boundary_data=ie,
+    boundary_data=ie_bbox,
     cbar_levels=[0 + 10 * n for n in range(11)],
 )
 
 for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "aet"]:
     cplt.plot_averages(
-        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=12
+        data=data,
+        var=var,
+        averages="month",
+        boundary_data=ie_bbox,
+        cbar_levels=12,
     )
 
 # ### Seasonal averages
 
 for var in ["gro", "bm", "pgro", "aet"]:
     cplt.plot_averages(
-        data=data, var=var, averages="season", boundary_data=ie, cbar_levels=12
+        data=data,
+        var=var,
+        averages="season",
+        boundary_data=ie_bbox,
+        cbar_levels=12,
     )
 
 # ### Point subset

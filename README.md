@@ -32,6 +32,7 @@ Notebook | Link
 Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_nuts.ipynb)
 Ireland Electoral Divisions | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_electoral_divisions.ipynb)
 Northern Ireland Electoral Wards | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_ni_wards.ipynb)
+Ireland counties - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary.ipynb)
 ***Meteorological data***
 Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample_met_data.ipynb)
 ***EURO-CORDEX***
@@ -39,6 +40,7 @@ EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/1
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_ie.ipynb)
 ***HiResIreland***
 HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland.ipynb)
+HiResIreland climate model data variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland_fields.ipynb)
 ***Grass growth***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_eurocordex.ipynb)
@@ -56,6 +58,8 @@ Soil water-holding capacity based on European soil database derived data - EURO-
 Soil water-holding capacity based on European soil database derived data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/soil_water_content_hiresireland.ipynb)
 ***Met Éireann Reanalysis***
 Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/mera_data.ipynb)
+***Meteorological data***
+Met stations in the Island of Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/met-stations.ipynb)
 ***Results***
 Box plots | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/box_plots.ipynb)
 ***Grass growth***
@@ -69,13 +73,9 @@ Agro-environmental regions based on February rainfall by Holden and Brereton (20
 
 Notebook | Link
 --- | ---
-***Boundaries***
-Ireland boundary - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary.ipynb)
 ***Land use and soil***
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/clc-2018.ipynb)
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/irish-soil-information-system.ipynb)
-***Meteorological data***
-Met stations in Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/met-stations.ipynb)
 ***Grass growth***
 Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/grass10.ipynb)
 Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample-met-data.ipynb)
