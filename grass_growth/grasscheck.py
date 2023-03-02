@@ -12,7 +12,7 @@
 # in Virkajärvi, P. et al. (eds),
 # *Meeting the future demands for grassland production*,
 # Grassland Science in Europe, Helsinki, Finland, European Grassland Federation,
-# vol. 25, pp. 716–718. [Online]. Available at
+# vol. 25, pp. 716-718. [Online]. Available at
 # <https://www.europeangrassland.org/fileadmin/documents/Infos/Printed_Matter/Proceedings/EGF2020.pdf>
 # (Accessed 13 September 2022).
 
@@ -23,64 +23,199 @@ import pandas as pd
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
-DATA_DIR = os.path.join("data", "grass-growth", "grasscheck", "grasscheck.ods")
+DATA_DIR = os.path.join("data", "grass_growth", "grasscheck", "grasscheck.ods")
 
-grass_ni = pd.read_excel(DATA_DIR, parse_dates=["week"])
+grass_ts = pd.read_excel(DATA_DIR, parse_dates=["week"])
 
-grass_ni.head()
-
-grass_ni.shape
-
-# use weekly time series starting on Monday to fill missing rows
-grass_ts = pd.DataFrame(
-    pd.date_range(
-        str(grass_ni["week"][0].year) + "-01-01",
-        str(grass_ni["week"][len(grass_ni) - 1].year) + "-12-31",
-        freq="W-MON",
-    ),
-    columns=["week"],
-)
-
-grass_ts = pd.merge(grass_ts, grass_ni, how="outer")
+# rename column
+grass_ts.rename(columns={"week": "time"}, inplace=True)
 
 grass_ts.head()
 
 grass_ts.shape
 
-DATA_DIR = os.path.join("data", "grass-growth", "grasscheck", "grasscheck.csv")
+# use weekly time series starting on Monday to fill missing rows
+grass_ = pd.DataFrame(
+    pd.date_range(
+        str(grass_ni["time"][0].year) + "-01-01",
+        str(grass_ni["time"][len(grass_ni) - 1].year) + "-12-31",
+        freq="W-MON",
+    ),
+    columns=["time"],
+)
+
+grass_ts = pd.merge(grass_, grass_ts, how="outer")
+
+grass_ts.head()
+
+grass_ts.shape
+
+DATA_DIR = os.path.join("data", "grass_growth", "grasscheck", "grasscheck.csv")
 
 # save time series
 grass_ts.to_csv(DATA_DIR, index=False)
 
 # set timestamps as the index
-grass_ts.index = grass_ts["week"]
-
-grass_ts.drop(columns=["week"], inplace=True)
+grass_ts.set_index("time", inplace=True)
 
 # capitalise county names
 counties = []
 for c in list(grass_ts):
     counties.append(c.capitalize())
-
 grass_ts.columns = counties
 
-grass_ts.plot(figsize=(12, 4), linewidth=1, cmap="viridis")
-plt.title("Grass growth in Northern Ireland [Data: GrassCheck NI]")
-plt.xlabel("")
-plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
-plt.show()
+grass_ts.head()
 
-for c in counties:
-    grass_ts[c].plot(figsize=(12, 4), linewidth=1)
-    plt.title(f"Grass growth in Co. {c} [Data: GrassCheck NI]")
-    plt.xlabel("")
-    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+# pivot table for plotting
+grass_piv = grass_ts.copy()
+grass_piv["year"] = grass_piv.index.year
+grass_piv["weekno"] = grass_piv.index.isocalendar().week
+grass_piv = pd.pivot_table(grass_piv, index="weekno", columns="year")
+
+grass_piv.head()
+
+# ## Time series
+
+for county in counties:
+    grass_piv[county].plot(
+        figsize=(12, 4),
+        xlabel="Week",
+        ylabel="Grass growth [kg DM ha⁻¹ day⁻¹]",
+    )
+    plt.title(f"GrassCheck NI data for Co. {county}")
+    plt.legend(title=None)
+    plt.tight_layout()
     plt.show()
 
 years = list(grass_ts.index.year.unique())
 for y in years:
-    grass_ts.loc[str(y)].plot(figsize=(12, 4), linewidth=1.25, cmap="viridis")
-    plt.title(f"Grass growth in Northern Ireland in {y} [Data: GrassCheck NI]")
-    plt.xlabel("")
-    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+    grass_ts.loc[str(y)].set_index(
+        grass_ts.loc[str(y)].index.isocalendar().week
+    ).plot(
+        figsize=(10, 4),
+        xlabel="Week",
+        ylabel="Grass growth [kg DM ha⁻¹ day⁻¹]",
+    )
+    plt.title(f"GrassCheck NI data for {y}")
+    plt.tight_layout()
     plt.show()
+
+# ## Distribution
+
+grass_ts.plot.box(
+    figsize=(4, 5),
+    showmeans=True,
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={"markeredgecolor": "LightSteelBlue", "zorder": 1},
+)
+plt.xticks(rotation="vertical")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+plt.tight_layout()
+# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "boxplot.png"))
+plt.show()
+
+grass_ts.diff().hist(figsize=(6, 8), bins=50, grid=False)
+plt.tight_layout()
+# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "diff_hist.png"))
+plt.show()
+
+# ## Filtering outliers using 3-week moving average
+
+grass_out = grass_ts.reset_index()
+
+for county in counties:
+    mn = grass_out.rolling(3, center=True, on="time")[county].mean()
+    grass_out[f"{county}_outlier"] = grass_out[county].sub(mn).abs().gt(10)
+    grass_out[f"{county}_mn"] = mn
+
+grass_out.set_index("time", inplace=True)
+
+for county in counties:
+    axs = grass_out.plot(
+        # ylim=[0.0, 200.0],
+        figsize=(10, 4),
+        y=county,
+        label="growth",
+    )
+    grass_out.plot(
+        figsize=(10, 4),
+        y=f"{county}_mn",
+        ax=axs,
+        label="moving_avg",
+        color="orange",
+        zorder=1,
+    )
+    grass_out[grass_out[f"{county}_outlier"] == True].plot(
+        ax=axs,
+        linewidth=0.0,
+        marker="*",
+        y=county,
+        label="outlier",
+        color="crimson",
+    )
+    plt.title(county)
+    plt.xlabel("")
+    plt.tight_layout()
+    plt.show()
+
+for county in counties:
+    axs = grass_out.loc["2017":"2019"].plot(
+        # ylim=[0.0, 200.0],
+        figsize=(12, 8),
+        y=county,
+        label="growth",
+    )
+    grass_out.loc["2017":"2019"].plot(
+        figsize=(10, 4),
+        y=f"{county}_mn",
+        ax=axs,
+        label="moving_avg",
+        color="orange",
+        zorder=1,
+    )
+    grass_out[grass_out[f"{county}_outlier"] == True].loc["2017":"2019"].plot(
+        ax=axs,
+        linewidth=0.0,
+        marker="*",
+        y=county,
+        label="outlier",
+        color="crimson",
+    )
+    plt.title(county)
+    plt.xlabel("")
+    plt.tight_layout()
+    plt.show()
+
+grass_out[[f"{county}_mn" for county in counties]].plot.box(
+    figsize=(4, 5),
+    showmeans=True,
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={"markeredgecolor": "LightSteelBlue", "zorder": 1},
+)
+plt.xticks(rotation="vertical")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+plt.tight_layout()
+# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "boxplot.png"))
+plt.show()

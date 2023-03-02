@@ -5,6 +5,7 @@
 
 # import libraries
 import os
+import glob
 from datetime import datetime, timezone
 import geopandas as gpd
 import intake
@@ -16,7 +17,7 @@ import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
-client = Client(n_workers=3, threads_per_worker=4, memory_limit="2GB")
+client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 
 client
 
@@ -26,8 +27,8 @@ DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX")
 DATA_DIR = os.path.join(DATA_DIR_BASE, "IE")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Valentia Observatory met station coords
-LON, LAT = -10.24333, 51.93806
+# Moorepark met station coords
+LON, LAT = -8.26389, 52.16389
 
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
@@ -52,10 +53,10 @@ cordex_eur11_cat.df.shape
 
 cordex_eur11_cat.df.head()
 
-# ## Read a subset (rcp45)
+# ## Read a subset (historical)
 
 cordex_eur11 = cordex_eur11_cat.search(
-    experiment_id="rcp45", driving_model_id="ICHEC-EC-EARTH"
+    experiment_id="historical", driving_model_id="ICHEC-EC-EARTH"
 )
 
 cordex_eur11
@@ -63,11 +64,18 @@ cordex_eur11
 cordex_eur11.df
 
 data = xr.open_mfdataset(
-    list(cordex_eur11.df["uri"]), chunks="auto", decode_coords="all"
+    glob.glob(
+        "/run/media/nms/MyPassport/EURO-CORDEX/RCA4/historical/EC-EARTH/*.nc"
+    ),
+    chunks="auto",
+    decode_coords="all",
 )
 
-# using Valentia Observatory met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+# data = xr.open_mfdataset(
+#     list(cordex_eur11.df["uri"]),
+#     chunks="auto",
+#     decode_coords="all"
+# )
 
 data
 
@@ -80,11 +88,11 @@ data_crs = data.rio.crs
 data_crs
 
 # subset for reference period and spin-up year
-data = data.sel(time=slice("2040", "2070"))
+data = data.sel(time=slice("1975", "2005"))
 
 data
 
-# ### Ireland subset
+# ## Ireland subset
 
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
@@ -94,21 +102,80 @@ data.coords["time_bnds"] = data_time_bnds
 
 data
 
-# ### Calculate photosynthetically active radiation
+# ## Visualise fields
+
+# ### Monthly averages
+
+for var in data.data_vars:
+    cplt.plot_averages(
+        data=data.sel(time=slice("1976", "2005")),
+        var=var,
+        averages="month",
+        boundary_data=ie_bbox,
+        cbar_levels=16,
+    )
+
+# ### Time series
+
+# using Moorepark met station coordinates
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+for var in data.data_vars:
+    plt.figure(figsize=(12, 4))
+    plt.plot(data_ie["time"], data_ie[var], linewidth=0.5)
+    plt.ylabel(
+        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+    )
+    plt.tight_layout()
+    plt.show()
+
+# ### Box plots
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+data_ie_df.set_index("time", inplace=True)
+
+for var in data_ie.data_vars:
+    data_ie_df.plot.box(
+        column=var, vert=False, showmeans=True, figsize=(12, 2)
+    )
+    plt.xlabel(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+    plt.tight_layout()
+    plt.show()
+
+# ## Calculate photosynthetically active radiation
 
 # Papaioannou et al. (1993) - irradiance ratio
 data = data.assign(PAR=data["rsds"] * 0.473)
 
 data
 
-# ### Calculate net downward shortwave radiation
+# compare radiation vals
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1989", "1991")
+)
 
-# assume an albedo of 0.23 (Allen et al., 1998)
-data = data.assign(RSN=data["rsds"] * (1 - 0.23))
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in ["rsds", "PAR"]:
+    data_ie_df[var] = data_ie[var]
 
-data
+data_ie_df.set_index("time", inplace=True)
 
-# ### Convert units
+data_ie_df.plot(figsize=(12, 4), xlabel="", colormap="viridis")
+plt.tight_layout()
+plt.show()
+
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie_df.plot.box(vert=False, showmeans=True, figsize=(12, 3))
+plt.tight_layout()
+plt.show()
+
+# ## Convert units and rename variables
 
 for v in data.data_vars:
     var_attrs = data[v].attrs  # extract attributes
@@ -116,22 +183,17 @@ for v in data.data_vars:
         var_attrs["units"] = "°C"
         data[v] = data[v] - 273.15
         var_attrs["note"] = "Converted from K to °C by subtracting 273.15"
-    elif v in ("PAR", "RSN", "rsds"):
+    elif v == "PAR":
         var_attrs["units"] = "MJ m⁻² day⁻¹"
         data[v] = data[v] * (60 * 60 * 24 / 1e6)
-        if v == "PAR":
-            var_attrs[
-                "long_name"
-            ] = "Surface Photosynthetically Active Radiation"
-            var_attrs["note"] = (
-                "Calculated by multiplying 'rsds' with an irradiance "
-                "ratio of 0.473 based on Papaioannou et al. (1993); "
-                "converted from W m⁻² to MJ m⁻² day⁻¹ by multiplying "
-                "0.0864 based on the FAO Irrigation and Drainage Paper "
-                "No. 56 (Allen et al., 1998, p. 45)"
-            )
-        elif v == "RSN":
-            var_attrs["long_name"] = "Surface Net Downward Shortwave Radiation"
+        var_attrs["long_name"] = "Surface Photosynthetically Active Radiation"
+        var_attrs["note"] = (
+            "Calculated by multiplying surface downwelling shortwave "
+            "radiation with an irradiance ratio of 0.473 based on Papaioannou "
+            "et al. (1993); converted from W m⁻² to MJ m⁻² day⁻¹ by "
+            "multiplying 0.0864 based on the FAO Irrigation and Drainage "
+            "Paper No. 56 (Allen et al., 1998, p. 45)"
+        )
     elif v in ("pr", "evspsblpot"):
         var_attrs["units"] = "mm day⁻¹"
         data[v] = data[v] * 60 * 60 * 24
@@ -142,7 +204,7 @@ for v in data.data_vars:
     data[v].attrs = var_attrs  # reassign attributes
 
 # rename variables
-data = data.rename({"tas": "T", "rsds": "RS", "pr": "PP", "evspsblpot": "PET"})
+data = data.rename({"tas": "T", "pr": "PP", "evspsblpot": "PET"})
 
 # assign dataset name
 for x in ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]:
@@ -150,6 +212,9 @@ for x in ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]:
         data.attrs[
             "dataset"
         ] = f"IE_EURO-CORDEX_RCA4_{x}_{data.attrs['experiment_id']}"
+
+# keep only required variables
+data = data.drop_vars(["rsds"])
 
 # assign attributes to the data
 data.attrs["comment"] = (
@@ -160,26 +225,26 @@ data.attrs["comment"] = (
     + " by nstreethran@ucc.ie."
 )
 
-data
-
 # reassign CRS
 data.rio.write_crs(data_crs, inplace=True)
 
 data.rio.crs
 
+# ## Visualise
+
 # ### Monthly averages
 
 cplt.plot_averages(
-    data=data.sel(time=slice("2041", "2070")),
+    data=data.sel(time=slice("1976", "2005")),
     var="T",
     averages="month",
     boundary_data=ie_bbox,
     cbar_levels=[3 + 1 * n for n in range(13)],
 )
 
-for var in data.data_vars:
+for var in ["PAR", "PET", "PP"]:
     cplt.plot_averages(
-        data=data.sel(time=slice("2041", "2070")),
+        data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
         boundary_data=ie_bbox,
@@ -190,18 +255,16 @@ for var in data.data_vars:
 
 for var in data.data_vars:
     cplt.plot_averages(
-        data=data.sel(time=slice("2041", "2070")),
+        data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="season",
         boundary_data=ie_bbox,
         cbar_levels=12,
     )
 
-# ### Point subset
+# ### Time series
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("2041", "2070")
-)
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie
 
@@ -215,7 +278,7 @@ for var in data.data_vars:
     plt.tight_layout()
     plt.show()
 
-data_ie = data_ie.sel(time=slice("2054", "2056"))
+data_ie = data_ie.sel(time=slice("1989", "1991"))
 
 for var in data.data_vars:
     plt.figure(figsize=(12, 4))
@@ -228,20 +291,9 @@ for var in data.data_vars:
     plt.show()
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in ["RS", "RSN", "PAR"]:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
-
-data_ie_df.plot(figsize=(12, 4), colormap="viridis", xlabel="")
-
-plt.tight_layout()
-plt.show()
-
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 # configure plot title
 plot_title = []
-for var in ["T", "PP", "PET", "PAR"]:
+for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
     plot_title.append(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
@@ -260,3 +312,22 @@ data_ie_df.plot(
 
 plt.tight_layout()
 plt.show()
+
+# ### Box plots
+
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+data_ie_df.set_index("time", inplace=True)
+
+for var in data_ie.data_vars:
+    data_ie_df.plot.box(
+        column=var, vert=False, showmeans=True, figsize=(12, 2)
+    )
+    plt.xlabel(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+    plt.tight_layout()
+    plt.show()

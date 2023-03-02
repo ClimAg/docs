@@ -46,23 +46,25 @@ ie_bbox = gpd.read_file(
 
 # met station coords
 LON_VAL, LAT_VAL = -10.24333, 51.93806  # Valentia Observatory
-LON_ROC, LAT_ROC = -8.24444, 51.79306  # Roche's Point
-LON_JOH, LAT_JOH = -6.5, 52.29167  # Johnstown Castle
-LON_MUL, LAT_MUL = -7.36222, 53.53722  # Mullingar
+LON_MPF, LAT_MPF = -8.26389, 52.16389  # Moorepark, Fermoy
 
 # ## rcp45
 
 data = xr.open_mfdataset(
     glob.glob(
-        os.path.join(
-            DATA_DIR, "EURO-CORDEX", "rcp45", "ICHEC-EC-EARTH", "*.nc"
-        )
+        os.path.join(DATA_DIR, "EURO-CORDEX", "rcp45", "EC-EARTH", "*.nc")
     ),
     chunks="auto",
     decode_coords="all",
 )
 
 data
+
+# remove the spin-up year
+data = data.sel(time=slice("2041", "2070"))
+
+# cumulative biomass
+data["c_bm"].attrs["long_name"] = "Net biomass production"
 
 # ### Annual averages
 
@@ -74,9 +76,6 @@ cplt.plot_averages(
     cbar_levels=12,
 )
 
-# remove the spin-up year
-data = data.sel(time=slice("2042", "2070"))
-
 # ### Monthly averages
 
 cplt.plot_averages(
@@ -84,10 +83,10 @@ cplt.plot_averages(
     var="gro",
     averages="month",
     boundary_data=ie_bbox,
-    cbar_levels=[0 + 10 * n for n in range(11)],
+    cbar_levels=[0 + 10 * n for n in range(16)],
 )
 
-for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "aet"]:
+for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "c_bm", "aet"]:
     cplt.plot_averages(
         data=data,
         var=var,
@@ -98,7 +97,7 @@ for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "aet"]:
 
 # ### Seasonal averages
 
-for var in ["gro", "bm", "pgro", "aet"]:
+for var in ["gro", "pgro", "bm", "aet"]:
     cplt.plot_averages(
         data=data,
         var=var,
@@ -121,7 +120,7 @@ for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
 
 data_ie_df.set_index("time", inplace=True)
-data_ie_df = data_ie_df[["bm", "pgro", "gro", "i_bm", "h_bm"]]
+data_ie_df = data_ie_df[["pgro", "gro", "h_bm", "i_bm", "bm", "c_bm"]]
 
 # configure plot title
 plot_title = []
@@ -172,9 +171,40 @@ data_ie_df.plot(
 plt.tight_layout()
 plt.show()
 
-# #### Roche's Point
+# #### Moorepark
 
-cds = cplt.rotated_pole_point(data=data, lon=LON_ROC, lat=LAT_ROC)
+cds = cplt.rotated_pole_point(data=data, lon=LON_MPF, lat=LAT_MPF)
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("2054", "2056")
+)
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+
+data_ie_df.set_index("time", inplace=True)
+data_ie_df = data_ie_df[["pgro", "gro", "i_bm", "h_bm", "bm", "c_bm"]]
+
+# configure plot title
+plot_title = []
+for var in list(data_ie_df):
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(3, 2),
+    figsize=(13, 8),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+)
+
+plt.tight_layout()
+plt.show()
+
+cds = cplt.rotated_pole_point(data=data, lon=LON_MPF, lat=LAT_MPF)
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
     time=slice("2054", "2056")
 )
@@ -204,66 +234,36 @@ data_ie_df.plot(
 plt.tight_layout()
 plt.show()
 
-# #### Johnstown Castle
+data_ie_y = data_ie.sel(time=slice("2054", "2056"))
 
-cds = cplt.rotated_pole_point(data=data, lon=LON_JOH, lat=LAT_JOH)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("2054", "2056")
-)
+data_ie_df = pd.DataFrame({"time": data_ie_y["time"]})
 
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-
-# configure plot title
-plot_title = []
-
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-    plot_title.append(
-        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
-    )
+for var in data_ie_y.data_vars:
+    data_ie_df[var] = data_ie_y[var]
 
 data_ie_df.set_index("time", inplace=True)
+data_ie_df = data_ie_df[["gro"]]
 
-data_ie_df.plot(
-    subplots=True,
-    layout=(5, 3),
-    figsize=(15, 11),
-    legend=False,
-    xlabel="",
-    title=plot_title,
-)
+# resample to weekly
+data_ie_df = data_ie_df.resample("W-MON").mean()
 
-plt.tight_layout()
-plt.show()
-
-# #### Mullingar
-
-cds = cplt.rotated_pole_point(data=data, lon=LON_MUL, lat=LAT_MUL)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("2054", "2056")
-)
-
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-
-# configure plot title
-plot_title = []
-
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-    plot_title.append(
-        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
-    )
-
+data_ie_df.reset_index(inplace=True)
+mn = data_ie_df.rolling(3, center=True, on="time")["gro"].mean()
+data_ie_df["outlier"] = data_ie_df["gro"].sub(mn).abs().gt(10)
+data_ie_df["moving_avg"] = mn
 data_ie_df.set_index("time", inplace=True)
 
-data_ie_df.plot(
-    subplots=True,
-    layout=(5, 3),
-    figsize=(15, 11),
-    legend=False,
-    xlabel="",
-    title=plot_title,
+axs = data_ie_df.plot(y="gro", figsize=(12, 5), xlabel="", label="growth")
+data_ie_df.plot(y="moving_avg", ax=axs, color="orange", zorder=1)
+data_ie_df[data_ie_df["outlier"] is True].plot(
+    y="gro",
+    ax=axs,
+    marker="*",
+    linewidth=0.0,
+    color="crimson",
+    label="outlier",
 )
-
+plt.xlabel("")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 plt.show()

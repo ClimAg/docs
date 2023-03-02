@@ -21,6 +21,8 @@
 
 import os
 from datetime import datetime, timezone
+import numpy as np
+import pandas as pd
 from climag.modvege_run import run_modvege
 
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -32,6 +34,29 @@ PARAMS_FILE = os.path.join(DATA_DIR, "params.csv")
 
 # define the name of the input time series file
 TS_FILE = os.path.join("data", "met", "MetEireann", "valentia.csv")
+
+# ## Input time series
+
+ts = pd.read_csv(TS_FILE, parse_dates=["time"])
+
+ts.sort_values(by=["time"], inplace=True)
+ts = ts.reset_index().set_index("time")
+
+ts.head()
+
+ts.tail()
+
+for year in ts.index.year.unique():
+    print("T", year, round(np.mean(ts.loc[str(year)]["T"]), 2))
+    print("PP", year, round(np.mean(ts.loc[str(year)]["PP"]), 2))
+    print(
+        "grazing season length",
+        round(
+            29.3 * np.mean(ts.loc[str(year)]["T"])
+            - 0.1 * np.sum(ts.loc[str(year)]["PP"])
+            + 19.5
+        ),
+    )
 
 # ## Results for different residual grass heights
 
