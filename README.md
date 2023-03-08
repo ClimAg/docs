@@ -35,13 +35,13 @@ Northern Ireland Electoral Wards | [nbviewer](https://nbviewer.org/gist/nmstreet
 Ireland counties - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary.ipynb)
 ***Meteorological data***
 Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample_met_data.ipynb)
-***EURO-CORDEX***
+***Climate model datasets***
 EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_intake.ipynb)
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/eurocordex_ie.ipynb)
-***HiResIreland***
-HiResIreland climate model data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland.ipynb)
-HiResIreland climate model data variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland_fields.ipynb)
-***Grass growth***
+HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland.ipynb)
+HiResIreland variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/hiresireland_fields.ipynb)
+Dataset visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/climate_data_viz.ipynb)
+***Model results***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_eurocordex.ipynb)
 ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/modvege_hiresireland.ipynb)
@@ -60,8 +60,6 @@ Soil water-holding capacity based on European soil database derived data - HiRes
 Met Éireann Reanalysis | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/mera_data.ipynb)
 ***Meteorological data***
 Met stations in the Island of Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/met-stations.ipynb)
-***Results***
-Box plots | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/box_plots.ipynb)
 ***Grass growth***
 GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/grasscheck.ipynb)
 PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/pasturebase.ipynb)

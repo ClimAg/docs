@@ -39,47 +39,46 @@ ie_bbox = gpd.read_file(
 
 # ## Read a subset (historical)
 
+exp, model = "historical", "EC-EARTH"
+
 data = xr.open_mfdataset(
-    glob.glob(
-        os.path.join(
-            DATA_DIR_BASE, "COSMO5-CLM", "historical", "EC-EARTH", "*.nc"
+    list(
+        itertools.chain(
+            *list(
+                glob.glob(
+                    os.path.join(
+                        DATA_DIR_BASE, "COSMO5-CLM", exp, model, e
+                    )
+                )
+                for e in [
+                    f"*mean_T_2M*{model}*{exp}*.nc",
+                    f"S1_daymean*{model}*{exp}*.nc",
+                    f"*ET*{model}*{exp}*4km_*.nc",
+                    f"*TOT_PREC*{model}*{exp}*.nc"
+                ]
+            )
         )
     ),
     chunks="auto",
-    decode_coords="all",
+    decode_coords="all"
 )
-
-# data = xr.open_mfdataset(
-#     list(itertools.chain(*list(
-#         glob.glob(os.path.join(
-#             DATA_DIR_BASE, "COSMO5-CLM", "historical", "EC-EARTH", e
-#         ))
-#         for e in ["*mean_T_2M*.nc", "*ASOB_S*.nc", "*ET*.nc", "*TOT_PREC*.nc"]
-#     ))),
-#     chunks="auto",
-#     decode_coords="all"
-# )
 
 data
 
-# # copy time_bnds
-# data_time_bnds = data.coords["time_bnds"]
+# copy time_bnds
+data_time_bnds = data.coords["time_bnds"]
 
 # copy CRS
 data_crs = data.rio.crs
 
 data_crs
 
-# drop spin-up year, for now
-data = data.sel(time=slice("1976", "2005"))
+# ## Clip to Ireland's boundary
 
-# ## Ireland subset
-
-# clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(1).to_crs(data_crs))
 
-# # reassign time_bnds
-# data.coords["time_bnds"] = data_time_bnds
+# convert Moorepark met station coordinates to rotated pole
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # rename and assign attributes to ET var
 data = data.rename({"w": "PET"})
@@ -88,13 +87,15 @@ data["PET"].attrs["units"] = "mm"
 
 data
 
-# ## Visualise fields
+# ## Visualise spin-up year
+
+data_ie = data.sel(time="1975")
 
 # ### Monthly averages
 
 for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
     cplt.plot_averages(
-        data=data,
+        data=data_ie,
         var=var,
         averages="month",
         boundary_data=ie_bbox,
@@ -103,7 +104,7 @@ for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
 
 for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
     cplt.plot_averages(
-        data=data,
+        data=data_ie,
         var=var,
         averages="month",
         boundary_data=ie_bbox,
@@ -112,36 +113,172 @@ for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
 
 # ### Time series
 
-# using Moorepark met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1975", "1977")
+)
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=1,
+)
+
+plt.tight_layout()
+plt.show()
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=1,
+)
+
+plt.tight_layout()
+plt.show()
+
+# ## Visualise fields
+
+# ### Monthly averages
+
+for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
+    cplt.plot_averages(
+        data=data.sel(time=slice("1976", "2005")),
+        var=var,
+        averages="month",
+        boundary_data=ie_bbox,
+        cbar_levels=16,
+    )
+
+for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
+    cplt.plot_averages(
+        data=data.sel(time=slice("1976", "2005")),
+        var=var,
+        averages="month",
+        boundary_data=ie_bbox,
+        cbar_levels=16,
+    )
+
+# ### Time series
 
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=0.5)
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=0.5,
+)
+
+plt.tight_layout()
+plt.show()
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=0.5,
+)
+
+plt.tight_layout()
+plt.show()
 
 # ### Box plots
+
+data_ie = data_ie.sel(time=slice("1976", "2005"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
 data_ie_df.set_index("time", inplace=True)
 
-for var in data_ie.data_vars:
+fig, axs = plt.subplots(4, 2, figsize=(12, 8))
+for ax, var in zip(axs.flat, data_ie.data_vars):
     data_ie_df.plot.box(
-        column=var, vert=False, showmeans=True, figsize=(12, 2)
+        column=var,
+        vert=False,
+        showmeans=True,
+        ax=ax,
+        patch_artist=True,
+        color={
+            "medians": "Crimson",
+            "whiskers": "DarkSlateGrey",
+            "caps": "DarkSlateGrey",
+        },
+        boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+        meanprops={
+            "markeredgecolor": "DarkSlateGrey",
+            "marker": "d",
+            "markerfacecolor": (1, 1, 0, 0),  # transparent
+        },
+        flierprops={
+            "alpha": 0.5,
+            "markeredgecolor": "LightSteelBlue",
+            "zorder": 1,
+        },
     )
-    plt.xlabel(
+    ax.set_title(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+    ax.set(yticklabels=[])
+plt.tight_layout()
+plt.show()
 
 # ## Calculate surface downwelling shortwave radiation
 
@@ -152,7 +289,7 @@ data["rsds"].attrs["units"] = "W m-2"
 data["rsds"].attrs["long_name"] = "Surface Downwelling Shortwave Radiation"
 
 cplt.plot_averages(
-    data=data,
+    data=data.sel(time=slice("1976", "2005")),
     var="rsds",
     averages="month",
     boundary_data=ie_bbox,
@@ -163,20 +300,44 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 plt.figure(figsize=(12, 4))
 plt.plot(data_ie["time"], data_ie["rsds"], linewidth=0.5)
-plt.ylabel(
-    f"{data_ie['rsds'].attrs['long_name']}\n[{data_ie['rsds'].attrs['units']}]"
+plt.title(
+    f"{data_ie['rsds'].attrs['long_name']} [{data_ie['rsds'].attrs['units']}]"
 )
 plt.tight_layout()
 plt.show()
 
+data_ie = data_ie.sel(time=slice("1976", "2005"))
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 data_ie_df["rsds"] = data_ie["rsds"]
 data_ie_df.set_index("time", inplace=True)
 
-data_ie_df.plot.box(column="rsds", vert=False, showmeans=True, figsize=(12, 2))
-plt.xlabel(
+fig = data_ie_df.plot.box(
+    column="rsds",
+    vert=False,
+    showmeans=True,
+    figsize=(8, 2),
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={
+        "alpha": 0.5,
+        "markeredgecolor": "LightSteelBlue",
+        "zorder": 1,
+    },
+)
+plt.title(
     f"{data_ie['rsds'].attrs['long_name']} [{data_ie['rsds'].attrs['units']}]"
 )
+fig.set(yticklabels=[])
 plt.tight_layout()
 plt.show()
 
@@ -198,20 +359,44 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 plt.figure(figsize=(12, 4))
 plt.plot(data_ie["time"], data_ie["rsds"], linewidth=0.5)
-plt.ylabel(
-    f"{data_ie['rsds'].attrs['long_name']}\n[{data_ie['rsds'].attrs['units']}]"
+plt.title(
+    f"{data_ie['rsds'].attrs['long_name']} [{data_ie['rsds'].attrs['units']}]"
 )
 plt.tight_layout()
 plt.show()
 
+data_ie = data_ie.sel(time=slice("1976", "2005"))
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 data_ie_df["rsds"] = data_ie["rsds"]
 data_ie_df.set_index("time", inplace=True)
 
-data_ie_df.plot.box(column="rsds", vert=False, showmeans=True, figsize=(12, 2))
-plt.xlabel(
+fig = data_ie_df.plot.box(
+    column="rsds",
+    vert=False,
+    showmeans=True,
+    figsize=(8, 2),
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={
+        "alpha": 0.5,
+        "markeredgecolor": "LightSteelBlue",
+        "zorder": 1,
+    },
+)
+plt.title(
     f"{data_ie['rsds'].attrs['long_name']} [{data_ie['rsds'].attrs['units']}]"
 )
+fig.set(yticklabels=[])
 plt.tight_layout()
 plt.show()
 
@@ -220,11 +405,9 @@ plt.show()
 # Papaioannou et al. (1993) - irradiance ratio
 data = data.assign(PAR=data["rsds"] * 0.473)
 
-data
-
 # compare radiation vals
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("1989", "1991")
+    time=slice("1997", "1999")
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
@@ -235,16 +418,42 @@ data_ie_df.set_index("time", inplace=True)
 
 data_ie_df.plot(figsize=(12, 4), colormap="viridis", xlabel="")
 plt.tight_layout()
+plt.title("Radiation [W m-2]")
 plt.show()
 
 data_ie_df[["rsds", "PAR"]].plot(
     figsize=(12, 4), colormap="viridis", xlabel=""
 )
+plt.title("Radiation [W m-2]")
 plt.tight_layout()
 plt.show()
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
-data_ie_df.plot.box(vert=False, showmeans=True, figsize=(12, 4))
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1976", "2005")
+)
+
+fig = data_ie_df.plot.box(
+    vert=False,
+    showmeans=True,
+    figsize=(10, 4),
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={
+        "alpha": 0.5,
+        "markeredgecolor": "LightSteelBlue",
+        "zorder": 1,
+    },
+)
 plt.tight_layout()
 plt.show()
 
@@ -299,20 +508,23 @@ data = data.drop_vars(
 # assign attributes to the data
 data.attrs["comment"] = (
     "This dataset has been clipped with the Island of Ireland's boundary and "
-    "units have been converted. "
-    "Last updated: "
+    "units have been converted. Last updated: "
     + str(datetime.now(tz=timezone.utc))
     + " by nstreethran@ucc.ie."
 )
 
-data
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
+
+# reassign CRS
+data.rio.write_crs(data_crs, inplace=True)
 
 # ## Visualise
 
 # ### Monthly averages
 
 cplt.plot_averages(
-    data=data,
+    data=data.sel(time=slice("1976", "2005")),
     var="T",
     averages="month",
     boundary_data=ie_bbox,
@@ -321,7 +533,7 @@ cplt.plot_averages(
 
 for var in ["PP", "PET", "PAR"]:
     cplt.plot_averages(
-        data=data,
+        data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
         boundary_data=ie_bbox,
@@ -330,9 +542,9 @@ for var in ["PP", "PET", "PAR"]:
 
 # ### Seasonal averages
 
-for var in ["PP", "PET", "PAR", "T"]:
+for var in data.data_vars:
     cplt.plot_averages(
-        data=data,
+        data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="season",
         boundary_data=ie_bbox,
@@ -344,28 +556,6 @@ for var in ["PP", "PET", "PAR", "T"]:
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie
-
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=0.5)
-    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
-    )
-    plt.tight_layout()
-    plt.show()
-
-data_ie = data_ie.sel(time=slice("1989", "1991"))
-
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=1)
-    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
-    )
-    plt.tight_layout()
-    plt.show()
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 # configure plot title
@@ -381,7 +571,33 @@ data_ie_df.set_index("time", inplace=True)
 data_ie_df.plot(
     subplots=True,
     layout=(4, 1),
-    figsize=(9, 11),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=0.5,
+)
+
+plt.tight_layout()
+plt.show()
+
+data_ie = data_ie.sel(time=slice("1997", "1999"))
+
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
+    )
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
     legend=False,
     xlabel="",
     title=plot_title,
@@ -392,24 +608,50 @@ plt.show()
 
 # ### Box plots
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1976", "2005")
+)
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
 data_ie_df.set_index("time", inplace=True)
 
-for var in data_ie.data_vars:
+fig, axs = plt.subplots(2, 2, figsize=(12, 4))
+for ax, var in zip(axs.flat, data_ie.data_vars):
     data_ie_df.plot.box(
-        column=var, vert=False, showmeans=True, figsize=(12, 2)
+        column=var,
+        vert=False,
+        showmeans=True,
+        ax=ax,
+        patch_artist=True,
+        color={
+            "medians": "Crimson",
+            "whiskers": "DarkSlateGrey",
+            "caps": "DarkSlateGrey",
+        },
+        boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+        meanprops={
+            "markeredgecolor": "DarkSlateGrey",
+            "marker": "d",
+            "markerfacecolor": (1, 1, 0, 0),  # transparent
+        },
+        flierprops={
+            "alpha": 0.5,
+            "markeredgecolor": "LightSteelBlue",
+            "zorder": 1,
+        },
     )
-    plt.xlabel(
+    ax.set_title(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+    ax.set(yticklabels=[])
+plt.tight_layout()
+plt.show()
 
 # ## Extend data to a spin-up year
+
+data = data.sel(time=slice("1976", "2005"))
 
 data_interp = data.interp(
     time=pd.date_range(
@@ -441,10 +683,7 @@ data_ie = data_interp.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 plt.figure(figsize=(12, 4))
 plt.plot(data_ie["time"], data_ie["T"], linewidth=1)
-plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-plt.ylabel(
-    f"{data_ie['T'].attrs['long_name']}\n[{data_ie['T'].attrs['units']}]"
-)
+plt.title(f"{data_ie['T'].attrs['long_name']} [{data_ie['T'].attrs['units']}]")
 plt.tight_layout()
 plt.show()
 
@@ -468,10 +707,7 @@ data_ie = data_interp.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 # should be the same as before, but shifted forwards to the spin-up year
 plt.figure(figsize=(12, 4))
 plt.plot(data_ie["time"], data_ie["T"], linewidth=1)
-plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-plt.ylabel(
-    f"{data_ie['T'].attrs['long_name']}\n[{data_ie['T'].attrs['units']}]"
-)
+plt.title(f"{data_ie['T'].attrs['long_name']} [{data_ie['T'].attrs['units']}]")
 plt.tight_layout()
 plt.show()
 
@@ -495,9 +731,6 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
 # spin-up year and first year should be identical
 plt.figure(figsize=(12, 4))
 plt.plot(data_ie["time"], data_ie["T"], linewidth=1)
-plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-plt.ylabel(
-    f"{data_ie['T'].attrs['long_name']}\n[{data_ie['T'].attrs['units']}]"
-)
+plt.title(f"{data_ie['T'].attrs['long_name']} [{data_ie['T'].attrs['units']}]")
 plt.tight_layout()
 plt.show()

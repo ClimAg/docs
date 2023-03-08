@@ -79,8 +79,8 @@ data = xr.open_mfdataset(
 
 data
 
-# copy time_bnds coordinates
-data_time_bnds = data.coords["time_bnds"]
+# using Moorepark met station coordinates
+cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
 # copy CRS
 data_crs = data.rio.crs
@@ -90,15 +90,15 @@ data_crs
 # subset for reference period and spin-up year
 data = data.sel(time=slice("1975", "2005"))
 
+# copy time_bnds coordinates
+data_time_bnds = data.coords["time_bnds"]
+
 data
 
 # ## Ireland subset
 
 # clip to Ireland's boundary
 data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
-
-# reassign time_bnds
-data.coords["time_bnds"] = data_time_bnds
 
 data
 
@@ -117,36 +117,72 @@ for var in data.data_vars:
 
 # ### Time series
 
-# using Moorepark met station coordinates
-cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
-
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=0.5)
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+
+data_ie_df.set_index("time", inplace=True)
+
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=0.5,
+)
+
+plt.tight_layout()
+plt.show()
 
 # ### Box plots
+
+data_ie = data_ie.sel(time=slice("1976", "2005"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
 data_ie_df.set_index("time", inplace=True)
 
-for var in data_ie.data_vars:
+fig, axs = plt.subplots(2, 2, figsize=(12, 4))
+for ax, var in zip(axs.flat, data_ie.data_vars):
     data_ie_df.plot.box(
-        column=var, vert=False, showmeans=True, figsize=(12, 2)
+        column=var,
+        vert=False,
+        showmeans=True,
+        ax=ax,
+        patch_artist=True,
+        color={
+            "medians": "Crimson",
+            "whiskers": "DarkSlateGrey",
+            "caps": "DarkSlateGrey",
+        },
+        boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+        meanprops={
+            "markeredgecolor": "DarkSlateGrey",
+            "marker": "d",
+            "markerfacecolor": (1, 1, 0, 0),  # transparent
+        },
+        flierprops={
+            "alpha": 0.5,
+            "markeredgecolor": "LightSteelBlue",
+            "zorder": 1,
+        },
     )
-    plt.xlabel(
+    ax.set_title(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+    ax.set(yticklabels=[])
+plt.tight_layout()
+plt.show()
 
 # ## Calculate photosynthetically active radiation
 
@@ -157,7 +193,7 @@ data
 
 # compare radiation vals
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("1989", "1991")
+    time=slice("1997", "1999")
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
@@ -170,8 +206,32 @@ data_ie_df.plot(figsize=(12, 4), xlabel="", colormap="viridis")
 plt.tight_layout()
 plt.show()
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
-data_ie_df.plot.box(vert=False, showmeans=True, figsize=(12, 3))
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1976", "2005")
+)
+
+fig = data_ie_df.plot.box(
+    vert=False,
+    showmeans=True,
+    figsize=(10, 3),
+    patch_artist=True,
+    color={
+        "medians": "Crimson",
+        "whiskers": "DarkSlateGrey",
+        "caps": "DarkSlateGrey",
+    },
+    boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+    meanprops={
+        "markeredgecolor": "DarkSlateGrey",
+        "marker": "d",
+        "markerfacecolor": (1, 1, 0, 0),  # transparent
+    },
+    flierprops={
+        "alpha": 0.5,
+        "markeredgecolor": "LightSteelBlue",
+        "zorder": 1,
+    },
+)
 plt.tight_layout()
 plt.show()
 
@@ -225,6 +285,9 @@ data.attrs["comment"] = (
     + " by nstreethran@ucc.ie."
 )
 
+# reassign time_bnds
+data.coords["time_bnds"] = data_time_bnds
+
 # reassign CRS
 data.rio.write_crs(data_crs, inplace=True)
 
@@ -268,27 +331,31 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie
 
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=0.5)
-    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
+data_ie_df = pd.DataFrame({"time": data_ie["time"]})
+# configure plot title
+plot_title = []
+for var in data_ie.data_vars:
+    data_ie_df[var] = data_ie[var]
+    plot_title.append(
+        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
 
-data_ie = data_ie.sel(time=slice("1989", "1991"))
+data_ie_df.set_index("time", inplace=True)
 
-for var in data.data_vars:
-    plt.figure(figsize=(12, 4))
-    plt.plot(data_ie["time"], data_ie[var], linewidth=1)
-    plt.title(f"{data_ie.attrs['dataset']}, lon={LON}, lat={LAT}")
-    plt.ylabel(
-        f"{data_ie[var].attrs['long_name']}\n[{data_ie[var].attrs['units']}]"
-    )
-    plt.tight_layout()
-    plt.show()
+data_ie_df.plot(
+    subplots=True,
+    layout=(4, 1),
+    figsize=(12, 11),
+    legend=False,
+    xlabel="",
+    title=plot_title,
+    linewidth=0.5,
+)
+
+plt.tight_layout()
+plt.show()
+
+data_ie = data_ie.sel(time=slice("1997", "1999"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 # configure plot title
@@ -304,7 +371,7 @@ data_ie_df.set_index("time", inplace=True)
 data_ie_df.plot(
     subplots=True,
     layout=(4, 1),
-    figsize=(9, 11),
+    figsize=(12, 11),
     legend=False,
     xlabel="",
     title=plot_title,
@@ -315,19 +382,61 @@ plt.show()
 
 # ### Box plots
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
+    time=slice("1976", "2005")
+)
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 for var in data_ie.data_vars:
     data_ie_df[var] = data_ie[var]
 data_ie_df.set_index("time", inplace=True)
 
-for var in data_ie.data_vars:
+fig, axs = plt.subplots(2, 2, figsize=(12, 4))
+for ax, var in zip(axs.flat, data_ie.data_vars):
     data_ie_df.plot.box(
-        column=var, vert=False, showmeans=True, figsize=(12, 2)
+        column=var,
+        vert=False,
+        showmeans=True,
+        ax=ax,
+        patch_artist=True,
+        color={
+            "medians": "Crimson",
+            "whiskers": "DarkSlateGrey",
+            "caps": "DarkSlateGrey",
+        },
+        boxprops={"facecolor": "Lavender", "color": "DarkSlateGrey"},
+        meanprops={
+            "markeredgecolor": "DarkSlateGrey",
+            "marker": "d",
+            "markerfacecolor": (1, 1, 0, 0),  # transparent
+        },
+        flierprops={
+            "alpha": 0.5,
+            "markeredgecolor": "LightSteelBlue",
+            "zorder": 1,
+        },
     )
-    plt.xlabel(
+    ax.set_title(
         f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
     )
-    plt.tight_layout()
-    plt.show()
+    ax.set(yticklabels=[])
+plt.tight_layout()
+plt.show()
+
+data_ie_df = data_ie_df[["PP"]].resample("A").sum()
+data_ie_df.set_index(data_ie_df.index.year, inplace=True)
+
+data_ie_df.plot.bar(figsize=(12, 4), legend=False, xlabel="")
+plt.title("Total precipitation [mm year⁻¹]")
+plt.tight_layout()
+plt.show()
+
+data_ie_df.diff().plot.hist(
+    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
+)
+plt.show()
+
+data_ie_df.plot.hist(
+    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
+)
+plt.show()
