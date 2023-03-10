@@ -230,7 +230,9 @@ plt.show()
 
 # ## Clip to boundary of Ireland
 
-data_ie = data.rio.clip(ie.buffer(1).to_crs(lambert_conformal))
+data_ie = data.rio.clip(
+    ie.buffer(1).to_crs(lambert_conformal), all_touched=True
+)
 
 data_ie
 
@@ -378,7 +380,9 @@ plt.show()
 # reassign CRS
 data.rio.write_crs(lambert_conformal, inplace=True)
 
-data_ie = data.rio.clip(ie.buffer(1).to_crs(lambert_conformal))
+data_ie = data.rio.clip(
+    ie.buffer(1).to_crs(lambert_conformal), all_touched=True
+)
 
 data_ie
 

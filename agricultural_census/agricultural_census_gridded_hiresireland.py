@@ -19,7 +19,7 @@ import climag.plot_configs as cplt
 # ## Open some gridded climate data
 
 TS_FILE = os.path.join(
-    "data", "HiResIreland", "IE", "IE_COSMO5_MPI-ESM-LR_rcp45_4km.nc"
+    "data", "HiResIreland", "IE", "IE_HiResIreland_COSMO5_EC-EARTH_rcp45.nc"
 )
 
 data = xr.open_dataset(TS_FILE, chunks="auto", decode_coords="all")
@@ -27,7 +27,7 @@ data = xr.open_dataset(TS_FILE, chunks="auto", decode_coords="all")
 data
 
 # keep only one variable
-data = data.drop_vars(names=["PET", "PP", "RG", "PAR"])
+data = data.drop_vars(names=["PET", "PP", "PAR"])
 
 data
 
@@ -215,12 +215,9 @@ len(dissolve.index.unique())
 # merge with cell data
 grid_cells.loc[dissolve.index, "sr"] = dissolve["stocking_rate"].values
 
-# drop rows with missing values
-grid_cells.dropna(inplace=True)
+grid_cells.shape
 
 grid_cells.head()
-
-grid_cells.shape
 
 len(grid_cells["geometry"].unique())
 
@@ -266,6 +263,41 @@ axs = grid_cells.plot(
         "loc": "upper left",
         "fmt": "{:.2f}",
         "title": "Stocking rate [LU ha⁻¹]",
+    },
+    missing_kwds={
+        "color": "darkslategrey",
+        "edgecolor": "darkslategrey",
+        "label": "No data",
+    },
+)
+for legend_handle in axs.get_legend().legendHandles:
+    legend_handle.set_markeredgewidth(0.2)
+    legend_handle.set_markeredgecolor("darkslategrey")
+axs.tick_params(labelbottom=False, labelleft=False)
+plt.axis("equal")
+plt.tight_layout()
+plt.show()
+
+# fill no data with min value
+grid_cells["sr"] = grid_cells["sr"].fillna(grid_cells["sr"].min())
+
+axs = grid_cells.plot(
+    column="sr",
+    cmap="Spectral_r",
+    scheme="equal_interval",
+    edgecolor="darkslategrey",
+    linewidth=0.2,
+    figsize=(6, 7),
+    legend=True,
+    legend_kwds={
+        "loc": "upper left",
+        "fmt": "{:.2f}",
+        "title": "Stocking rate [LU ha⁻¹]",
+    },
+    missing_kwds={
+        "color": "darkslategrey",
+        "edgecolor": "darkslategrey",
+        "label": "No data",
     },
 )
 for legend_handle in axs.get_legend().legendHandles:

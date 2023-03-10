@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import xarray as xr
 from dask.distributed import Client
 import climag.plot_configs as cplt
@@ -36,6 +37,7 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 ie_bbox = gpd.read_file(
     GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"
 )
+ie_ne = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 
 # ## Read a subset (historical)
 
@@ -46,22 +48,25 @@ data = xr.open_mfdataset(
         itertools.chain(
             *list(
                 glob.glob(
-                    os.path.join(
-                        DATA_DIR_BASE, "COSMO5-CLM", exp, model, e
-                    )
+                    os.path.join(DATA_DIR_BASE, "COSMO5-CLM", exp, model, e)
                 )
                 for e in [
                     f"*mean_T_2M*{model}*{exp}*.nc",
                     f"S1_daymean*{model}*{exp}*.nc",
-                    f"*ET*{model}*{exp}*4km_*.nc",
-                    f"*TOT_PREC*{model}*{exp}*.nc"
+                    f"*ET*{model}*{exp}*.nc",
+                    f"*TOT_PREC*{model}*{exp}*.nc",
                 ]
             )
         )
     ),
     chunks="auto",
-    decode_coords="all"
+    decode_coords="all",
 )
+
+# rename and assign attributes to ET var
+data = data.rename({"w": "PET"})
+data["PET"].attrs["long_name"] = "evapotranspiration"
+data["PET"].attrs["units"] = "mm"
 
 data
 
@@ -73,17 +78,49 @@ data_crs = data.rio.crs
 
 data_crs
 
-# ## Clip to Ireland's boundary
-
-data = data.rio.clip(ie.buffer(1).to_crs(data_crs))
-
 # convert Moorepark met station coordinates to rotated pole
 cds = cplt.rotated_pole_point(data=data, lon=LON, lat=LAT)
 
-# rename and assign attributes to ET var
-data = data.rename({"w": "PET"})
-data["PET"].attrs["long_name"] = "evapotranspiration"
-data["PET"].attrs["units"] = "mm"
+# ## Clip to Ireland's boundary
+
+data = data.rio.clip(ie.buffer(1).to_crs(data_crs), all_touched=True)
+
+# number of grid cells with data
+len(
+    data.groupby("time.season")
+    .mean(dim="time")["T_2M"][0]
+    .values.flatten()[
+        np.isfinite(
+            data.groupby("time.season")
+            .mean(dim="time")["T_2M"][0]
+            .values.flatten()
+        )
+    ]
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="T_2M",
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="T_2M",
+    boundary_data=ie_bbox,
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="T_2M",
+    contour=True,
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="T_2M",
+    contour=True,
+    boundary_data=ie_bbox,
+)
 
 data
 
@@ -93,12 +130,12 @@ data_ie = data.sel(time="1975")
 
 # ### Monthly averages
 
-for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
+for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S"]:
     cplt.plot_averages(
         data=data_ie,
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -107,7 +144,7 @@ for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
         data=data_ie,
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -174,7 +211,7 @@ for var in ["ASWDIR_S", "ASWDIFD_S", "ASWDIFU_S", "ASOB_S"]:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -183,7 +220,7 @@ for var in ["TOT_PREC", "PET", "T_2M", "ALB_RAD"]:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -292,7 +329,7 @@ cplt.plot_averages(
     data=data.sel(time=slice("1976", "2005")),
     var="rsds",
     averages="month",
-    boundary_data=ie_bbox,
+    boundary_data=ie_ne,
     cbar_levels=16,
 )
 
@@ -351,7 +388,7 @@ cplt.plot_averages(
     data=data,
     var="rsds",
     averages="month",
-    boundary_data=ie_bbox,
+    boundary_data=ie_ne,
     cbar_levels=16,
 )
 
@@ -527,7 +564,7 @@ cplt.plot_averages(
     data=data.sel(time=slice("1976", "2005")),
     var="T",
     averages="month",
-    boundary_data=ie_bbox,
+    boundary_data=ie_ne,
     cbar_levels=[3 + 1 * n for n in range(13)],
 )
 
@@ -536,7 +573,7 @@ for var in ["PP", "PET", "PAR"]:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -547,7 +584,7 @@ for var in data.data_vars:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="season",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=14,
     )
 

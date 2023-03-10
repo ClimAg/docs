@@ -49,7 +49,7 @@ if not os.path.isfile(os.path.join(SUB_DIR, FILE_NAME)):
             f"Download URL: {URL}"
         )
 
-DATA_FILE = os.path.join(SUB_DIR, "ref-nuts-2021-01m.shp.zip")
+DATA_FILE = os.path.join(SUB_DIR, FILE_NAME)
 
 ZipFile(DATA_FILE).namelist()
 
@@ -77,8 +77,12 @@ nuts0 = nuts0[nuts0["CNTR_CODE"].isin(["IE", "UK"])]
 
 nuts0
 
-base = nuts0.plot(color="navajowhite", figsize=(7.5, 7.5))
-nuts0.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = nuts0.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("NUTS0 Regions of Ireland and UK")
@@ -104,8 +108,12 @@ nuts1 = nuts1[nuts1["NUTS_ID"].isin(["IE0", "UKN"])]
 
 nuts1
 
-base = nuts1.plot(color="navajowhite", figsize=(7.5, 7.5))
-nuts1.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = nuts1.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
 base.yaxis.set_major_formatter(cplt.latitude_tick_format)
@@ -130,8 +138,12 @@ nuts2
 
 nuts2.total_bounds.round(2)
 
-base = nuts2.plot(color="navajowhite", figsize=(7.5, 7.5))
-nuts2.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = nuts2.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
 base.yaxis.set_major_formatter(cplt.latitude_tick_format)
@@ -154,8 +166,12 @@ nuts3 = nuts3[nuts3["NUTS_ID"].str.contains("IE|UKN")]
 
 nuts3
 
-base = nuts3.plot(color="navajowhite", figsize=(7.5, 7.5))
-nuts3.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = nuts3.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
 base.yaxis.set_major_formatter(cplt.latitude_tick_format)
@@ -187,8 +203,12 @@ ie = ie.assign(DESCRIPTION=DESCRIPTION)
 
 ie
 
-base = ie.plot(color="navajowhite", figsize=(7.5, 7.5))
-ie.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = ie.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 
 base.xaxis.set_major_formatter(cplt.longitude_tick_format)
 base.yaxis.set_major_formatter(cplt.latitude_tick_format)
@@ -213,8 +233,12 @@ ie.to_crs(2157, inplace=True)
 
 ie
 
-base = ie.plot(color="navajowhite", figsize=(7.5, 7.5))
-ie.boundary.plot(ax=base, color="darkslategrey", linewidth=0.4)
+base = ie.plot(
+    color="navajowhite",
+    figsize=(7.5, 7.5),
+    edgecolor="darkslategrey",
+    linewidth=0.4,
+)
 
 # plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 # base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))

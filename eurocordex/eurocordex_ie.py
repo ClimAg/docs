@@ -11,6 +11,7 @@ import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import xarray as xr
 from dask.distributed import Client
 import climag.plot_configs as cplt
@@ -36,6 +37,7 @@ ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 ie_bbox = gpd.read_file(
     GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"
 )
+ie_ne = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 
 # ## Reading the local catalogue
 
@@ -66,6 +68,7 @@ cordex_eur11.df
 data = xr.open_mfdataset(
     glob.glob(
         "/run/media/nms/MyPassport/EURO-CORDEX/RCA4/historical/EC-EARTH/*.nc"
+        # "data/EURO-CORDEX/RCA4/historical/EC-EARTH/*.nc"
     ),
     chunks="auto",
     decode_coords="all",
@@ -98,7 +101,44 @@ data
 # ## Ireland subset
 
 # clip to Ireland's boundary
-data = data.rio.clip(ie.buffer(500).to_crs(data_crs))
+data = data.rio.clip(ie.buffer(6500).to_crs(data_crs), all_touched=True)
+
+# number of grid cells with data
+len(
+    data.groupby("time.season")
+    .mean(dim="time")["tas"][0]
+    .values.flatten()[
+        np.isfinite(
+            data.groupby("time.season")
+            .mean(dim="time")["tas"][0]
+            .values.flatten()
+        )
+    ]
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="tas",
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="tas",
+    boundary_data=ie_bbox,
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="tas",
+    contour=True,
+)
+
+cplt.plot_map(
+    data=data.groupby("time.season").mean(dim="time").sel(season="JJA"),
+    var="tas",
+    contour=True,
+    boundary_data=ie_bbox,
+)
 
 data
 
@@ -111,7 +151,7 @@ for var in data.data_vars:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=16,
     )
 
@@ -301,7 +341,7 @@ cplt.plot_averages(
     data=data.sel(time=slice("1976", "2005")),
     var="T",
     averages="month",
-    boundary_data=ie_bbox,
+    boundary_data=ie_ne,
     cbar_levels=[3 + 1 * n for n in range(13)],
 )
 
@@ -310,7 +350,7 @@ for var in ["PAR", "PET", "PP"]:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="month",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=12,
     )
 
@@ -321,7 +361,7 @@ for var in data.data_vars:
         data=data.sel(time=slice("1976", "2005")),
         var=var,
         averages="season",
-        boundary_data=ie_bbox,
+        boundary_data=ie_ne,
         cbar_levels=12,
     )
 

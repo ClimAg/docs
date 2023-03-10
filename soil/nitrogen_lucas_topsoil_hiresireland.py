@@ -177,7 +177,9 @@ plt.tight_layout()
 plt.show()
 
 # fill no data with min value
-grid_cells["ni"] = grid_cells["ni"].fillna(0.35)
+grid_cells["ni"] = grid_cells["ni"].fillna(grid_cells["ni"].min())
+
+grid_cells.head()
 
 axs = grid_cells.plot(
     column="ni",

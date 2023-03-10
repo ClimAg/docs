@@ -37,7 +37,7 @@ data
 
 data.rio.crs
 
-# ETRS 89 LAEA
+# manually assign CRS: ETRS 89 LAEA
 data_crs = 3035
 
 data.rio.write_crs(data_crs, inplace=True)
@@ -54,7 +54,7 @@ ie.crs
 
 # clip raster to Ireland's boundary
 data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True).rio.clip(
-    ie.to_crs(data_crs)["geometry"]
+    ie.buffer(6500).to_crs(data_crs)
 )
 
 data
@@ -164,7 +164,33 @@ plt.axis("equal")
 plt.tight_layout()
 plt.show()
 
+# fill no data with min value
+grid_cells["mean"] = grid_cells["mean"].fillna(grid_cells["mean"].min())
+
 grid_cells["whc"] = grid_cells["mean"]
+
+axs = grid_cells.plot(
+    column="mean",
+    cmap="Spectral_r",
+    scheme="equal_interval",
+    edgecolor="darkslategrey",
+    linewidth=0.2,
+    figsize=(6, 7),
+    legend=True,
+    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "TAWC [mm]"},
+    missing_kwds={
+        "color": "darkslategrey",
+        "edgecolor": "darkslategrey",
+        "label": "No data",
+    },
+)
+for legend_handle in axs.get_legend().legendHandles:
+    legend_handle.set_markeredgewidth(0.2)
+    legend_handle.set_markeredgecolor("darkslategrey")
+axs.tick_params(labelbottom=False, labelleft=False)
+plt.axis("equal")
+plt.tight_layout()
+plt.show()
 
 grid_cells.drop(columns=["mean", "count"], inplace=True)
 

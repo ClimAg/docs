@@ -50,7 +50,7 @@ ie.crs
 
 # clip raster to Ireland's boundary
 data = rxr.open_rasterio(DATA_FILE, chunks="auto", masked=True).rio.clip(
-    ie.to_crs(data.rio.crs)["geometry"]
+    ie.buffer(6500).to_crs(data.rio.crs)
 )
 
 data
@@ -200,7 +200,7 @@ plt.tight_layout()
 plt.show()
 
 # fill no data with min value
-grid_cells["ni"] = grid_cells["ni"].fillna(0.35)
+grid_cells["ni"] = grid_cells["ni"].fillna(grid_cells["ni"].min())
 
 axs = grid_cells.plot(
     column="ni",
