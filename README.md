@@ -33,6 +33,7 @@ Ireland boundary - NUTS 2021 | [nbviewer](https://nbviewer.org/gist/nmstreethran
 Ireland Electoral Divisions | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_electoral_divisions.ipynb)
 Northern Ireland Electoral Wards | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland_boundary_ni_wards.ipynb)
 Ireland counties - Ordnance Survey Ireland / Northern Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/ireland-boundary.ipynb)
+Natural Earth 10 m boundary for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/naturalearth.ipynb)
 ***Meteorological data***
 Sample met data (Valentia Observatory) for model development | [nbviewer](https://nbviewer.org/gist/nmstreethran/153a21ee6d6d68c98de2de9867cf254d/sample_met_data.ipynb)
 ***Climate model datasets***
