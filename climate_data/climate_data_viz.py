@@ -7,14 +7,15 @@
 import os
 import glob
 import itertools
+import numpy as np
 from datetime import datetime, timezone
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
 import xarray as xr
 from dask.distributed import Client
 import climag.plot_configs as cplt
+import climag.plot_facet_maps as cfacet
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
@@ -26,15 +27,10 @@ DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX", "IE")
 
 # Moorepark met station coords
 LON, LAT = -8.26389, 52.16389
-# # Valentia Observatory met station coords
-# LON_V, LAT_V = -10.24333, 51.93806
 
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
-ie_bbox = gpd.read_file(
-    GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"
-)
+ie_bbox = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 
 datasets = {}
 
@@ -55,6 +51,14 @@ for exp, model, data in itertools.product(
         chunks=CHUNKS,
         decode_coords="all",
     )
+
+    # convert HadGEM2-ES data back to 360-day calendar
+    # this ensures that the correct weighting is applied when calculating
+    # the weighted average
+    if model == "HadGEM2-ES":
+        datasets[f"{data}_{model}_{exp}"] = datasets[
+            f"{data}_{model}_{exp}"
+        ].convert_calendar("360_day", align_on="year")
 
 # remove spin-up year
 for key in datasets.keys():
@@ -107,26 +111,160 @@ for var in varlist:
     plt.tight_layout()
     plt.show()
 
-# ## Averages
+# ## Seasonal maps - hist/rcp diff
 
-# ### Annual averages
+# ### hist/rcp45
 
-# ### Monthly averages
-
-# ### Seasonal averages
-
-for var in data.data_vars:
-    cplt.plot_averages(
-        data=data.sel(time=slice("1976", "2005")),
+for var in varlist:
+    cfacet.plot_season_diff_hist_rcp(
+        data=(
+            datasets["EURO-CORDEX_EC-EARTH_historical"],
+            datasets["EURO-CORDEX_EC-EARTH_rcp45"],
+        ),
         var=var,
-        averages="season",
         boundary_data=ie_bbox,
-        cbar_levels=12,
+        stat="mean",
     )
 
-# ### Time series
+# ### hist/rcp85
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+for var in varlist:
+    cfacet.plot_season_diff_hist_rcp(
+        data=(
+            datasets["EURO-CORDEX_EC-EARTH_historical"],
+            datasets["EURO-CORDEX_EC-EARTH_rcp85"],
+        ),
+        var=var,
+        boundary_data=ie_bbox,
+        stat="mean",
+    )
+
+# ## Seasonal maps
+
+# ### Mean
+
+# #### Weighted vs. unweighted mean
+
+cfacet.plot_season_diff(
+    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"],
+    var="PP",
+    boundary_data=ie_bbox,
+    stat="mean",
+)
+
+# #### Mean
+
+cfacet.plot_seasonal(
+    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"],
+    # cbar_levels=[2 + 0.25 * n for n in range(56)],
+    boundary_data=ie_bbox,
+    stat="mean",
+    var="PP",
+    contour=True,
+)
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    # cbar_levels=[2 + 0.25 * n for n in range(56)],
+    boundary_data=ie_bbox,
+    stat="mean",
+    var="PP",
+    contour=True,
+)
+
+# ### Quantiles
+
+# #### Median
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="median",
+    var="PP",
+    contour=True,
+)
+
+# #### 90th percentile
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="0.9q",
+    var="PP",
+    contour=True,
+)
+
+# #### 10th percentile
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="0.1q",
+    var="PP",
+    contour=True,
+)
+
+# ### Standard deviation
+
+# #### Unbised vs. biased SD
+
+cfacet.plot_season_diff(
+    datasets["HiResIreland_EC-EARTH_rcp45"],
+    var="PP",
+    boundary_data=ie_bbox,
+    stat="std",
+)
+
+# #### SD
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="std",
+    var="PP",
+    contour=True,
+)
+
+# ### Max and min
+
+# #### Max
+
+cfacet.plot_seasonal(
+    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="max",
+    var="PP",
+    contour=True,
+)
+
+# #### Min
+
+cfacet.plot_seasonal(
+    data=datasets["HiResIreland_EC-EARTH_rcp45"],
+    boundary_data=ie_bbox,
+    stat="min",
+    var="T",
+    contour=True,
+)
+
+# ### Selecting seasonal data
+
+seasonal_data = datasets["EURO-CORDEX_EC-EARTH_rcp45"].sel(
+    time=datasets["EURO-CORDEX_EC-EARTH_rcp45"]["time.season"] == "JJA"
+)
+
+seasonal_data
+
+# ## Time series
+
+# using Moorepark met station coordinates
+cds = cplt.rotated_pole_point(
+    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"], lon=LON, lat=LAT
+)
+
+data_ie = datasets["EURO-CORDEX_EC-EARTH_rcp45"].sel(
+    {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+)
 
 data_ie
 
@@ -181,8 +319,10 @@ plt.show()
 
 # ### Box plots
 
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("1976", "2005")
+data_ie = (
+    datasets["EURO-CORDEX_EC-EARTH_rcp45"]
+    .sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
+    .sel(time=slice("1976", "2005"))
 )
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
