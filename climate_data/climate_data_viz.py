@@ -90,26 +90,7 @@ for var in varlist:
 
 # ## Histograms
 
-for var in varlist:
-    data_pivot = pd.pivot_table(
-        data_all[var], values=var, columns="dataset", index=data_all[var].index
-    )
-    data_pivot.plot(
-        kind="hist",
-        subplots=True,
-        figsize=(12, 6),
-        bins=50,
-        sharex=True,
-        sharey=True,
-        layout=(2, 4),
-        title=(
-            datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
-            + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
-            f" at Moorepark ({LON}, {LAT})"
-        ),
-    )
-    plt.tight_layout()
-    plt.show()
+c
 
 # ## Seasonal maps - hist/rcp diff
 

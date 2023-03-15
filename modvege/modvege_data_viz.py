@@ -77,9 +77,11 @@ for key in datasets.keys():
     # # normalise to keep only date in time
     # datasets[key]["time"] = datasets[key].indexes["time"].normalize()
 
+list(datasets.keys())
+
 datasets["EURO-CORDEX_EC-EARTH_rcp45"]
 
-varlist = ["bm", "pgro", "gro", "c_bm", "h_bm", "i_bm"]
+varlist = ["bm", "pgro", "gro", "i_bm", "c_bm", "h_bm"]
 
 # ## Box plots
 
@@ -102,16 +104,16 @@ for var in varlist:
 
 for var in ["bm", "pgro", "gro"]:
     data_pivot = pd.pivot_table(
-        data_all[var], values=var, columns="dataset", index=data_all[var].index
+        data_all[var], values=var, columns="legend", index=data_all[var].index
     )
     data_pivot.plot(
         kind="hist",
         subplots=True,
-        figsize=(12, 6),
+        figsize=(12, 15),
         bins=50,
         sharex=True,
         sharey=True,
-        layout=(2, 4),
+        layout=(6, 4),
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
@@ -143,17 +145,6 @@ for var in ["bm", "pgro", "gro", "c_bm"]:
         data=(
             datasets["EURO-CORDEX_EC-EARTH_historical"],
             datasets["EURO-CORDEX_EC-EARTH_rcp85"],
-        ),
-        var=var,
-        boundary_data=ie_bbox,
-        stat="mean",
-    )
-
-for var in ["bm", "pgro", "gro", "c_bm"]:
-    cfacet.plot_season_diff_hist_rcp(
-        data=(
-            datasets["EURO-CORDEX_HadGEM2-ES_historical"],
-            datasets["EURO-CORDEX_HadGEM2-ES_rcp85"],
         ),
         var=var,
         boundary_data=ie_bbox,
