@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Visualising climate model datasets
+# # Visualising ModVege results
 
 # import libraries
 import os
@@ -35,7 +35,8 @@ datasets = {}
 for exp, model, data in itertools.product(
     ["historical", "rcp45", "rcp85"],
     ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"],
-    ["EURO-CORDEX", "HiResIreland"],
+    ["EURO-CORDEX"]
+    # ["EURO-CORDEX", "HiResIreland"]
 ):
     # auto-rechunking may cause NotImplementedError with object dtype
     # where it will not be able to estimate the size in bytes of object data
@@ -44,10 +45,17 @@ for exp, model, data in itertools.product(
     else:
         CHUNKS = "auto"
 
-    datasets[f"{data}_{model}_{exp}"] = xr.open_dataset(
+    datasets[f"{data}_{model}_{exp}"] = xr.open_mfdataset(
         glob.glob(
-            os.path.join("data", data, "IE", f"*{data}*{model}*{exp}*.nc")
-        )[0],
+            os.path.join(
+                "data",
+                "ModVege",
+                data,
+                exp,
+                model,
+                f"*{data}*{model}*{exp}*.nc",
+            )
+        ),
         chunks=CHUNKS,
         decode_coords="all",
     )
@@ -69,7 +77,9 @@ for key in datasets.keys():
     # # normalise to keep only date in time
     # datasets[key]["time"] = datasets[key].indexes["time"].normalize()
 
-varlist = ["PAR", "PET", "PP", "T"]
+datasets["EURO-CORDEX_EC-EARTH_rcp45"]
+
+varlist = ["bm", "pgro", "gro", "c_bm", "h_bm", "i_bm"]
 
 # ## Box plots
 
@@ -90,7 +100,7 @@ for var in varlist:
 
 # ## Histograms
 
-for var in varlist:
+for var in ["bm", "pgro", "gro"]:
     data_pivot = pd.pivot_table(
         data_all[var], values=var, columns="dataset", index=data_all[var].index
     )
@@ -115,7 +125,7 @@ for var in varlist:
 
 # ### hist/rcp45
 
-for var in varlist:
+for var in ["bm", "pgro", "gro", "c_bm"]:
     cfacet.plot_season_diff_hist_rcp(
         data=(
             datasets["EURO-CORDEX_EC-EARTH_historical"],
@@ -128,11 +138,22 @@ for var in varlist:
 
 # ### hist/rcp85
 
-for var in varlist:
+for var in ["bm", "pgro", "gro", "c_bm"]:
     cfacet.plot_season_diff_hist_rcp(
         data=(
             datasets["EURO-CORDEX_EC-EARTH_historical"],
             datasets["EURO-CORDEX_EC-EARTH_rcp85"],
+        ),
+        var=var,
+        boundary_data=ie_bbox,
+        stat="mean",
+    )
+
+for var in ["bm", "pgro", "gro", "c_bm"]:
+    cfacet.plot_season_diff_hist_rcp(
+        data=(
+            datasets["EURO-CORDEX_HadGEM2-ES_historical"],
+            datasets["EURO-CORDEX_HadGEM2-ES_rcp85"],
         ),
         var=var,
         boundary_data=ie_bbox,
@@ -147,7 +168,7 @@ for var in varlist:
 
 cfacet.plot_season_diff(
     data=datasets["EURO-CORDEX_EC-EARTH_rcp45"],
-    var="PP",
+    var="gro",
     boundary_data=ie_bbox,
     stat="mean",
 )
@@ -209,8 +230,8 @@ cfacet.plot_seasonal(
 # #### Unbised vs. biased SD
 
 cfacet.plot_season_diff(
-    datasets["HiResIreland_EC-EARTH_rcp45"],
-    var="PP",
+    datasets["EURO-CORDEX_EC-EARTH_rcp45"],
+    var="gro",
     boundary_data=ie_bbox,
     stat="std",
 )
@@ -246,14 +267,6 @@ cfacet.plot_seasonal(
     var="T",
     contour=True,
 )
-
-# ### Selecting seasonal data
-
-seasonal_data = datasets["EURO-CORDEX_EC-EARTH_rcp45"].sel(
-    time=datasets["EURO-CORDEX_EC-EARTH_rcp45"]["time.season"] == "JJA"
-)
-
-seasonal_data
 
 # ## Time series
 
