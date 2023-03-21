@@ -48,7 +48,8 @@ Dataset visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex.ipynb)
 ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland.ipynb)
-Result visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_data_viz.ipynb)
+EURO-CORDEX hist/rcp result comparisons | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_hist_rcp.ipynb)
+Moorepark time series distribution | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_timeseries_moorepark.ipynb)
 ***Livestock units***
 Census of Agriculture, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_cso.ipynb)
 Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_daera.ipynb)

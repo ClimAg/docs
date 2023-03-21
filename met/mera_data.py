@@ -155,7 +155,7 @@ os.system(
     f"{BASE_FILE_NAME}.grb {BASE_FILE_NAME}_.grb"
 )
 
-os.system(f"cdo -v -f nc -copy {BASE_FILE_NAME}_.grb {BASE_FILE_NAME}.nc")
+os.system(f"cdo -v -f nc4c -copy {BASE_FILE_NAME}_.grb {BASE_FILE_NAME}.nc")
 
 # ## Read data
 
@@ -330,7 +330,7 @@ for f in FILE_LIST:
     )
     # keep only the third forecast step
     os.system(f"cdo seltimestep,3/{len(data['time']) * 3}/3 " f"{f} {f}.grb")
-    os.system(f"cdo -f nc copy {f}.grb {f}.nc")
+    os.system(f"cdo -f nc4c copy {f}.grb {f}.nc")
 
 # ### Read data
 
