@@ -1,273 +1,355 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Met Éireann Reanalysis
+# # Met Éireann Reanalysis - compare variables
 #
 # <https://www.met.ie/climate/available-data/mera>
+#
+# Conversion table for accumulated variables:
+# <https://confluence.ecmwf.int/pages/viewpage.action?pageId=197702790>
 
 # import libraries
+import glob
 import os
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
+from itertools import chain
 import cartopy.crs as ccrs
 import geopandas as gpd
-import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
-import matplotlib.units as munits
 import numpy as np
+import pandas as pd
 import pooch
 import xarray as xr
-import glob
 import climag.plot_configs as cplt
-import pandas as pd
-from itertools import chain
 
-LON, LAT = -10.24333, 51.93806  # Valentia Observatory
+# Moorepark, Fermoy met station coords
+LON, LAT = -8.26389, 52.16389
 
 # transform coordinates from lon/lat to Lambert Conformal Conic
 XLON, YLAT = cplt.lambert_conformal.transform_point(
     x=LON, y=LAT, src_crs=ccrs.PlateCarree()
 )
 
-# Ireland boundary (derived from NUTS 2021)
+# Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
-# directory of MERA GRIB files
-DATA_DIR = os.path.join("/run/media/nms/Elements", "MERA", "grib")
-NC_DIR = os.path.join("/run/media/nms/MyPassport", "MERA", "netcdf")
+# directory of processed MERA netCDF files
+DATA_DIR = os.path.join("/run/media/nms/MyPassport", "MERA", "netcdf")
 
-# ## Global radiation
+URL = "https://cli.fusio.net/cli/climate_data/webdata/dly575.csv"
+FILE_NAME = "moorepark.csv"
+DATA_FILE = os.path.join("data", "met", "MetEireann", FILE_NAME)
+os.makedirs(os.path.join("data", "met", "MetEireann"), exist_ok=True)
 
-for var in ["117_105_0_4"]:
-    # directory to store temporary files
-    TEMP_DIR = os.path.join(DATA_DIR, f"{var}_FC3hr", "temp")
-    os.makedirs(TEMP_DIR, exist_ok=True)
-    # directory to store netCDFs
-    os.makedirs(os.path.join(NC_DIR, f"{var}_FC3hr"), exist_ok=True)
-
-    # list of files; 1981 to 2005
-    file_list = list(
-        chain(
-            *list(
-                glob.glob(os.path.join(DATA_DIR, f"{var}_FC3hr", e))
-                for e in [f"*{i}*{var}_FC3hr*" for i in range(2010, 2011)]
-            )
-        )
+# download Moorepark met data if necessary
+if not os.path.isfile(DATA_FILE):
+    pooch.retrieve(
+        url=URL,
+        known_hash=None,
+        fname=FILE_NAME,
+        path=os.path.join("data", "met", "MetEireann"),
     )
 
-    for f in file_list:
-        # if the GRIB file is archived, decompress it
-        if f.endswith(".bz2"):
-            # GRIB file path
-            file_name = os.path.split(f)[1][:-4]
-            gf = os.path.join(TEMP_DIR, file_name)
-            # extract file
-            with bz2.BZ2File(f, "rb") as in_file:
-                with open(gf, "wb") as out_file:
-                    shutil.copyfileobj(in_file, out_file)
-        else:
-            # if not compressed, copy GRIB file to temp dir
-            os.system(f"cp {f} {TEMP_DIR}")
-            file_name = os.path.split(f)[1]
-            gf = os.path.join(TEMP_DIR, file_name)
-
-        # open the GRIB file to get data length and variable attributes
-        data = xr.open_dataset(
-            gf, decode_coords="all", chunks="auto", engine="cfgrib"
-        )
-        data_varname = list(data.data_vars)[0]
-        data_attrs = data[data_varname].attrs
-
-        # keep only the third forecast step and convert to netCDF
-        os.system(
-            "cdo -s -f nc4c -copy "
-            # f"-seltimestep,3/{len(data['time']) * 3}/3 "
-            f"{gf} {gf}.nc"
+    with open(f"{DATA_FILE[:-4]}.txt", "w", encoding="utf-8") as outfile:
+        outfile.write(
+            f"Data downloaded on: {datetime.now(tz=timezone.utc)}\n"
+            f"Download URL: {URL}"
         )
 
-        # assign variable attributes and clip to Ireland's boundary
-        data = xr.open_dataset(f"{gf}.nc", decode_coords="all", chunks="auto")
-        data = data.rename({list(data.data_vars)[0]: data_varname})
-        data[data_varname].attrs = data_attrs
-        data = data.rio.clip(
-            ie.buffer(1).to_crs(cplt.lambert_conformal), all_touched=True
-        )
-        data.to_netcdf(os.path.join(NC_DIR, f"{var}_FC3hr", file_name + ".nc"))
+# view file
+os.system(f"sed -n -e 1,26p {DATA_FILE}")
 
-        # delete intermediate files
-        os.system(f"rm -r {os.path.join(TEMP_DIR, '*')}")
+df = pd.read_csv(DATA_FILE, skiprows=24, parse_dates=["date"])
+df.set_index("date", inplace=True)
+df = df.loc["2003":"2005"]
+# handle missing data
+df.replace(" ", np.nan, inplace=True)
 
-for var in ["117_105_0_4"]:
-    # directory to store temporary files
-    TEMP_DIR = os.path.join(DATA_DIR, f"{var}_FC3hr", "temp")
-    os.makedirs(TEMP_DIR, exist_ok=True)
-    # directory to store netCDFs
-    os.makedirs(os.path.join(NC_DIR, f"{var}_FC3hr"), exist_ok=True)
+df.head()
 
-    # list of files; 1981 to 2005
-    file_list = list(
-        chain(
-            *list(
-                glob.glob(os.path.join(DATA_DIR, f"{var}_FC3hr", e))
-                for e in [f"*{i}*{var}_FC3hr*" for i in range(2011, 2012)]
-            )
+# ## Global irradiance
+
+var = "117_105_0_4"
+file_list = list(
+    chain(
+        *list(
+            glob.glob(os.path.join(DATA_DIR, f"{var}_FC3hr", e))
+            for e in [f"*{i}*{var}_FC3hr*" for i in range(2003, 2006)]
         )
     )
-
-    for f in file_list:
-        # if the GRIB file is archived, decompress it
-        if f.endswith(".bz2"):
-            # GRIB file path
-            file_name = os.path.split(f)[1][:-4]
-            gf = os.path.join(TEMP_DIR, file_name)
-            # extract file
-            with bz2.BZ2File(f, "rb") as in_file:
-                with open(gf, "wb") as out_file:
-                    shutil.copyfileobj(in_file, out_file)
-        else:
-            # if not compressed, copy GRIB file to temp dir
-            os.system(f"cp {f} {TEMP_DIR}")
-            file_name = os.path.split(f)[1]
-            gf = os.path.join(TEMP_DIR, file_name)
-
-        # open the GRIB file to get data length and variable attributes
-        data = xr.open_dataset(
-            gf, decode_coords="all", chunks="auto", engine="cfgrib"
-        )
-        data_varname = list(data.data_vars)[0]
-        data_attrs = data[data_varname].attrs
-
-        # keep only the third forecast step and convert to netCDF
-        os.system(
-            "cdo -s -f nc4c -copy "
-            f"-seltimestep,3/{len(data['time']) * 3}/3 "
-            f"{gf} {gf}.nc"
-        )
-
-        # assign variable attributes and clip to Ireland's boundary
-        data = xr.open_dataset(f"{gf}.nc", decode_coords="all", chunks="auto")
-        data = data.rename({list(data.data_vars)[0]: data_varname})
-        data[data_varname].attrs = data_attrs
-        data = data.rio.clip(
-            ie.buffer(1).to_crs(cplt.lambert_conformal), all_touched=True
-        )
-        data.to_netcdf(os.path.join(NC_DIR, f"{var}_FC3hr", file_name + ".nc"))
-
-        # delete intermediate files
-        os.system(f"rm -r {os.path.join(TEMP_DIR, '*')}")
-
-data_1 = xr.open_mfdataset(
-    glob.glob(os.path.join(NC_DIR, "117_105_0_4_FC3hr", "*2010*FC3hr.nc")),
-    decode_coords="all",
-    chunks="auto",
 )
+data = xr.open_mfdataset(file_list, chunks="auto", decode_coords="all")
 
-data_2 = xr.open_mfdataset(
-    glob.glob(os.path.join(NC_DIR, "117_105_0_4_FC3hr", "*2011*FC3hr.nc")),
-    decode_coords="all",
-    chunks="auto",
-)
+# note that the units are incorrect; it should be J m-2
+data
 
-data_1
-
-data_2
-
-# resample to daily
+# convert to W m-2
 var = "grad"
-time_attrs = data_1["time"].attrs
-data_attrs = data_1[var].attrs
-data_d1 = data_1.resample(time="3H").sum()
-data_d1 = data_d1.resample(time="D").mean()
-# data_d1 = data_1.resample(time="D").mean()
-data_d1[var].attrs = data_attrs
-data_d1["time"].attrs = time_attrs
+data_attrs = data[var].attrs  # copy var attributes
+data_crs = data.rio.crs  # copy CRS
+data[var] = data[var] / (3 * 3600)
 
-# resample to daily and convert units to deg C
-var = "grad"
-time_attrs = data_2["time"].attrs
-data_attrs = data_2[var].attrs
-data_d2 = data_2.resample(time="D").mean()
-data_d2[var].attrs = data_attrs
-data_d2["time"].attrs = time_attrs
+# resample to daily - take the mean
+time_attrs = data["time"].attrs
+data_d = data.resample(time="D").mean()
+data_d[var].attrs = data_attrs  # reassign attributes
+data_d["time"].attrs = time_attrs
+data_d[var].attrs["units"] = "W m⁻²"  # update attributes
+data_d.rio.write_crs(data_crs, inplace=True)  # reassign CRS
 
 # extract data for the nearest grid cell to the point
-data_tsd1 = data_d1.sel(dict(x=XLON, y=YLAT), method="nearest")
-data_tsd2 = data_d2.sel(dict(x=XLON, y=YLAT), method="nearest")
+data_tsd = data_d.sel({"x": XLON, "y": YLAT}, method="nearest")
 
-data_df1 = pd.DataFrame({"time": data_tsd1["time"]})
-data_df1[f"{var}_1"] = data_tsd1[var]
-data_df2 = pd.DataFrame({"time": data_tsd2["time"]})
-data_df2[f"{var}_2"] = data_tsd2[var]
+data_tsd
 
-data_df = pd.concat([data_df1, data_df2])
-
+# convert to dataframe for plotting
+data_df = pd.DataFrame({"time": data_tsd["time"]})
+data_df[f"{var}"] = data_tsd[var]
 data_df.set_index("time", inplace=True)
+# met data - convert to W m-2
+df_plot = df[["glorad"]].copy()
+df_plot["glorad"] = (
+    df_plot["glorad"].astype(float) / (1 / 100**2) / (24 * 3600)
+)
 
-data_df.head()
+# plot
+ax = data_df.plot(
+    figsize=(12, 4.5),
+    y=var,
+    color="lightslategrey",
+    alpha=0.7,
+    linewidth=2,
+    label="MÉRA",
+)
+df_plot.plot(
+    ax=ax, y="glorad", color="crimson", linewidth=0.75, label="Station"
+)
+plt.tight_layout()
+plt.ylabel(
+    data_d[var].attrs["long_name"] + " [" + data_d[var].attrs["units"] + "]"
+)
+plt.xlabel("")
+plt.show()
 
-data_df.tail()
-
-data_df.plot(figsize=(12, 4))
+# map
+plt.figure(figsize=(9, 7))
+ax = plt.axes(projection=cplt.lambert_conformal)
+data_d.isel(time=90, height=0)[var].plot.contourf(
+    ax=ax,
+    robust=True,
+    cmap="Spectral_r",
+    x="x",
+    y="y",
+    levels=10,
+    transform=cplt.lambert_conformal,
+    cbar_kwargs={
+        "label": (
+            data_d[var].attrs["long_name"]
+            + " ["
+            + data_d[var].attrs["units"]
+            + "]"
+        )
+    },
+)
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    color="lightslategrey",
+    linewidth=0.5,
+    x_inline=False,
+    y_inline=False,
+)
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
+ax.set_title(str(data_d.isel(time=90, height=0)["time"].values))
 plt.tight_layout()
 plt.show()
 
-# compare w/ met data
-val = pd.read_csv(
-    "data/met/MetEireann/dly2275.csv", skiprows=24, parse_dates=["date"]
+# ## Total precipitation
+
+var = "61_105_0_4"
+file_list = list(
+    chain(
+        *list(
+            glob.glob(os.path.join(DATA_DIR, f"{var}_FC3hr", e))
+            for e in [f"*{i}*{var}_FC3hr*" for i in range(2003, 2006)]
+        )
+    )
+)
+data = xr.open_mfdataset(file_list, chunks="auto", decode_coords="all")
+
+data
+
+# resample to daily - take the sum
+var = "tp"
+data_attrs = data[var].attrs
+time_attrs = data["time"].attrs
+data_crs = data.rio.crs
+data_d = data.resample(time="D").sum()
+data_d[var].attrs = data_attrs
+data_d["time"].attrs = time_attrs
+data_d[var].attrs["units"] = "mm day⁻¹"
+data_d.rio.write_crs(data_crs, inplace=True)
+
+# clip to Ireland's boundary to remove NaNs after summing
+data_d = data_d.rio.clip(
+    ie.buffer(1).to_crs(cplt.lambert_conformal), all_touched=True
 )
 
-# filter data
-val = val[(val["date"].dt.year >= 2010) & (val["date"].dt.year <= 2011)]
+data_d
 
-val["time"] = val["date"]
-val.set_index("time", inplace=True)
+# extract data for the nearest grid cell to the point
+data_tsd = data_d.sel({"x": XLON, "y": YLAT}, method="nearest")
 
-# convert all to W m-2
-data_df["glorad"] = (
-    val["glorad"].astype(float) / (1 / 100**2) / (24 * 3600)
-)  # from J cm-2
-data_df["grad_1"] = data_df["grad_1"].astype(float) / (3 * 3600)  # 1h
-data_df["grad_2"] = data_df["grad_2"].astype(float) / (3 * 3600)  # 3h
+data_tsd
 
-data_df.head()
+# convert to dataframe for plotting
+data_df = pd.DataFrame({"time": data_tsd["time"]})
+data_df[f"{var}"] = data_tsd[var]
+data_df.set_index("time", inplace=True)
+# met data
+df_plot = df[["rain"]].copy()
+df_plot["rain"] = df_plot["rain"].astype(float)
 
-data_df.plot(figsize=(12, 4))
+# plot
+ax = data_df.plot(
+    figsize=(12, 4.5),
+    y=var,
+    color="lightslategrey",
+    alpha=0.7,
+    linewidth=2,
+    label="MÉRA",
+)
+df_plot.plot(ax=ax, y="rain", color="crimson", linewidth=0.75, label="Station")
+plt.tight_layout()
+plt.ylabel(
+    data_d[var].attrs["long_name"] + " [" + data_d[var].attrs["units"] + "]"
+)
+plt.xlabel("")
+plt.show()
+
+# map
+plt.figure(figsize=(9, 7))
+ax = plt.axes(projection=cplt.lambert_conformal)
+data_d.isel(time=90, height=0)[var].plot.contourf(
+    ax=ax,
+    robust=True,
+    cmap=cplt.cmap_mako_r,
+    x="x",
+    y="y",
+    levels=10,
+    transform=cplt.lambert_conformal,
+    cbar_kwargs={
+        "label": (
+            data_d[var].attrs["long_name"]
+            + " ["
+            + data_d[var].attrs["units"]
+            + "]"
+        )
+    },
+)
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    color="lightslategrey",
+    linewidth=0.5,
+    x_inline=False,
+    y_inline=False,
+)
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
+ax.set_title(str(data_d.isel(time=90, height=0)["time"].values))
 plt.tight_layout()
 plt.show()
 
-ax = data_df[["glorad"]].plot(
-    figsize=(12, 4), linewidth=2, color="lightslategrey", alpha=0.7
+# ## Maximum temperature
+
+var = "15_105_2_2"
+file_list = list(
+    chain(
+        *list(
+            glob.glob(os.path.join(DATA_DIR, f"{var}_FC3hr", e))
+            for e in [f"*{i}*{var}_FC3hr*" for i in range(2003, 2006)]
+        )
+    )
 )
-data_df[["grad_2"]].plot(
-    figsize=(12, 4), ax=ax, color="crimson", linewidth=0.5
+data = xr.open_mfdataset(file_list, decode_coords="all", chunks="auto")
+
+data
+
+# convert to deg C
+var = "tmax"
+data_attrs = data[var].attrs
+data_crs = data.rio.crs
+data[var] = data[var] - 273.15
+
+# resample to daily - take the max
+time_attrs = data["time"].attrs
+data_d = data.resample(time="D").max()
+data_d[var].attrs = data_attrs  # reassign attributes
+data_d["time"].attrs = time_attrs
+data_d[var].attrs["units"] = "°C"  # update attributes
+data_d.rio.write_crs(data_crs, inplace=True)  # reassign CRS
+
+# extract data for the nearest grid cell to the point
+data_tsd = data_d.sel({"x": XLON, "y": YLAT}, method="nearest")
+
+data_tsd
+
+# convert to dataframe for plotting
+data_df = pd.DataFrame({"time": data_tsd["time"]})
+data_df[f"{var}"] = data_tsd[var]
+data_df.set_index("time", inplace=True)
+# met data
+df_plot = df[["maxtp"]].copy()
+df_plot["maxtp"] = df_plot["maxtp"].astype(float)
+
+# plot
+ax = data_df.plot(
+    figsize=(12, 4.5),
+    y=var,
+    color="lightslategrey",
+    alpha=0.7,
+    linewidth=2,
+    label="MÉRA",
 )
+df_plot.plot(
+    ax=ax, y="maxtp", color="crimson", linewidth=0.75, label="Station"
+)
+plt.tight_layout()
+plt.ylabel(
+    data_d[var].attrs["long_name"] + " [" + data_d[var].attrs["units"] + "]"
+)
+plt.xlabel("")
+plt.show()
+
+# map
+plt.figure(figsize=(9, 7))
+ax = plt.axes(projection=cplt.lambert_conformal)
+data_d.isel(time=90, height=0)[var].plot.contourf(
+    ax=ax,
+    robust=True,
+    cmap="Spectral_r",
+    x="x",
+    y="y",
+    levels=10,
+    transform=cplt.lambert_conformal,
+    cbar_kwargs={
+        "label": (
+            data_d[var].attrs["long_name"]
+            + " ["
+            + data_d[var].attrs["units"]
+            + "]"
+        )
+    },
+)
+ax.gridlines(
+    draw_labels=dict(bottom="x", left="y"),
+    color="lightslategrey",
+    linewidth=0.5,
+    x_inline=False,
+    y_inline=False,
+)
+ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
+ax.set_title(str(data_d.isel(time=90, height=0)["time"].values))
 plt.tight_layout()
 plt.show()
 
-# convert all to MJ m-2 day-1
-data_df["glorad"] = data_df["glorad"].astype(float) * 86400 / 1e6
-data_df["grad_1"] = data_df["grad_1"].astype(float) * 86400 / 1e6
-data_df["grad_2"] = data_df["grad_2"].astype(float) * 86400 / 1e6
-
-ax = data_df[["glorad"]].plot(
-    figsize=(12, 4), linewidth=2, color="lightslategrey", alpha=0.7
-)
-data_df[["grad_2"]].plot(
-    figsize=(12, 4), ax=ax, color="crimson", linewidth=0.5
-)
-plt.tight_layout()
-plt.show()
-
-# convert all to PAR
-data_df["glorad"] = data_df["glorad"].astype(float) * 0.473
-data_df["grad_1"] = data_df["grad_1"].astype(float) * 0.473
-data_df["grad_2"] = data_df["grad_2"].astype(float) * 0.473
-
-ax = data_df[["glorad"]].plot(
-    figsize=(12, 4), linewidth=2, color="lightslategrey", alpha=0.7
-)
-data_df[["grad_2"]].plot(
-    figsize=(12, 4), ax=ax, color="crimson", linewidth=0.5
-)
-plt.tight_layout()
-plt.show()
+print("Last updated:", datetime.now(tz=timezone.utc))
