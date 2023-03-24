@@ -45,7 +45,7 @@ HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843
 HiResIreland variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/hiresireland_fields.ipynb)
 Dataset visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/climate_data_viz.ipynb)
 ***Met Éireann Reanalysis***
-How to use MÉRA data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data.ipynb)
+How to use MÉRA GRIB files | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data.ipynb)
 MÉRA accumulated data comparison | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_accumulated.ipynb)
 Deriving evapotranspiration using MÉRA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_et.ipynb)
 ***Model results***
