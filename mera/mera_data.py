@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Met Éireann Reanalysis
+# # Met Éireann Reanalysis (MÉRA) - using GRIB files
 #
 # <https://www.met.ie/climate/available-data/mera>
 #

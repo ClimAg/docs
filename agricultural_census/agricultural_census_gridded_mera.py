@@ -18,17 +18,14 @@ import climag.plot_configs as cplt
 
 # ## Open some gridded climate data
 
-TS_FILE = os.path.join(
-    "/run/media/nms/MyPassport",
-    "MERA",
-    "netcdf",
-    "11_105_2_0_FC3hr",
-    "MERA_PRODYEAR_1981_01_11_105_2_0_FC3hr.nc",
-)
+TS_FILE = os.path.join("data", "MERA", "IE_MERA_FC3hr_3_day.nc")
 
 data = xr.open_dataset(TS_FILE, chunks="auto", decode_coords="all")
 
 data
+
+# keep only one var
+data = data.drop_vars(["PAR", "PET", "PP"])
 
 # ## Use the gridded data's bounds to generate a gridded vector layer
 
@@ -64,13 +61,13 @@ data_ = data.isel(time=0)
 data_
 
 # find number of grid cells with data
-len(data_["t"].values.flatten()[np.isfinite(data_["t"].values.flatten())])
+len(data_["T"].values.flatten()[np.isfinite(data_["T"].values.flatten())])
 
 plt.figure(figsize=(9, 7))
 axs = plt.axes(projection=cplt.plot_projection)
 
 # plot data for the variable
-data_["t"].plot(
+data_["T"].plot(
     ax=axs,
     cmap="Spectral_r",
     x="x",
@@ -97,7 +94,7 @@ for x, y in itertools.product(
     data__ = data.isel(x=x, y=y)
 
     # ignore null cells
-    if not data__["t"].isnull().all():
+    if not data__["T"].isnull().all():
         grid_centroids["wkt"].append(
             f"POINT ({float(data__['x'].values)} "
             f"{float(data__['y'].values)})"
@@ -132,7 +129,7 @@ grid_cells.shape
 axs = plt.axes(projection=cplt.plot_projection)
 
 # plot data for the variable
-data_["t"].plot(
+data_["T"].plot(
     ax=axs,
     cmap="Spectral_r",
     x="x",

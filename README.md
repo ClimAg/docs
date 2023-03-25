@@ -45,9 +45,10 @@ HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843
 HiResIreland variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/hiresireland_fields.ipynb)
 Dataset visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/climate_data_viz.ipynb)
 ***Met Éireann Reanalysis***
-How to use MÉRA GRIB files | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data.ipynb)
-MÉRA accumulated data comparison | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_accumulated.ipynb)
+Using MÉRA GRIB files | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data.ipynb)
+MÉRA data comparison with met station observations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_compare.ipynb)
 Deriving evapotranspiration using MÉRA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_et.ipynb)
+Create MÉRA ModVege input data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_process.ipynb)
 ***Model results***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex.ipynb)
@@ -60,11 +61,14 @@ Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran
 Census of Agriculture - geospatial data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census.ipynb)
 Census of Agriculture - gridded data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_gridded_eurocordex.ipynb)
 Census of Agriculture - gridded data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_gridded_hiresireland.ipynb)
+Census of Agriculture - gridded data - MÉRA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_gridded_mera.ipynb)
 ***Soil***
 Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/nitrogen_lucas_topsoil_eurocordex.ipynb)
 Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/nitrogen_lucas_topsoil_hiresireland.ipynb)
+Nitrogen nutritional index based on LUCAS topsoil data - MÉRA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/nitrogen_lucas_topsoil_mera.ipynb)
 Soil water-holding capacity based on European soil database derived data - EURO-CORDEX | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/soil_water_content_eurocordex.ipynb)
 Soil water-holding capacity based on European soil database derived data - HiResIreland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/soil_water_content_hiresireland.ipynb)
+Soil water-holding capacity based on European soil database derived data - MÉRA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/soil_water_content_mera.ipynb)
 ***Meteorological data***
 Met stations in the Island of Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/met-stations.ipynb)
 ***Grass growth***

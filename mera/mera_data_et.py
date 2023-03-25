@@ -7,31 +7,18 @@
 
 # import libraries
 import glob
-import math
 import os
 from datetime import datetime, timezone
-from itertools import chain
 import cartopy.crs as ccrs
-import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import pooch
 import xarray as xr
 import climag.plot_configs as cplt
 
-# Moorepark, Fermoy met station coords
-LON, LAT = -8.26389, 52.16389
-
-# transform coordinates from lon/lat to Lambert Conformal Conic
-XLON, YLAT = cplt.lambert_conformal.transform_point(
-    x=LON, y=LAT, src_crs=ccrs.PlateCarree()
-)
-
-# directory of processed MERA netCDF files
+# directory of processed MÉRA netCDF files
 DATA_DIR = os.path.join("/run/media/nms/MyPassport", "MERA", "netcdf_day")
 
-# list of folders containing variables needed to derive ET
+# list of variables needed to derive ET
 var_dirs = [
     "1_105_0_0",  # surface pressure
     "15_105_2_2",  # max temperature
@@ -60,10 +47,20 @@ data_crs = ds["1_105_0_0"].rio.crs
 for v in var_dirs:
     ds[v] = ds[v].isel(height=0)
 
+# ## Visualise the variables
+
+# Moorepark, Fermoy met station coords
+LON, LAT = -8.26389, 52.16389
+
+# transform coordinates from lon/lat to Lambert Conformal Conic
+XLON, YLAT = cplt.lambert_conformal.transform_point(
+    x=LON, y=LAT, src_crs=ccrs.PlateCarree()
+)
+
 
 def plot_map(data, var, cmap="Spectral_r"):
     """
-    Map plotting helper function
+    Helper function for plotting maps
     """
 
     plt.figure(figsize=(9, 7))
@@ -114,8 +111,6 @@ def plot_ts(data, var):
     plt.show()
 
 
-# ## Visualise the variables
-
 for v in var_dirs:
     var = list(ds[v].data_vars)[0]
     plot_map(ds[v], var, cplt.colormap_configs(var))
@@ -148,11 +143,11 @@ for v in var_dirs:
 #
 # Equation (9) in Allen et al. (1998), p.33
 #
-# T_mean = (T_max + T_min) / 2
+# $$T_{mean} = \frac{T_{max} + T_{min}}{2}$$
 #
-# - T_mean: mean air temperature at 2 m height [°C]
-# - T_max: maximum air temperature at 2 m height [°C]
-# - T_min: minimum air temperature at 2 m height [°C]
+# - $T_{mean}$: mean air temperature at 2 m height [°C]
+# - $T_{max}$: maximum air temperature at 2 m height [°C]
+# - $T_{min}$: minimum air temperature at 2 m height [°C]
 
 t_mean = xr.combine_by_coords(
     [ds["15_105_2_2"], ds["16_105_2_2"]], combine_attrs="drop_conflicts"
@@ -175,17 +170,18 @@ plot_ts(t_mean, "t_mean")
 #
 # Equation (40) in Allen et al. (1998), p. 53
 #
-# R_n = R_ns - R_nl
+# $$R_n = R_{ns} - R_{nl}$$
 #
-# - R_n: net radiation at the crop surface [MJ m⁻² day⁻¹]
-# - R_ns: incoming net shortwave radiation [MJ m⁻² day⁻¹]
-# - R_nl: outgoing net longwave radiation [MJ m⁻² day⁻¹]
+# - $R_n$: net radiation at the crop surface [MJ m⁻² day⁻¹]
+# - $R_{ns}$: incoming net shortwave radiation [MJ m⁻² day⁻¹]
+# - $R_{nl}$: outgoing net longwave radiation [MJ m⁻² day⁻¹]
 
 r_n = xr.combine_by_coords(
     [ds["111_105_0_4"], ds["112_105_0_4"]], combine_attrs="drop_conflicts"
 )
 
-r_n = r_n.assign(r_n=r_n["nswrs"] - r_n["nlwrs"])
+# since both are incoming, they must be added, not subtracted
+r_n = r_n.assign(r_n=r_n["nswrs"] + r_n["nlwrs"])
 r_n["r_n"].attrs["units"] = "MJ m⁻² day⁻¹"
 r_n["r_n"].attrs["long_name"] = "Net radiation"
 r_n = r_n.drop_vars(["nswrs", "nlwrs"])
@@ -199,19 +195,19 @@ plot_ts(r_n, "r_n")
 
 # Equation (11) in Allen et al. (1998), p. 36
 #
-# e^o(T) = 0.6108exp(17.27T / (T + 237.3))
+# $$e^o(T) = 0.6108 \times \exp\left(\frac{17.27 T}{T + 237.3}\right)$$
 #
-# - e^o(T): saturation vapour pressure at the air temperature T [kPa]
-# - T: air temperature [°C]
+# - $e^o(T)$: saturation vapour pressure at the air temperature T [kPa]
+# - $T$: air temperature [°C]
 #
 # Equation (12) in Allen et al. (1998), p. 36
 #
-# e_s = (e^o(T_max) + e^o(T_min)) / 2
+# $$e_s = \frac{e^o(T_{max}) + e^o(T_{min})}{2}$$
 #
-# - e_s: Mean saturation vapour pressure [kPa]
-# - e^o(T_max): saturation vapour pressure at the maximum air temperature
+# - $e_s$: mean saturation vapour pressure [kPa]
+# - $e^o(T_{max})$: saturation vapour pressure at the maximum air temperature
 #   [kPa]
-# - e^o(T_min): saturation vapour pressure at the minimum air temperature
+# - $e^o(T_{min})$: saturation vapour pressure at the minimum air temperature
 #   [kPa]
 
 e_s = xr.combine_by_coords(
@@ -230,7 +226,7 @@ e_s["e_s"].attrs["long_name"] = "Mean saturation vapour pressure"
 e_s = e_s.drop_vars(["tmax", "tmin", "e_s_tmax", "e_s_tmin"])
 e_s.rio.write_crs(data_crs, inplace=True)
 
-plot_map(e_s, "e_s")
+plot_map(e_s, "e_s", cplt.cmap_flare)
 
 plot_ts(e_s, "e_s")
 
@@ -241,42 +237,34 @@ plot_ts(e_s, "e_s")
 #
 # Equation (13) in Allen et al. (1998), p. 37
 #
-# Δ = (4098(0.6108exp(17.27T / (T + 237.3)))) / (T + 237.3)²
-#   = (4098e_s) / (T + 237.3)²
+# $$Δ = \frac{4098 \times (0.6108 \times \exp(\frac{17.27 T}{T + 237.3}))}
+#   {(T + 237.3)^2}$$
 #
-# - Δ: slope vapour pressure curve [kPa °C⁻¹]
-# - T: mean air temperature at 2 m height [°C]
-# - e_s: mean saturation vapour pressure [kPa]
+# - $Δ$: slope vapour pressure curve [kPa °C⁻¹]
+# - $T$: mean air temperature at 2 m height [°C]
 #
-# For standardisation, the mean temperature for 24-hour periods is defined
-# as the mean of the daily maximum and minimum temperatures rather than as
-# the average of hourly temperature measurements.
+# In the FAO Penman-Monteith equation, where $∆$ occurs in the numerator and
+# denominator, the slope of the vapour pressure curve is calculated using mean
+# air temperature.
 
-delta = xr.combine_by_coords(
-    [ds["15_105_2_2"], ds["16_105_2_2"]], combine_attrs="drop_conflicts"
-)
+delta = t_mean.copy()
 
 delta = delta.assign(
-    delta_tmax=(
+    delta=(
         4098
-        * (0.6108 * np.exp((17.27 * delta["tmax"]) / (delta["tmax"] + 237.3)))
-        / np.power((delta["tmax"] + 273.3), 2)
+        * (
+            0.6108
+            * np.exp((17.27 * delta["t_mean"]) / (delta["t_mean"] + 237.3))
+        )
+        / np.power((delta["t_mean"] + 273.3), 2)
     )
 )
-delta = delta.assign(
-    delta_tmin=(
-        4098
-        * (0.6108 * np.exp((17.27 * delta["tmin"]) / (delta["tmin"] + 237.3)))
-        / np.power((delta["tmin"] + 273.3), 2)
-    )
-)
-delta = delta.assign(delta=(delta["delta_tmax"] + delta["delta_tmin"]) / 2)
 delta["delta"].attrs["units"] = "kPa"
 delta["delta"].attrs["long_name"] = "Slope vapour pressure curve"
-delta = delta.drop_vars(["tmax", "tmin", "delta_tmax", "delta_tmin"])
+delta = delta.drop_vars(["t_mean"])
 delta.rio.write_crs(data_crs, inplace=True)
 
-plot_map(delta, "delta")
+plot_map(delta, "delta", cplt.cmap_flare)
 
 plot_ts(delta, "delta")
 
@@ -291,10 +279,10 @@ plot_ts(delta, "delta")
 #
 # Equation (8) in Allen et al (1998), p. 32
 #
-# γ = 0.000665P
+# $γ = 0.665 \times 10^{-3} \times P$
 #
-# - γ: psychrometric constant [kPa °C⁻¹]
-# - P: atmospheric pressure [kPa]
+# - $γ$: psychrometric constant [kPa °C⁻¹]
+# - $P$: atmospheric pressure [kPa]
 
 gamma = ds["1_105_0_0"].copy()
 
@@ -304,7 +292,7 @@ gamma["gamma"].attrs["long_name"] = "Psychrometric constant"
 gamma = gamma.drop_vars(["pres"])
 gamma.rio.write_crs(data_crs, inplace=True)
 
-plot_map(gamma, "gamma")
+plot_map(gamma, "gamma", cplt.cmap_flare)
 
 plot_ts(gamma, "gamma")
 
@@ -314,36 +302,36 @@ plot_ts(gamma, "gamma")
 #
 # http://colaweb.gmu.edu/dev/clim301/lectures/wind/wind-uv
 #
-# w = sqrt(u_z^2 + v_z^2)
+# $$w = \sqrt{u^2 + v^2}$$
 #
-# - w: wind speed [m s⁻¹]
-# - u: u-component of wind speed [m s⁻¹]
-# - v: v-component of wind speed [m s⁻¹]
+# - $w$: wind speed [m s⁻¹]
+# - $u$: u-component of wind speed [m s⁻¹]
+# - $v$: v-component of wind speed [m s⁻¹]
 #
 # If not measured at 2 m height, convert wind speed measured at different
 # heights above the soil surface to wind speed at 2 m above the surface,
 # assuming a short grass surface.
 #
-# Equation (47) in Allen et al (1998).
+# Equation (47) in Allen et al (1998), p. 56
 #
-# w₂ = w_z * (4.87 / ln(67.8z - 5.42))
+# $$w_2 = w_z \times \frac{4.87}{\ln(67.8 z - 5.42)}$$
 #
-# - w₂: wind speed at 2 m height [m s⁻¹]
-# - w_z: measured wind speed at z m above ground surface [m s⁻¹]
-# - z: height of measurement above ground surface [m]
+# - $w_2$: wind speed at 2 m height [m s⁻¹]
+# - $w_z$: measured wind speed at z m above ground surface [m s⁻¹]
+# - $z$: height of measurement above ground surface [m]
 
 w_2 = xr.combine_by_coords(
     [ds["33_105_10_0"], ds["34_105_10_0"]], combine_attrs="drop_conflicts"
 )
 
 w_2 = w_2.assign(w=np.hypot(w_2["u"], w_2["v"]))
-w_2 = w_2.assign(w_2=w_2["w"] * (4.87 / np.log((67.8 * 10) - 5.42)))
+w_2 = w_2.assign(w_2=w_2["w"] * (4.87 / np.log((67.8 * 10.0) - 5.42)))
 w_2["w_2"].attrs["units"] = "m s⁻¹"
 w_2["w_2"].attrs["long_name"] = "Wind speed at 2 m height"
 w_2 = w_2.drop_vars(["u", "v", "w"])
 w_2.rio.write_crs(data_crs, inplace=True)
 
-plot_map(w_2, "w_2")
+plot_map(w_2, "w_2", "GnBu")
 
 plot_ts(w_2, "w_2")
 
@@ -356,12 +344,12 @@ plot_ts(w_2, "w_2")
 #
 # Equation (19) in Allen et al. (1998), p. 39
 #
-# e_a = (RH_mean / 100)((e^o(T_max) + e^o(T_min)) / 2)
-#     = (RH_mean / 100)e_s
+# $$e_a = \frac{RH_{mean}}{100} \times \frac{e^o(T_{max}) + e^o(T_{min})}{2}
+#   = \frac{RH_{mean}}{100} \times e_s$$
 #
-# - e_a: actual vapour pressure [kPa]
-# - RH_mean: mean relative humidity [%]
-# - e_s: saturation vapour pressure [kPa]
+# - $e_a$: actual vapour pressure [kPa]
+# - $RH_{mean}$: mean relative humidity [%]
+# - $e_s$: saturation vapour pressure [kPa]
 
 e_a = xr.combine_by_coords(
     [ds["52_105_2_0"], e_s], combine_attrs="drop_conflicts"
@@ -373,7 +361,7 @@ e_a["e_a"].attrs["long_name"] = "Actual vapour pressure"
 e_a = e_a.drop_vars(["r", "e_s"])
 e_a.rio.write_crs(data_crs, inplace=True)
 
-plot_map(e_a, "e_a")
+plot_map(e_a, "e_a", "GnBu")
 
 plot_ts(e_a, "e_a")
 
@@ -383,25 +371,25 @@ plot_ts(e_a, "e_a")
 #
 # Equation (6) in Allen et al. (1998), p. 24
 #
-# ETo = (
-#     (0.408Δ(R_n - G) + γ(900 / (T + 273))w₂(e_s - e_a)) /
-#     (Δ + γ(1 + 0.34w₂))
-# )
+# $$ET_o = \frac{0.408 \times Δ \times (R_n - G) + γ \times \frac{900}{T + 273}
+#   \times w_2 \times (e_s - e_a)}{Δ + γ \times (1 + 0.34 \times w_2)}$$
 #
-# - ETo: reference evapotranspiration [mm day⁻¹]
-# - Δ: slope vapour pressure curve [kPa °C⁻¹]
-# - R_n: net radiation at the crop surface [MJ m⁻² day⁻¹]
-# - G: soil heat flux density [MJ m⁻² day⁻¹]
-# - γ: psychrometric constant [kPa °C⁻¹]
-# - T: mean daily air temperature at 2 m height [°C]
-# - w₂: wind speed at 2 m height [m s⁻¹]
-# - e_s: saturation vapour pressure [kPa]
-# - e_a: actual vapour pressure [kPa]
+# - $ET_o$: reference evapotranspiration [mm day⁻¹]
+# - $Δ$: slope vapour pressure curve [kPa °C⁻¹]
+# - $R_n$: net radiation at the crop surface [MJ m⁻² day⁻¹]
+# - $G$: soil heat flux density [MJ m⁻² day⁻¹]
+# - $γ$: psychrometric constant [kPa °C⁻¹]
+# - $T$: mean daily air temperature at 2 m height [°C]
+# - $w_2$: wind speed at 2 m height [m s⁻¹]
+# - $e_s$: saturation vapour pressure [kPa]
+# - $e_a$: actual vapour pressure [kPa]
 #
 # The soil heat flux is small compared to net radiation, particularly when
 # the surface is covered by vegetation. As the magnitude of the day heat
 # flux beneath the grass reference surface is relatively small, it may be
-# ignored. This is shown in Equation (42) in Allen et al. (1998), p. 54.
+# ignored.
+#
+# Equation (42) in Allen et al. (1998), p. 54
 
 eto = xr.combine_by_coords(
     [delta, gamma, r_n, t_mean, w_2, e_s, e_a],
@@ -413,14 +401,12 @@ eto = eto.assign(
     PET=(
         (
             (0.408 * eto["delta"] * eto["r_n"])
-            + (
-                eto["gamma"]
-                * (900 / (eto["t_mean"] + 273))
-                * eto["w_2"]
-                * (eto["e_s"] - eto["e_a"])
-            )
+            + eto["gamma"]
+            * (900 / (eto["t_mean"] + 273))
+            * eto["w_2"]
+            * (eto["e_s"] - eto["e_a"])
         )
-        / (eto["delta"] + (eto["gamma"] * (1 + 0.34 * eto["w_2"])))
+        / (eto["delta"] + eto["gamma"] * (1 + 0.34 * eto["w_2"]))
     )
 )
 
@@ -429,10 +415,8 @@ eto["PET"].attrs["long_name"] = "Reference evapotranspiration"
 eto = eto.drop_vars(["delta", "gamma", "e_a", "e_s", "r_n", "t_mean", "w_2"])
 eto.rio.write_crs(data_crs, inplace=True)
 
-plot_map(eto, "PET")
+plot_map(eto, "PET", "BrBG_r")
 
 plot_ts(eto, "PET")
-
-eto.to_netcdf(os.path.join(DATA_DIR, "MERA_PET_day.nc"))
 
 print("Last updated:", datetime.now(tz=timezone.utc))

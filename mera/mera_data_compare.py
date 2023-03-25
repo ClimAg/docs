@@ -34,7 +34,7 @@ XLON, YLAT = cplt.lambert_conformal.transform_point(
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
-# directory of processed MERA netCDF files
+# directory of processed MÉRA netCDF files
 DATA_DIR = os.path.join("/run/media/nms/MyPassport", "MERA", "netcdf")
 
 URL = "https://cli.fusio.net/cli/climate_data/webdata/dly575.csv"
