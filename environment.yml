@@ -1,4 +1,4 @@
-name: ClimAgTest
+name: ClimAg
 channels:
   - conda-forge
   - defaults
@@ -11,18 +11,21 @@ dependencies:
   - intake-esm
   - cartopy
   - nc-time-axis
+  - aiohttp
+  - odfpy
+  - seaborn
+  - cfgrib
+  - pooch
+  - rasterstats
+  - cdo  # unavailable on Windows; use Conda with WSL
+  - xesmf  # unavailable on Windows; use Conda with WSL
+  - esmpy=8.3.1  # module name change compatibility for xesmf
+  - cf_xarray
+  - sparse
+  - numba
+  - mpi
+  - pytest
   - jupyterlab
   - flake8
   - pylint
-  - aiohttp
-  - odfpy
   - black
-  - seaborn
-  - cfgrib
-  - pygrib
-  - metpy
-  - cdo
-  - python-cdo
-  - regionmask
-  - tqdm
-  - pooch

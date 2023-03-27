@@ -35,7 +35,6 @@
 # - <https://scitools.org.uk/cartopy/docs/latest/reference/projections.html>
 # - <https://confluence.ecmwf.int/display/OIFS/How+to+convert+GRIB+to+netCDF>
 # - <https://github.com/corteva/rioxarray/issues/135>
-# - <https://docs.xarray.dev/en/stable/generated/xarray.DataArray.assign_coords.html>
 #
 # Example data used:
 # <https://www.met.ie/downloads/MERA_PRODYEAR_2015_06_11_105_2_0_FC3hr.grb>
@@ -50,6 +49,7 @@
 #   - cartopy
 #   - matplotlib
 #   - nc-time-axis
+#   - pooch
 
 # import libraries
 import os
@@ -117,7 +117,7 @@ data.longitude.attrs = long_attrs
 # ### Plots
 
 plt.figure(figsize=(9, 7))
-(data.isel(time=0, step=2)["t"] - 273.15).plot(
+(data.isel(time=0, step=2)["t"] - 273.15).plot.contourf(
     robust=True,
     cmap="Spectral_r",
     levels=11,
@@ -131,7 +131,7 @@ plt.show()
 
 # specifying lon/lat as the x/y axes
 plt.figure(figsize=(9, 7))
-(data.isel(time=0, step=2)["t"] - 273.15).plot(
+(data.isel(time=0, step=2)["t"] - 273.15).plot.contourf(
     robust=True,
     cmap="Spectral_r",
     x="longitude",
@@ -172,7 +172,7 @@ data
 # ## Plots
 
 plt.figure(figsize=(9, 7))
-(data.isel(time=0, height=0)["t"] - 273.15).plot(
+(data.isel(time=0, height=0)["t"] - 273.15).plot.contourf(
     robust=True,
     cmap="Spectral_r",
     levels=11,
@@ -199,30 +199,6 @@ lambert_conformal = ccrs.LambertConformal(
 )
 
 lambert_conformal
-
-plt.figure(figsize=(9, 7))
-ax = plt.axes(projection=lambert_conformal)
-(data.isel(time=0, height=0)["t"] - 273.15).plot(
-    ax=ax,
-    robust=True,
-    cmap="Spectral_r",
-    x="x",
-    y="y",
-    levels=11,
-    transform=lambert_conformal,
-    cbar_kwargs={"label": "Temperature [°C]"},
-)
-ax.gridlines(
-    draw_labels={"bottom": "x", "left": "y"},
-    color="lightslategrey",
-    linewidth=0.5,
-    x_inline=False,
-    y_inline=False,
-)
-ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
-plt.title(f"time={data.isel(time=0, height=0)['t']['time'].values}")
-plt.tight_layout()
-plt.show()
 
 plt.figure(figsize=(9, 7))
 ax = plt.axes(projection=lambert_conformal)
@@ -255,33 +231,6 @@ data_ie = data.rio.clip(
 )
 
 data_ie
-
-plt.figure(figsize=(9, 7))
-ax = plt.axes(projection=ccrs.EuroPP())
-(data_ie.isel(time=0, height=0)["t"] - 273.15).plot(
-    ax=ax,
-    robust=True,
-    cmap="Spectral_r",
-    x="x",
-    y="y",
-    levels=8,
-    transform=lambert_conformal,
-    cbar_kwargs={"label": "Temperature [°C]"},
-)
-ax.gridlines(
-    draw_labels={"bottom": "x", "left": "y"},
-    color="lightslategrey",
-    linewidth=0.5,
-    x_inline=False,
-    y_inline=False,
-)
-ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
-plt.title(
-    "MERA_FC3hr, "
-    + f"time={str(data_ie.isel(time=0, height=0)['t']['time'].values)[:19]}"
-)
-plt.tight_layout()
-plt.show()
 
 # contour plot
 plt.figure(figsize=(9, 7))

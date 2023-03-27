@@ -55,6 +55,7 @@ ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nms
 ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland.ipynb)
 EURO-CORDEX hist/rcp result comparisons | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_hist_rcp.ipynb)
 Moorepark time series distribution | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_timeseries_moorepark.ipynb)
+Regridding results for comparison | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/regridding.ipynb)
 ***Livestock units***
 Census of Agriculture, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_cso.ipynb)
 Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_daera.ipynb)
