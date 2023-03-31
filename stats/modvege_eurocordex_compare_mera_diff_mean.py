@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in mean - historical and observational (MERA)
+# # ModVege results - EURO-CORDEX - Difference in mean - historical and observational (MERA)
 #
 # - Weighted means take into account the number of days in each month
 
@@ -29,7 +29,7 @@ season_list = ["DJF", "MAM", "JJA", "SON"]
 
 data = {}
 stat = "mean"
-dataset = "HiResIreland"
+dataset = "EURO-CORDEX"
 
 for x in ["season", "cumulative"]:
     data[f"MERA_{x[0]}"] = xr.open_mfdataset(
@@ -129,7 +129,6 @@ def plot_all(data, var, season, levels=None, ticks=None):
             f"{data[var].attrs['long_name']} [{data[var].attrs['units']}]"
         ),
         "aspect": 19,
-        "extendfrac": "auto",
     }
 
     if ticks is not None:
