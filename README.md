@@ -53,11 +53,13 @@ Create MÉRA ModVege input data | [nbviewer](https://nbviewer.org/gist/nmstreeth
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex.ipynb)
 ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland.ipynb)
-EURO-CORDEX hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_compare_exp_diff_mean.ipynb)
-HiResIreland hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland_compare_exp_diff_mean.ipynb)
-Climate model hist/obs result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_compare_mera_diff_mean.ipynb)
 Moorepark time series distribution | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_timeseries_moorepark.ipynb)
 Comparison of regridding methods | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/regridding.ipynb)
+***Statistics***
+EURO-CORDEX hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_compare_exp_diff_mean.ipynb)
+HiResIreland hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland_compare_exp_diff_mean.ipynb)
+EURO-CORDEX model hist/obs result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_compare_mera_diff_mean.ipynb)
+HiResIreland hist/obs result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland_compare_mera_diff_mean.ipynb)
 ***Livestock units***
 Census of Agriculture, CSO | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_cso.ipynb)
 Census of Agriculture, DAERA | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agricultural_census_daera.ipynb)
