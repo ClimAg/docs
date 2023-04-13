@@ -34,7 +34,6 @@
 # - <https://docs.xarray.dev/en/stable/examples/ERA5-GRIB-example.html>
 # - <https://scitools.org.uk/cartopy/docs/latest/reference/projections.html>
 # - <https://confluence.ecmwf.int/display/OIFS/How+to+convert+GRIB+to+netCDF>
-# - <https://github.com/corteva/rioxarray/issues/135>
 #
 # Example data used:
 # <https://www.met.ie/downloads/MERA_PRODYEAR_2015_06_11_105_2_0_FC3hr.grb>
@@ -50,6 +49,8 @@
 #   - matplotlib
 #   - nc-time-axis
 #   - pooch
+#   - netcdf4
+#   - cfgrib
 
 # import libraries
 import os
@@ -97,7 +98,10 @@ BASE_FILE_NAME = os.path.join(DATA_DIR, FILE_NAME)
 # ## Read original GRIB data
 
 data = xr.open_dataset(
-    f"{BASE_FILE_NAME}.grb", decode_coords="all", chunks="auto"
+    f"{BASE_FILE_NAME}.grb",
+    decode_coords="all",
+    chunks="auto",
+    engine="cfgrib",
 )
 
 data
