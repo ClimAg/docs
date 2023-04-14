@@ -46,24 +46,14 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 ### Livestock units
 
-- [Census of Agriculture, CSO](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_cso.ipynb)
-- [Census of Agriculture, DAERA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_daera.ipynb)
+- Census of Agriculture: [CSO](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_cso.ipynb), [DAERA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_daera.ipynb)
 - [Census of Agriculture - geospatial data](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census.ipynb)
-- [Census of Agriculture - gridded data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_eurocordex.ipynb)
-- [Census of Agriculture - gridded data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_hiresireland.ipynb)
-- [Census of Agriculture - gridded data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_mera.ipynb)
+- Census of Agriculture - gridded data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_mera.ipynb)
 
-### Soil nitrogen
+### Soil
 
-- [Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_eurocordex.ipynb)
-- [Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_hiresireland.ipynb)
-- [Nitrogen nutritional index based on LUCAS topsoil data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_mera.ipynb)
-
-### Soil water holding capacity
-
-- [Soil water-holding capacity based on European soil database derived data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_eurocordex.ipynb)
-- [Soil water-holding capacity based on European soil database derived data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_hiresireland.ipynb)
-- [Soil water-holding capacity based on European soil database derived data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_mera.ipynb)
+- Nitrogen nutritional index based on LUCAS topsoil data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_mera.ipynb)
+- Soil water-holding capacity based on European soil database derived data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_mera.ipynb)
 
 ### Model results
 
