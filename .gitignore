@@ -131,6 +131,7 @@ dmypy.json
 ## Other
 draft/
 .vscode/
+*test/
 *.access*
 *.png
 *.jpg
