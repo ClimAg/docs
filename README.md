@@ -22,7 +22,7 @@ To update the environment:
 conda env update --name ClimAg --file environment.yml
 ```
 
-Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. cdo) are unavailable for Windows.
+Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. CDO) are unavailable for Windows.
 
 ## Notebooks
 
@@ -61,8 +61,8 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 ### Compare historical with observations
 
-- EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_eurocordex_compare_mera_diff_mean.ipynb), std, max, min
-- HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_hiresireland_compare_mera_diff_mean.ipynb), std, max, min
+- EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_eurocordex_compare_mera_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/std/modvege_eurocordex_compare_mera_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/max/modvege_eurocordex_compare_mera_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/min/modvege_eurocordex_compare_mera_diff_min.ipynb)
+- HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_hiresireland_compare_mera_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/std/modvege_hiresireland_compare_mera_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/max/modvege_hiresireland_compare_mera_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/min/modvege_hiresireland_compare_mera_diff_min.ipynb)
 
 <!--
 ***Climate model datasets***
