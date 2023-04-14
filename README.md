@@ -69,12 +69,10 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 - [Comparison of regridding methods](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/modvege/regridding.ipynb)
 
-### Statistics
+### Compare historical with observations
 
-- Compare historical with observations
-  - Mean
-    - [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_eurocordex_compare_mera_diff_mean.ipynb)
-    - [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_hiresireland_compare_mera_diff_mean.ipynb)
+- EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_eurocordex_compare_mera_diff_mean.ipynb), std, max, min
+- HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_hiresireland_compare_mera_diff_mean.ipynb), std, max, min
 
 <!--
 ***Climate model datasets***
@@ -109,9 +107,9 @@ CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/irish-soil-information-system.ipynb)
 ***Grass growth***
 Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/grass10.ipynb)
-Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/sample-met-data.ipynb) -->
+Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/sample-met-data.ipynb)
 
-<!-- ## References
+## References
 
 - Coordinate reference system for Ireland: [ETRS89 / Irish TM EPSG 2157](https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems) -->
 
