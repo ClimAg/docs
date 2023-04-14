@@ -53,22 +53,30 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - [Census of Agriculture - gridded data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_hiresireland.ipynb)
 - [Census of Agriculture - gridded data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/agricultural_census/agricultural_census_gridded_mera.ipynb)
 
-### Soil
+### Soil nitrogen
 
-- [Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen_lucas_topsoil_eurocordex.ipynb)
-- [Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen_lucas_topsoil_hiresireland.ipynb)
-- [Nitrogen nutritional index based on LUCAS topsoil data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen_lucas_topsoil_mera.ipynb)
-- [Soil water-holding capacity based on European soil database derived data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/soil_water_content_eurocordex.ipynb)
-- [Soil water-holding capacity based on European soil database derived data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/soil_water_content_hiresireland.ipynb)
-- [Soil water-holding capacity based on European soil database derived data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/soil_water_content_mera.ipynb)
+- [Nitrogen nutritional index based on LUCAS topsoil data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_eurocordex.ipynb)
+- [Nitrogen nutritional index based on LUCAS topsoil data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_hiresireland.ipynb)
+- [Nitrogen nutritional index based on LUCAS topsoil data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_mera.ipynb)
+
+### Soil water holding capacity
+
+- [Soil water-holding capacity based on European soil database derived data - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_eurocordex.ipynb)
+- [Soil water-holding capacity based on European soil database derived data - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_hiresireland.ipynb)
+- [Soil water-holding capacity based on European soil database derived data - MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_mera.ipynb)
 
 ### Model results
 
 - [Comparison of regridding methods](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/modvege/regridding.ipynb)
 
+### Statistics
+
+- Compare historical with observations
+  - Mean
+    - [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_eurocordex_compare_mera_diff_mean.ipynb)
+    - [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/compare_mera/mean/modvege_hiresireland_compare_mera_diff_mean.ipynb)
+
 <!--
-Notebook | Link
---- | ---
 ***Climate model datasets***
 EURO-CORDEX data catalogue | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/eurocordex_intake.ipynb)
 EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/eurocordex_ie.ipynb)
@@ -85,8 +93,6 @@ Moorepark time series distribution | [nbviewer](https://nbviewer.org/gist/nmstre
 ***Statistics***
 EURO-CORDEX hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_compare_exp_diff_mean.ipynb)
 HiResIreland hist/rcp result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland_compare_exp_diff_mean.ipynb)
-EURO-CORDEX model hist/obs result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex_compare_mera_diff_mean.ipynb)
-HiResIreland hist/obs result comparisons - mean diff | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland_compare_mera_diff_mean.ipynb)
 ***Meteorological data***
 Met stations in the Island of Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/met-stations.ipynb)
 ***Grass growth***
@@ -98,8 +104,6 @@ Agro-environmental regions based on February rainfall by Holden and Brereton (20
 
 ### Other
 
-Notebook | Link
---- | ---
 ***Land use and soil***
 CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/clc-2018.ipynb)
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/irish-soil-information-system.ipynb)
