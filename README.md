@@ -24,7 +24,7 @@ conda env update --name ClimAg --file environment.yml
 
 Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. cdo) are unavailable for Windows.
 
-## Notebooks
+<!-- ## Notebooks
 
 ### Main
 
@@ -92,15 +92,15 @@ CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb
 Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/irish-soil-information-system.ipynb)
 ***Grass growth***
 Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/grass10.ipynb)
-Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/sample-met-data.ipynb)
+Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/sample-met-data.ipynb) -->
 
-## References
+<!-- ## References
 
-- Coordinate reference system for Ireland: [ETRS89 / Irish TM EPSG 2157](https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems)
+- Coordinate reference system for Ireland: [ETRS89 / Irish TM EPSG 2157](https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems) -->
 
 ## Licence
 
-Copyright 2022 N. M. Streethran
+Copyright 2022-2023 N. M. Streethran
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
