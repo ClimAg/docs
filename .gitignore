@@ -135,4 +135,4 @@ draft/
 *.png
 *.jpg
 *.jpeg
-*.ipynb
+*.py
