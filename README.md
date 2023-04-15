@@ -34,15 +34,21 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - [Ireland counties - Ordnance Survey Ireland / Northern Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland-boundary.ipynb)
 - [Natural Earth 10 m boundary for Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/naturalearth.ipynb)
 
+### HiResIreland
+
+- [HiResIreland data fields](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/hiresireland/hiresireland_fields.ipynb)
+
 ### Met Éireann Reanalysis (MÉRA)
 
 - [Using MÉRA GRIB files](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/mera/mera_data.ipynb)
 - [MÉRA data comparison with met station observations](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/mera/mera_data_compare.ipynb)
 - [Deriving evapotranspiration using MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/mera/mera_data_et.ipynb)
+- [Processed MÉRA data](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/mera/mera_data_process.ipynb)
 
 ### Meteorological data
 
 - [Sample met data (Valentia Observatory) for model development](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/met/sample_met_data.ipynb)
+- [Met stations in Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/met/met_stations.ipynb)
 
 ### Livestock units
 
@@ -54,6 +60,17 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 - Nitrogen nutritional index based on LUCAS topsoil data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/nitrogen/nitrogen_lucas_topsoil_mera.ipynb)
 - Soil water-holding capacity based on European soil database derived data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_mera.ipynb)
+- [Irish Soil Information System](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/irish_soil_information_system.ipynb)
+
+### Grass growth observations
+
+- [PastureBase Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/pasturebase.ipynb)
+- [GrassCheck NI](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grasscheck.ipynb)
+- [Grass10](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass10.ipynb)
+
+### Land cover
+
+- [CORINE Land Cover 2018](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/land_cover/clc_2018.ipynb)
 
 ### Data preparation
 
