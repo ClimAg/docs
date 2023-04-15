@@ -16,12 +16,12 @@ cd jupyter-notebooks
 
 # # copy files to temporary directory
 # # https://unix.stackexchange.com/a/132601
-# mv **/*.py --parents ../draft/nb
+# cp **/*.py --parents ../draft/nb
 
 git checkout main
 
 # delete existing Python scripts
-rm **/*.py
+rm */*.py
 
 cd ../draft/nb/
 

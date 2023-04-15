@@ -230,11 +230,60 @@ plt.show()
 grass_out = grass_ts.reset_index()
 
 for county in counties:
-    mn = grass_out.rolling(3, center=True, on="time")[county].mean()
-    grass_out[f"{county}_outlier"] = grass_out[county].sub(mn).abs().gt(10)
+    mn = grass_out.rolling(3, center=True, on="time")[county].median()
+    # mn = grass_out.rolling(3, center=True, on="time")[county].mean()
+    # sd = grass_out.rolling(3, center=True, on="time")[county].std()
+    grass_out[f"{county}_outlier"] = grass_out[county].sub(mn).abs().gt(25)
     grass_out[f"{county}_mn"] = mn
+    # grass_out[f"{county}_sd"] = sd
+    # grass_out[f"{county}_f"] = np.nan
+    # grass_out[f"{county}_f"] = grass_out[
+    #     (
+    #         grass_out[county] <=
+    #         grass_out[f"{county}_mn"] + 2 * grass_out[f"{county}_sd"]
+    #     ) & (
+    #         grass_out[county] >=
+    #         grass_out[f"{county}_mn"] - 2 * grass_out[f"{county}_sd"]
+    #     )
+    # ][[county]]
+    # grass_out[f"{county}_f"] = grass_out[
+    #     grass_out[f"{county}_f"].isna()
+    # ][[county]]
 
 grass_out.set_index("time", inplace=True)
+
+for county in counties:
+    axs = grass_out.plot(
+        # ylim=[0.0, 200.0],
+        figsize=(10, 4),
+        y=county,
+        label="growth",
+    )
+    grass_out.plot(
+        figsize=(10, 4),
+        y=f"{county}_mn",
+        ax=axs,
+        label="moving_avg",
+        color="orange",
+        zorder=1,
+    )
+    # grass_out.plot(
+    #     figsize=(10, 4), y=f"{county}_f", ax=axs, label="f",
+    #     color="purple", linewidth=0.0, marker="*"
+    # )
+    if True in list(grass_out[f"{county}_outlier"].unique()):
+        grass_out[grass_out[f"{county}_outlier"] == True].plot(
+            ax=axs,
+            linewidth=0.0,
+            marker="*",
+            y=county,
+            label="outlier",
+            color="crimson",
+        )
+    plt.title(f"PastureBase Ireland grass growth data for Co. {county}")
+    plt.xlabel("")
+    plt.tight_layout()
+    plt.show()
 
 for county in counties:
     axs = grass_out.plot(
