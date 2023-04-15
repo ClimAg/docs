@@ -21,7 +21,7 @@ cp **/*.py --parents ../draft/nb
 # git checkout main
 
 # # delete existing Python scripts
-# rm **/*.py
+# rm */*.py
 
 # cd ../draft/nb/
 
