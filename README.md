@@ -31,7 +31,7 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - [Ireland boundary - NUTS 2021](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland_boundary_nuts.ipynb)
 - [Ireland Electoral Divisions](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland_boundary_electoral_divisions.ipynb)
 - [Northern Ireland Electoral Wards](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland_boundary_ni_wards.ipynb)
-- [Ireland counties - Ordnance Survey Ireland / Northern Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland-boundary.ipynb)
+- [Ireland counties - Ordnance Survey Ireland / Northern Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/ireland_boundary.ipynb)
 - [Natural Earth 10 m boundary for Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/boundaries/naturalearth.ipynb)
 
 ### HiResIreland
@@ -78,13 +78,27 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 ### Compare simulation results (historical with future)
 
+#### Seasonal
+
 - EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_eurocordex_compare_exp_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_eurocordex_compare_exp_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_eurocordex_compare_exp_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_eurocordex_compare_exp_diff_min.ipynb)
 - HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_hiresireland_compare_exp_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_hiresireland_compare_exp_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_hiresireland_compare_exp_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_hiresireland_compare_exp_diff_min.ipynb)
 
+#### Annual
+
+- EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_eurocordex_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_eurocordex_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_eurocordex_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_eurocordex_compare_exp_diff_min_annual.ipynb)
+- HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_hiresireland_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_hiresireland_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_hiresireland_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_hiresireland_compare_exp_diff_min_annual.ipynb)
+
 ### Compare simulation results (historical with observations)
+
+#### Seasonal
 
 - EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_mean/modvege_eurocordex_compare_mera_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_std/modvege_eurocordex_compare_mera_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_max/modvege_eurocordex_compare_mera_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_min/modvege_eurocordex_compare_mera_diff_min.ipynb)
 - HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_mean/modvege_hiresireland_compare_mera_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_std/modvege_hiresireland_compare_mera_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_max/modvege_hiresireland_compare_mera_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_min/modvege_hiresireland_compare_mera_diff_min.ipynb)
+
+#### Annual
+
+- EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_mean/modvege_eurocordex_compare_mera_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_std/modvege_eurocordex_compare_mera_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_max/modvege_eurocordex_compare_mera_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_min/modvege_eurocordex_compare_mera_diff_min_annual.ipynb)
+- HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_mean/modvege_hiresireland_compare_mera_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_std/modvege_hiresireland_compare_mera_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_max/modvege_hiresireland_compare_mera_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_min/modvege_hiresireland_compare_mera_diff_min_annual.ipynb)
 
 <!--
 ***Climate model datasets***
@@ -93,29 +107,14 @@ EURO-CORDEX data for Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran
 HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/hiresireland.ipynb)
 HiResIreland variables | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/hiresireland_fields.ipynb)
 Dataset visualisations | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/climate_data_viz.ipynb)
-***Met Éireann Reanalysis***
-Create MÉRA ModVege input data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/mera_data_process.ipynb)
 ***Model results***
 ModVege results using sample met data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_valentia.ipynb)
 ModVege results with EURO-CORDEX data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_eurocordex.ipynb)
 ModVege results with HiResIreland data | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_hiresireland.ipynb)
 Moorepark time series distribution | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/modvege_timeseries_moorepark.ipynb)
-***Meteorological data***
-Met stations in the Island of Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/met-stations.ipynb)
-***Grass growth***
-GrassCheck NI | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/grasscheck.ipynb)
-PastureBase Ireland | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/pasturebase.ipynb)
 ***Climatic regions***
 Seasonality map from EPA phenology study by Scarrott et al. (2010) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/seasonality-map-epa.ipynb)
 Agro-environmental regions based on February rainfall by Holden and Brereton (2004) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/agro-environmental-regions.ipynb)
-
-### Other
-
-***Land use and soil***
-CORINE land cover 2018 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/clc-2018.ipynb)
-Soil information system | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/irish-soil-information-system.ipynb)
-***Grass growth***
-Grass10 | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/grass10.ipynb)
 Growing season definition based on Connaughton (1973) | [nbviewer](https://nbviewer.org/gist/nmstreethran/88adb3d843260d60e038dafdbf3c4c41/sample-met-data.ipynb)
 
 ## References
