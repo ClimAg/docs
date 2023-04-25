@@ -37,8 +37,8 @@ grass_ts.shape
 # use weekly time series starting on Monday to fill missing rows
 grass_ = pd.DataFrame(
     pd.date_range(
-        str(grass_ni["time"][0].year) + "-01-01",
-        str(grass_ni["time"][len(grass_ni) - 1].year) + "-12-31",
+        str(grass_ts["time"][0].year) + "-01-01",
+        str(grass_ts["time"][len(grass_ts) - 1].year) + "-12-31",
         freq="W-MON",
     ),
     columns=["time"],
@@ -87,19 +87,6 @@ for county in counties:
     plt.tight_layout()
     plt.show()
 
-years = list(grass_ts.index.year.unique())
-for y in years:
-    grass_ts.loc[str(y)].set_index(
-        grass_ts.loc[str(y)].index.isocalendar().week
-    ).plot(
-        figsize=(10, 4),
-        xlabel="Week",
-        ylabel="Grass growth [kg DM ha⁻¹ day⁻¹]",
-    )
-    plt.title(f"GrassCheck NI data for {y}")
-    plt.tight_layout()
-    plt.show()
-
 # ## Distribution
 
 grass_ts.plot.box(
@@ -122,13 +109,32 @@ grass_ts.plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "boxplot.png"))
+# plt.savefig(
+#     os.path.join("data", "grass_growth", "grasscheck", "boxplot.png")
+# )
 plt.show()
 
 grass_ts.diff().hist(figsize=(6, 8), bins=50, grid=False)
 plt.tight_layout()
-# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "diff_hist.png"))
+# plt.savefig(
+#     os.path.join("data", "grass_growth", "grasscheck", "diff_hist.png")
+# )
 plt.show()
+
+grass_ts_ = grass_ts.melt(ignore_index=False).rename(
+    columns={"variable": "county"}
+)
+
+grass_ts_["weekno"] = grass_ts_.index.isocalendar().week
+
+grass_ts_.reset_index(inplace=True)
+
+DATA_DIR = os.path.join(
+    "data", "grass_growth", "grasscheck", "grasscheck_cleaned.csv"
+)
+
+# save time series
+grass_ts_.to_csv(DATA_DIR, index=False)
 
 # ## Filtering outliers using 3-week moving average
 
@@ -217,5 +223,7 @@ grass_out[[f"{county}_mn" for county in counties]].plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(os.path.join("data", "grass_growth", "grasscheck", "boxplot.png"))
+# plt.savefig(
+#     os.path.join("data", "grass_growth", "grasscheck", "boxplot.png")
+# )
 plt.show()

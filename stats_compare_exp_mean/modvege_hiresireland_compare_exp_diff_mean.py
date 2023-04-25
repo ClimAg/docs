@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in (weighted) mean - historical and rcp45/rcp85
+# # Seasonal stats - HiResIreland - Difference in (weighted) mean - historical and rcp45/rcp85
 #
 # - Weighted means take into account the number of days in each month
 
@@ -70,15 +70,5 @@ for season in season_list:
         levels=cstats.colorbar_levels(30),
         ticks=cstats.colorbar_ticks(30),
     )
-
-# ## Total biomass consumption (ingested + harvested) (yearly total)
-
-cstats.plot_all(
-    data=data["HiResIreland_c"],
-    var="c_bm_all",
-    season=None,
-    levels=cstats.colorbar_levels(750),
-    ticks=cstats.colorbar_ticks(750),
-)
 
 print("Last updated:", datetime.now(tz=timezone.utc))

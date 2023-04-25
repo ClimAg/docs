@@ -237,3 +237,44 @@ plt.xlim(landcover.rio.bounds()[0] - 9e3, landcover.rio.bounds()[1] + 9e3)
 plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
+
+# keep only pasture
+lc = rxr.open_rasterio(
+    os.path.join("data", "land-cover", "clc-2018", "clc-2018-ie.tif"),
+    chunks="auto",
+)
+
+lc
+
+# pastures
+lc = lc.where(lc.compute() == 18, drop=True)
+
+lc
+
+fig = lc.plot(add_colorbar=False)
+fig.axes.tick_params(labelbottom=False, labelleft=False)
+plt.title(None)
+plt.axis("equal")
+plt.xlabel("")
+plt.ylabel("")
+plt.tight_layout()
+plt.show()
+
+# export to GeoTIFF
+lc.rio.to_raster(
+    os.path.join(DATA_DIR_BASE, "clc-2018-ie-pasture.tif"),
+    windowed=True,
+    tiled=True,
+)
+
+# vectorised (done in QGIS)
+pasture = gpd.read_file(
+    os.path.join(DATA_DIR_BASE, "clc-2018-pasture.gpkg"), layer="dissolved"
+)
+
+pasture
+
+fig = pasture.plot()
+fig.axes.tick_params(labelbottom=False, labelleft=False)
+plt.tight_layout()
+plt.show()

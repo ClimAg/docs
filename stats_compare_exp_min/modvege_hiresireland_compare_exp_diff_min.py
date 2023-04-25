@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in min - historical and rcp45/rcp85
+# # Seasonal stats - HiResIreland - Difference in minimum - historical and rcp45/rcp85
 
 # import libraries
 from datetime import datetime, timezone
@@ -68,15 +68,5 @@ for season in season_list:
         levels=cstats.colorbar_levels(45),
         ticks=cstats.colorbar_ticks(45),
     )
-
-# ## Total biomass consumption (ingested + harvested) (yearly total)
-
-cstats.plot_all(
-    data=data["HiResIreland_c"],
-    var="c_bm_all",
-    season=None,
-    levels=cstats.colorbar_levels(1500),
-    ticks=cstats.colorbar_ticks(1500),
-)
 
 print("Last updated:", datetime.now(tz=timezone.utc))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - EURO-CORDEX - Difference in unbiased standard deviation - historical and rcp45/rcp85
+# # Seasonal stats - EURO-CORDEX - Difference in (unbiased) standard deviation - historical and rcp45/rcp85
 
 # import libraries
 from datetime import datetime, timezone
@@ -68,15 +68,5 @@ for season in season_list:
         levels=cstats.colorbar_levels(15),
         ticks=cstats.colorbar_ticks(15),
     )
-
-# ## Total biomass consumption (ingested + harvested) (yearly total)
-
-cstats.plot_all(
-    data=data["EURO-CORDEX_c"],
-    var="c_bm_all",
-    season=None,
-    levels=cstats.colorbar_levels(450),
-    ticks=cstats.colorbar_ticks(450),
-)
 
 print("Last updated:", datetime.now(tz=timezone.utc))
