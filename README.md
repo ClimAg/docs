@@ -80,7 +80,7 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - [Comparison of regridding methods](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/modvege/regridding.ipynb)
 - [Prepare MÉRA time series for model evaluation](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass_growth_mera_ts.ipynb)
 
-### Compare simulation results (historical with future)
+### Future risk (historical with future)
 
 #### Seasonal
 
@@ -92,7 +92,7 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_eurocordex_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_eurocordex_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_eurocordex_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_eurocordex_compare_exp_diff_min_annual.ipynb)
 - HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_hiresireland_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_hiresireland_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_hiresireland_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_hiresireland_compare_exp_diff_min_annual.ipynb)
 
-### Compare simulation results (historical with observations)
+### Validation
 
 #### Seasonal
 
@@ -101,6 +101,7 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 ### Model evaluation
 
+- [Compare simulations with grass growth measurements (pasture only)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass_growth_pastures_compare.ipynb)
 - [Compare simulations with grass growth measurements](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass_growth_compare.ipynb)
 
 <!-- #### Annual / overall

@@ -70,6 +70,22 @@ run_modvege(
     out_dir=DATA_DIR,
 )
 
+# run the main function using the example data
+# rep = 0 when grazed/harvested
+run_modvege(
+    input_params_file=PARAMS_FILE,
+    input_timeseries_file=TS_FILE,
+    out_dir=DATA_DIR,
+)
+
+# run the main function using the example data
+# rep = 0 when grazed/harvested
+run_modvege(
+    input_params_file=PARAMS_FILE,
+    input_timeseries_file=TS_FILE,
+    out_dir=DATA_DIR,
+)
+
 # ### h = 0.00 m (max cutting)
 
 run_modvege(

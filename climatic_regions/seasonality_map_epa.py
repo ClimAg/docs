@@ -36,10 +36,8 @@ import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
 import geopandas as gpd
-import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import ticker
 from dask.distributed import Client
 
 print("Last updated:", datetime.now(tz=timezone.utc))

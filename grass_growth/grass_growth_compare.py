@@ -4,19 +4,11 @@
 # # Compare grass growth time series using MERA for each county at a weekly frequency
 
 import os
-import geopandas as gpd
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import rioxarray as rxr
 import seaborn as sns
-import xarray as xr
-from geocube.api.core import make_geocube
-from rasterstats import zonal_stats
-from shapely.geometry import Polygon
-import climag.plot_configs as cplt
-from sklearn.metrics import mean_squared_error
 import statsmodels.api as sm
+from sklearn.metrics import mean_squared_error
 
 df1 = pd.read_csv(
     os.path.join(

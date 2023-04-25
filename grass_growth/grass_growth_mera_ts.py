@@ -6,15 +6,10 @@
 import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import rioxarray as rxr
-from geocube.api.core import make_geocube
-from rasterstats import zonal_stats
-from shapely.geometry import Polygon
 import xarray as xr
+from rasterstats import zonal_stats
 import climag.plot_configs as cplt
-import shapely
 
 # ## Model results
 
