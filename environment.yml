@@ -22,7 +22,6 @@ dependencies:
   - sparse  # xesmf dependency
   - numba  # xesmf dependency
   - mpi  # xesmf dependency
-  - geocube
   - matplotlib
   - nc-time-axis
   - seaborn
@@ -31,3 +30,4 @@ dependencies:
   - pylint
   - black
   - jupyterlab
+  - qgis

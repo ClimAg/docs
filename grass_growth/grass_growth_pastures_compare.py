@@ -56,7 +56,7 @@ data_all.index = pd.to_datetime(data_all.index)
 
 for county in counties:
     fig = mera_p["2012":"2019"][county].plot(
-        figsize=(12, 4), label="Simulated", color="dodgerblue"
+        figsize=(12, 4), label="Simulated", color="lightskyblue"
     )
     df_p[county].plot(
         ax=fig.axes, label="Measured", color="crimson", alpha=0.75
@@ -123,7 +123,7 @@ def rmse_by_county(data_m, data_s, counties=counties, season=None):
     if season:
         col_name = season
     else:
-        col_name = "All"
+        col_name = "All seasons"
     rmse = pd.DataFrame(columns=["County", col_name])
     for i, county in enumerate(counties):
         plot_data = get_plot_data(data_m, data_s, county, season)
@@ -135,7 +135,7 @@ def rmse_by_county(data_m, data_s, counties=counties, season=None):
         ]
     plot_data = get_plot_data(data_m, data_s, county=None, season=season)
     rmse.loc[i] = [
-        "All",
+        "All counties",
         mean_squared_error(
             plot_data["Measured"], plot_data["Simulated"], squared=False
         ),
@@ -154,7 +154,7 @@ def rmse_all(data_m, data_s):
         rmse_by_county(df_p, mera_p, season=None),
         on="County",
     )
-    plot_data.sort_values(by="All", inplace=True)
+    plot_data.sort_values(by="All seasons", inplace=True)
     return plot_data
 
 
@@ -171,167 +171,128 @@ def get_linear_regression(data_m, data_s, county, season=None):
 
     print(results.summary())
 
-    fig = plot_data.plot.scatter(
-        x="Measured", y="Simulated", marker="x", color="dodgerblue"
+    # fig = plot_data.plot.scatter(
+    #     x="Measured", y="Simulated", marker="x", color="dodgerblue"
+    # )
+    fig = sns.jointplot(
+        x="Measured",
+        y="Simulated",
+        data=plot_data,
+        color="lightskyblue",
+        marginal_kws=dict(bins=25),
     )
-    plt.axline((0, 0), slope=1, color="crimson", linestyle="dotted")
+    # x = y line
+    plt.axline(
+        (0, 0),
+        slope=1,
+        color="mediumvioletred",
+        linestyle="dotted",
+        linewidth=2,
+    )
     b, m = results.params
     plt.axline(
-        xy1=(0, b), slope=m, label=f"$y = {m:.2f}x {b:+.2f}$", color="crimson"
+        xy1=(0, b),
+        slope=m,
+        label=f"$y = {m:.2f}x {b:+.2f}$",
+        color="crimson",
+        linewidth=2,
     )
     plt.xlim([-5, 155])
     plt.ylim([-5, 155])
     plt.legend()
     # plt.axis("equal")
+    plt.xlabel("Measured [kg DM ha⁻¹ day⁻¹]")
+    plt.ylabel("Simulated [kg DM ha⁻¹ day⁻¹]")
     plt.tight_layout()
     plt.show()
 
 
 # ### RMSE
 
+list("rgb")
+
 rmse_all(df_p, mera_p).plot.bar(
-    figsize=(12, 5), x="County", cmap="viridis", edgecolor="darkslategrey"
+    figsize=(12, 5),
+    x="County",
+    edgecolor="darkslategrey",
+    color=["lightskyblue", "gold", "mediumvioletred"],
 )
 plt.tight_layout()
 plt.xlabel("")
 plt.ylabel("Root-mean-square error")
 plt.show()
 
-# ### MAM
+# ### Linear regression - all counties
 
-get_linear_regression(df_p, mera_p, county="Wexford", season="MAM")
-
-# ### JJA
-
-get_linear_regression(df_p, mera_p, county="Wexford", season="JJA")
-
-# ### All
-
-get_linear_regression(df_p, mera_p, county="Wexford")
-
-# ### All counties - MAM
+# #### MAM
 
 get_linear_regression(df_p, mera_p, county=None, season="MAM")
 
-# ### All counties - JJA
+# #### JJA
 
 get_linear_regression(df_p, mera_p, county=None, season="JJA")
 
-# ### All counties - All months
+# #### All seasons
 
 get_linear_regression(df_p, mera_p, county=None)
 
-# ## Box plots - MAM growth grouped by year
+# ## Box plots
 
-for county in ["Wexford"]:
-    plot_data = data_all[(data_all["county"] == county)]
-    # remove Jan, Feb, Nov, Dec data
-    plot_data = plot_data[
-        (plot_data.index.month == 3)
-        | (plot_data.index.month == 4)
-        | (plot_data.index.month == 5)
-    ]
-    fig, ax = plt.subplots(figsize=(15, 5))
-    sns.boxplot(
-        x=plot_data.index.year,
-        y=plot_data["value"],
-        hue=plot_data["data"],
-        ax=ax,
-        palette="Pastel1",
-        showmeans=True,
-        meanprops={
-            "markeredgecolor": "darkslategrey",
-            "marker": "d",
-            "markerfacecolor": (1, 1, 0, 0),
-            "markersize": 4.5,
-        },
-        flierprops={
-            "marker": "o",
-            "markerfacecolor": (1, 1, 0, 0),
-        },
-    )
-    plt.xlabel("")
-    ax.tick_params(axis="x", rotation=90)
-    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
-    # plt.title(county)
-    plt.legend(title=None)
-    plt.tight_layout()
-    print(county)
-    plt.show()
 
-# ## Box plots - JJA growth grouped by year
+def box_plots(counties, season):
+    for county in counties:
+        plot_data = data_all[(data_all["county"] == county)]
+        # keep season data
+        if season == "MAM":
+            plot_data = plot_data[
+                (plot_data.index.month == 3)
+                | (plot_data.index.month == 4)
+                | (plot_data.index.month == 5)
+            ]
+        elif season == "JJA":
+            plot_data = plot_data[
+                (plot_data.index.month == 6)
+                | (plot_data.index.month == 7)
+                | (plot_data.index.month == 8)
+            ]
+        fig, ax = plt.subplots(figsize=(15, 5))
+        sns.boxplot(
+            x=plot_data.index.year,
+            y=plot_data["value"],
+            hue=plot_data["data"],
+            ax=ax,
+            palette="Pastel1",
+            showmeans=True,
+            meanprops={
+                "markeredgecolor": "darkslategrey",
+                "marker": "d",
+                "markerfacecolor": (1, 1, 0, 0),
+                "markersize": 4.5,
+            },
+            flierprops={
+                "marker": "o",
+                "markerfacecolor": (1, 1, 0, 0),
+                "markeredgecolor": "darkslategrey",
+            },
+            boxprops={"edgecolor": "darkslategrey", "alpha": 0.75},
+            whiskerprops={"color": "darkslategrey", "alpha": 0.75},
+            capprops={"color": "darkslategrey", "alpha": 0.75},
+            medianprops={"color": "darkslategrey", "alpha": 0.75},
+        )
+        plt.xlabel("")
+        ax.tick_params(axis="x", rotation=90)
+        plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+        # plt.title(county)
+        plt.legend(title=None)
+        plt.tight_layout()
+        print(county)
+        plt.show()
 
-for county in ["Wexford"]:
-    plot_data = data_all[(data_all["county"] == county)]
-    # remove Jan, Feb, Nov, Dec data
-    plot_data = plot_data[
-        (plot_data.index.month == 6)
-        | (plot_data.index.month == 7)
-        | (plot_data.index.month == 8)
-    ]
-    fig, ax = plt.subplots(figsize=(15, 5))
-    sns.boxplot(
-        x=plot_data.index.year,
-        y=plot_data["value"],
-        hue=plot_data["data"],
-        ax=ax,
-        palette="Pastel1",
-        showmeans=True,
-        meanprops={
-            "markeredgecolor": "darkslategrey",
-            "marker": "d",
-            "markerfacecolor": (1, 1, 0, 0),
-            "markersize": 4.5,
-        },
-        flierprops={
-            "marker": "o",
-            "markerfacecolor": (1, 1, 0, 0),
-        },
-    )
-    plt.xlabel("")
-    ax.tick_params(axis="x", rotation=90)
-    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
-    # plt.title(county)
-    plt.legend(title=None)
-    plt.tight_layout()
-    print(county)
-    plt.show()
 
-# ## Box plots - March - October growth grouped by year
+# ### MAM growth grouped by year
 
-for county in ["Wexford"]:
-    plot_data = data_all[(data_all["county"] == county)]
-    # remove Jan, Feb, Nov, Dec data
-    plot_data = plot_data[
-        (plot_data.index.month != 1)
-        & (plot_data.index.month != 2)
-        & (plot_data.index.month != 11)
-        & (plot_data.index.month != 12)
-    ]
-    fig, ax = plt.subplots(figsize=(15, 5))
-    sns.boxplot(
-        x=plot_data.index.year,
-        y=plot_data["value"],
-        hue=plot_data["data"],
-        ax=ax,
-        palette="Pastel1",
-        showmeans=True,
-        meanprops={
-            "markeredgecolor": "darkslategrey",
-            "marker": "d",
-            "markerfacecolor": (1, 1, 0, 0),
-            "markersize": 4.5,
-        },
-        flierprops={
-            "marker": "o",
-            "markerfacecolor": (1, 1, 0, 0),
-        },
-    )
-    plt.xlabel("")
-    ax.tick_params(axis="x", rotation=90)
-    plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
-    # plt.title(county)
-    plt.legend(title=None)
-    plt.tight_layout()
-    print(county)
-    plt.show()
+box_plots(["Wexford"], "MAM")
+
+# ### JJA growth grouped by year
+
+box_plots(["Wexford"], "JJA")

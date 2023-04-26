@@ -335,25 +335,6 @@ data.rio.crs
 
 # ## Visualise
 
-# ### Monthly averages
-
-cplt.plot_averages(
-    data=data.sel(time=slice("1976", "2005")),
-    var="T",
-    averages="month",
-    boundary_data=ie_ne,
-    cbar_levels=[3 + 1 * n for n in range(13)],
-)
-
-for var in ["PAR", "PET", "PP"]:
-    cplt.plot_averages(
-        data=data.sel(time=slice("1976", "2005")),
-        var=var,
-        averages="month",
-        boundary_data=ie_ne,
-        cbar_levels=12,
-    )
-
 # ### Seasonal averages
 
 for var in data.data_vars:
@@ -461,22 +442,4 @@ for ax, var in zip(axs.flat, data_ie.data_vars):
     )
     ax.set(yticklabels=[])
 plt.tight_layout()
-plt.show()
-
-data_ie_df = data_ie_df[["PP"]].resample("A").sum()
-data_ie_df.set_index(data_ie_df.index.year, inplace=True)
-
-data_ie_df.plot.bar(figsize=(12, 4), legend=False, xlabel="")
-plt.title("Total precipitation [mm year⁻¹]")
-plt.tight_layout()
-plt.show()
-
-data_ie_df.diff().plot.hist(
-    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
-)
-plt.show()
-
-data_ie_df.plot.hist(
-    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
-)
 plt.show()

@@ -13,15 +13,19 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
-from dask.distributed import Client
+
+# from dask.distributed import Client
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
+import importlib
+
+importlib.reload(cplt)
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
-client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
+# client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 
-client
+# client
 
 # Moorepark met station coords
 LON, LAT = -8.26389, 52.16389
@@ -90,48 +94,28 @@ for var in varlist:
 
 # ## Histograms
 
-c
-
-# ## Seasonal maps - hist/rcp diff
-
-# ### hist/rcp45
-
 for var in varlist:
-    cfacet.plot_season_diff_hist_rcp(
-        data=(
-            datasets["EURO-CORDEX_EC-EARTH_historical"],
-            datasets["EURO-CORDEX_EC-EARTH_rcp45"],
-        ),
-        var=var,
-        boundary_data=ie_bbox,
-        stat="mean",
+    data_pivot = pd.pivot_table(
+        data_all[var], values=var, columns="legend", index=data_all[var].index
     )
-
-# ### hist/rcp85
-
-for var in varlist:
-    cfacet.plot_season_diff_hist_rcp(
-        data=(
-            datasets["EURO-CORDEX_EC-EARTH_historical"],
-            datasets["EURO-CORDEX_EC-EARTH_rcp85"],
+    data_pivot.plot(
+        kind="hist",
+        subplots=True,
+        figsize=(10, 18),
+        bins=50,
+        sharex=True,
+        sharey=True,
+        layout=(8, 3),
+        title=(
+            datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
+            + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
+            f" at Moorepark ({LON}, {LAT})"
         ),
-        var=var,
-        boundary_data=ie_bbox,
-        stat="mean",
     )
+    plt.tight_layout()
+    plt.show()
 
 # ## Seasonal maps
-
-# ### Mean
-
-# #### Weighted vs. unweighted mean
-
-cfacet.plot_season_diff(
-    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"],
-    var="PP",
-    boundary_data=ie_bbox,
-    stat="mean",
-)
 
 # #### Mean
 
@@ -153,49 +137,6 @@ cfacet.plot_seasonal(
     contour=True,
 )
 
-# ### Quantiles
-
-# #### Median
-
-cfacet.plot_seasonal(
-    data=datasets["HiResIreland_EC-EARTH_rcp45"],
-    boundary_data=ie_bbox,
-    stat="median",
-    var="PP",
-    contour=True,
-)
-
-# #### 90th percentile
-
-cfacet.plot_seasonal(
-    data=datasets["HiResIreland_EC-EARTH_rcp45"],
-    boundary_data=ie_bbox,
-    stat="0.9q",
-    var="PP",
-    contour=True,
-)
-
-# #### 10th percentile
-
-cfacet.plot_seasonal(
-    data=datasets["HiResIreland_EC-EARTH_rcp45"],
-    boundary_data=ie_bbox,
-    stat="0.1q",
-    var="PP",
-    contour=True,
-)
-
-# ### Standard deviation
-
-# #### Unbised vs. biased SD
-
-cfacet.plot_season_diff(
-    datasets["HiResIreland_EC-EARTH_rcp45"],
-    var="PP",
-    boundary_data=ie_bbox,
-    stat="std",
-)
-
 # #### SD
 
 cfacet.plot_seasonal(
@@ -205,8 +146,6 @@ cfacet.plot_seasonal(
     var="PP",
     contour=True,
 )
-
-# ### Max and min
 
 # #### Max
 
@@ -341,22 +280,4 @@ for ax, var in zip(axs.flat, data_ie.data_vars):
     )
     ax.set(yticklabels=[])
 plt.tight_layout()
-plt.show()
-
-data_ie_df = data_ie_df[["PP"]].resample("A").sum()
-data_ie_df.set_index(data_ie_df.index.year, inplace=True)
-
-data_ie_df.plot.bar(figsize=(12, 4), legend=False, xlabel="")
-plt.title("Total precipitation [mm year⁻¹]")
-plt.tight_layout()
-plt.show()
-
-data_ie_df.diff().plot.hist(
-    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
-)
-plt.show()
-
-data_ie_df.plot.hist(
-    bins=15, edgecolor="darkslategrey", legend=False, alpha=0.75, hatch="///"
-)
 plt.show()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in mean - historical and observational (MÉRA)
+# # Seasonal stats - HiResIreland - Difference in (weighted) mean - historical and observational (MÉRA)
 #
 # - Weighted means take into account the number of days in each month
 

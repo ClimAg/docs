@@ -34,15 +34,14 @@ BASE_DIR = os.path.join("data", "ModVege", "EURO-CORDEX")
 TEMP_DIR = os.path.join(BASE_DIR, "stats")
 os.makedirs(TEMP_DIR, exist_ok=True)
 
-exp, model = "rcp45", "EC-EARTH"
+# exp, model = "rcp45", "EC-EARTH"
 
 datasets = {}
 
 for exp, model, data in itertools.product(
     ["historical", "rcp45", "rcp85"],
     ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"],
-    ["EURO-CORDEX"]
-    # ["EURO-CORDEX", "HiResIreland"]
+    ["EURO-CORDEX", "HiResIreland"],
 ):
     # auto-rechunking may cause NotImplementedError with object dtype
     # where it will not be able to estimate the size in bytes of object data
@@ -87,7 +86,7 @@ list(datasets.keys())
 
 datasets["EURO-CORDEX_EC-EARTH_rcp45"]
 
-varlist = ["bm", "pgro", "gro", "i_bm", "c_bm", "h_bm"]
+varlist = ["bm", "pgro", "gro", "i_bm"]
 
 # ## Box plots
 
@@ -108,18 +107,18 @@ for var in varlist:
 
 # ## Histograms
 
-for var in ["bm", "pgro", "gro"]:
+for var in varlist:
     data_pivot = pd.pivot_table(
         data_all[var], values=var, columns="legend", index=data_all[var].index
     )
     data_pivot.plot(
         kind="hist",
         subplots=True,
-        figsize=(12, 15),
+        figsize=(10, 18),
         bins=50,
         sharex=True,
         sharey=True,
-        layout=(6, 4),
+        layout=(8, 3),
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in max - historical and observational (MÉRA)
+# # Seasonal stats - HiResIreland - Difference in maximum - historical and observational (MÉRA)
 
 # import libraries
 from datetime import datetime, timezone

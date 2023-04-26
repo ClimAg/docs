@@ -22,6 +22,30 @@ client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 
 client
 
+tmax = xr.open_dataset(
+    "/run/media/nms/MyPassport/HiResIreland/COSMO5-CLM/historical/CNRM-CM5/day_max_T_2M_COSMO5_CNRM-CM5_historical_4km.nc",
+    decode_coords="all",
+    chunks="auto",
+)
+
+tmax
+
+tmin = xr.open_dataset(
+    "/run/media/nms/MyPassport/HiResIreland/COSMO5-CLM/historical/CNRM-CM5/day_min_T_2M_COSMO5_CNRM-CM5_historical_4km.nc",
+    decode_coords="all",
+    chunks="auto",
+)
+
+tmin
+
+et = xr.open_dataset(
+    "/run/media/nms/MyPassport/HiResIreland/COSMO5-CLM/historical/CNRM-CM5/day_sum_ET_COSMO5_CNRM-CM5_historical_4km.nc",
+    decode_coords="all",
+    chunks="auto",
+)
+
+et
+
 DATA_DIR_BASE = os.path.join("data", "HiResIreland")
 
 # directory to store outputs
@@ -39,9 +63,27 @@ ie_bbox = gpd.read_file(
 )
 ie_ne = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 
-# ## Read a subset (historical)
+exp, model = "rcp45", "EC-EARTH"
 
-exp, model = "historical", "EC-EARTH"
+#
+
+data = xr.open_dataset(
+    glob.glob(
+        os.path.join(
+            DATA_DIR_BASE,
+            "COSMO5-CLM",
+            exp,
+            model,
+            f"*ET*{model}*{exp}*2040.nc",
+        )
+    )[0],
+    decode_coords="all",
+    chunks="auto",
+)
+
+data
+
+# ## Read a subset (historical)
 
 data = xr.open_mfdataset(
     list(
@@ -557,6 +599,25 @@ data.coords["time_bnds"] = data_time_bnds
 data.rio.write_crs(data_crs, inplace=True)
 
 # ## Visualise
+
+# ### Monthly averages
+
+cplt.plot_averages(
+    data=data.sel(time=slice("1976", "2005")),
+    var="T",
+    averages="month",
+    boundary_data=ie_ne,
+    cbar_levels=[3 + 1 * n for n in range(13)],
+)
+
+for var in ["PP", "PET", "PAR"]:
+    cplt.plot_averages(
+        data=data.sel(time=slice("1976", "2005")),
+        var=var,
+        averages="month",
+        boundary_data=ie_ne,
+        cbar_levels=16,
+    )
 
 # ### Seasonal averages
 

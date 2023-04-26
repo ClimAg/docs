@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - EURO-CORDEX - Difference in max - historical and observational (MÉRA)
+# # Seasonal stats - EURO-CORDEX - Difference in maximum - historical and observational (MÉRA)
 
 # import libraries
 from datetime import datetime, timezone

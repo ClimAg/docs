@@ -60,29 +60,8 @@ data = xr.open_mfdataset(
 
 data
 
-# ### Annual averages
-
-cplt.plot_averages(
-    data=data, var="gro", averages="year", boundary_data=ie, cbar_levels=12
-)
-
 # remove the spin-up year
 data = data.sel(time=slice("2042", "2070"))
-
-# ### Monthly averages
-
-cplt.plot_averages(
-    data=data,
-    var="gro",
-    averages="month",
-    boundary_data=ie,
-    cbar_levels=[0 + 10 * n for n in range(11)],
-)
-
-for var in ["gro", "bm", "pgro", "i_bm", "h_bm", "aet"]:
-    cplt.plot_averages(
-        data=data, var=var, averages="month", boundary_data=ie, cbar_levels=12
-    )
 
 # ### Seasonal averages
 
@@ -94,37 +73,6 @@ for var in ["gro", "bm", "pgro", "aet"]:
 # ### Point subset
 
 # #### Valentia Observatory
-
-cds = cplt.rotated_pole_point(data=data, lon=LON_VAL, lat=LAT_VAL)
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("2054", "2056")
-)
-
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
-data_ie_df = data_ie_df[["bm", "pgro", "gro", "i_bm", "h_bm"]]
-
-# configure plot title
-plot_title = []
-for var in list(data_ie_df):
-    plot_title.append(
-        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
-    )
-
-data_ie_df.plot(
-    subplots=True,
-    layout=(3, 2),
-    figsize=(13, 8),
-    legend=False,
-    xlabel="",
-    title=plot_title,
-)
-
-plt.tight_layout()
-plt.show()
 
 cds = cplt.rotated_pole_point(data=data, lon=LON_VAL, lat=LAT_VAL)
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(

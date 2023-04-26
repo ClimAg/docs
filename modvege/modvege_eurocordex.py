@@ -19,12 +19,13 @@
 # [Jouven1]: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 # [Jouven2]: https://doi.org/10.1111/j.1365-2494.2006.00517.x
 
-import os
 import glob
+import os
 from datetime import datetime, timezone
-import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import xarray as xr
 from dask.distributed import Client
 import climag.plot_configs as cplt
@@ -59,55 +60,8 @@ data = xr.open_mfdataset(
 
 data
 
-data_ = data.sel(time="1990")
-
-data_.max(dim="time", skipna=True).compute()["h_bm"]
-
-data_.compute()["h_bm"].argmax(dim="time", skipna=True)
-
-data_.compute()["h_bm"].argmax(dim=["rlon", "rlat"])
-
-data.max(dim="time", skipna=True)["i_bm"].values
-
 # remove the spin-up year
 data = data.sel(time=slice("1976", "2005"))
-
-# ### Annual averages
-
-cplt.plot_averages(
-    data=data,
-    var="gro",
-    averages="year",
-    boundary_data=ie_bbox,
-    cbar_levels=12,
-)
-
-# ### Monthly averages
-
-cplt.plot_averages(
-    data=data,
-    var="gro",
-    averages="month",
-    boundary_data=ie_bbox,
-    cbar_levels=[0 + 10 * n for n in range(16)],
-)
-
-cplt.plot_averages(
-    data=data,
-    var="gro",
-    averages="month",
-    boundary_data=ie_bbox,
-    cbar_levels=[0 + 10 * n for n in range(16)],
-)
-
-for var in ["pgro", "bm", "i_bm", "h_bm", "c_bm"]:
-    cplt.plot_averages(
-        data=data,
-        var=var,
-        averages="month",
-        boundary_data=ie_bbox,
-        cbar_levels=12,
-    )
 
 # ### Seasonal averages
 
@@ -128,41 +82,6 @@ data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie
 
-data_ie = data_ie.where(data_ie["i_bm"] > 0)
-
-data_ie["i_bm"].values
-
-import numpy as np
-
-len(data_ie["i_bm"].values[~np.isnan(data_ie["i_bm"].values)])
-
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
-data_ie_df = data_ie_df[["pgro", "gro", "h_bm", "i_bm", "bm"]]
-
-# configure plot title
-plot_title = []
-for var in list(data_ie_df):
-    plot_title.append(
-        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
-    )
-
-data_ie_df.plot(
-    subplots=True,
-    layout=(5, 1),
-    figsize=(12, 14),
-    legend=False,
-    xlabel="",
-    title=plot_title,
-    linewidth=1,
-)
-
-plt.tight_layout()
-plt.show()
-
 data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
@@ -187,36 +106,6 @@ data_ie_df.plot(
     xlabel="",
     title=plot_title,
     linewidth=1,
-)
-
-plt.tight_layout()
-plt.show()
-
-data_ie = data.sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest").sel(
-    time=slice("1997", "1999")
-)
-
-data_ie_df = pd.DataFrame({"time": data_ie["time"]})
-for var in data_ie.data_vars:
-    data_ie_df[var] = data_ie[var]
-
-data_ie_df.set_index("time", inplace=True)
-data_ie_df = data_ie_df[["pgro", "gro", "h_bm", "i_bm", "bm"]]
-
-# configure plot title
-plot_title = []
-for var in list(data_ie_df):
-    plot_title.append(
-        f"{data_ie[var].attrs['long_name']} [{data_ie[var].attrs['units']}]"
-    )
-
-data_ie_df.plot(
-    subplots=True,
-    layout=(5, 1),
-    figsize=(12, 14),
-    legend=False,
-    xlabel="",
-    title=plot_title,
 )
 
 plt.tight_layout()
