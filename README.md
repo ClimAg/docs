@@ -64,17 +64,16 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 ### Soil
 
 - Nitrogen nutritional index based on LUCAS topsoil data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_nitrogen/nitrogen_lucas_topsoil_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_nitrogen/nitrogen_lucas_topsoil_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_nitrogen/nitrogen_lucas_topsoil_mera.ipynb)
-- Soil water-holding capacity based on European soil database derived data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_water_content/soil_water_content_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/water_content/soil_water_content_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_water_content/soil_water_content_mera.ipynb)
+- Soil water-holding capacity based on European soil database derived data: [EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_water_content/soil_water_content_eurocordex.ipynb), [HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_water_content/soil_water_content_hiresireland.ipynb), [MÉRA](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil_water_content/soil_water_content_mera.ipynb)
 
 ### Grass growth observations
 
 - [PastureBase Ireland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/pasturebase.ipynb)
 - [GrassCheck NI](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grasscheck.ipynb)
 
-### Land cover and regions
+### Land cover
 
 - [CORINE Land Cover 2018](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/land_cover/clc_2018.ipynb)
-- [Agro-environmental regions based on February rainfall by Holden and Brereton (2004)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/climatic_regions/seasonality_map_epa.ipynb)
 
 ### Data preparation
 
@@ -105,7 +104,7 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 ### Model evaluation
 
-- [Compare simulations with grass growth measurements (pasture only)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass_growth_pastures_compare.ipynb)
+- [Compare simulations with grass growth measurements](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass_growth_pastures_compare.ipynb)
 
 ### Model results
 
@@ -118,8 +117,9 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 
 - [Irish Soil Information System](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/soil/irish_soil_information_system.ipynb)
 - [Grass10](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/grass_growth/grass10.ipynb)
-- [Seasonality map from EPA phenology study by Scarrott et al. (2010)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/climatic_regions/agro_environmental_regions.ipynb)
-- [Growing season definition based on Connaughton (1973)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/met/sample-met-data.ipynb)
+- [Seasonality map from EPA phenology study by Scarrott et al. (2010)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/climatic_regions/seasonality_map_epa.ipynb)
+- [Agro-environmental regions based on February rainfall by Holden and Brereton (2004)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/climatic_regions/agro_environmental_regions.ipynb)
+- [Growing season definition based on Connaughton (1973)](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/met/met_growing_season.ipynb)
 
 <!--
 ## References
