@@ -126,14 +126,14 @@ axs = grid_cells.plot(
     linewidth=0.2,
     figsize=(6, 7),
     legend=True,
-    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "TAWC [mm]"},
+    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "WHC [mm]"},
     missing_kwds={
         "color": "darkslategrey",
         "edgecolor": "darkslategrey",
         "label": "No data",
     },
 )
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)

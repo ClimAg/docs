@@ -23,8 +23,9 @@ client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 
 client
 
-# Moorepark met station coords
-LON, LAT = -8.26389, 52.16389
+# met station coords
+# Wexford,4015,ENNISCORTHY (Brownswood),18,297870,135550,1983,(null)
+LON, LAT = -6.56083, 52.46306
 
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
@@ -33,8 +34,6 @@ ie_bbox = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 BASE_DIR = os.path.join("data", "ModVege", "EURO-CORDEX")
 TEMP_DIR = os.path.join(BASE_DIR, "stats")
 os.makedirs(TEMP_DIR, exist_ok=True)
-
-# exp, model = "rcp45", "EC-EARTH"
 
 datasets = {}
 
@@ -101,7 +100,6 @@ for var in varlist:
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
-            f" at Moorepark ({LON}, {LAT})"
         ),
     )
 
@@ -114,7 +112,7 @@ for var in varlist:
     data_pivot.plot(
         kind="hist",
         subplots=True,
-        figsize=(10, 18),
+        figsize=(8, 18),
         bins=50,
         sharex=True,
         sharey=True,
@@ -122,7 +120,6 @@ for var in varlist:
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
-            f" at Moorepark ({LON}, {LAT})"
         ),
     )
     plt.tight_layout()

@@ -29,6 +29,7 @@ import rioxarray as rxr
 from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
+import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
@@ -101,8 +102,8 @@ landcover.rio.bounds()
 landcover.rio.crs
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # convert the boundary's CRS to match the CLC raster's CRS
 ie.to_crs(landcover.rio.crs, inplace=True)
@@ -238,16 +239,39 @@ plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
 
-# keep only pasture
-lc = rxr.open_rasterio(
-    os.path.join("data", "land-cover", "clc-2018", "clc-2018-ie.tif"),
-    chunks="auto",
+img = plt.figure(figsize=(15, 15))
+img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
+img.set_visible(False)
+
+ticks = list(np.arange(0.5, len(uniquevals) + 0.5, 1))
+cbar = plt.colorbar(ticks=ticks)
+cbar.ax.set_yticklabels(list(uniquevals["label"]))
+
+landcover.rio.reproject(cplt.plot_projection).plot(
+    add_colorbar=False, cmap=colours
 )
 
-lc
+ie.to_crs(cplt.plot_projection).boundary.plot(
+    ax=img.axes, edgecolor="darkslategrey"
+)
+
+plt.title(None)
+
+img.axes.tick_params(labelbottom=False, labelleft=False)
+
+plt.xlabel("")
+plt.ylabel("")
+
+plt.axis("equal")
+
+bbox = ie.to_crs(cplt.plot_projection).bounds
+plt.xlim(float(bbox["minx"]) - 0.1, float(bbox["maxx"]) + 0.1)
+plt.ylim(float(bbox["miny"]) - 0.1, float(bbox["maxy"]) + 0.1)
+
+plt.show()
 
 # pastures
-lc = lc.where(lc.compute() == 18, drop=True)
+lc = landcover.where(landcover.compute() == 18, drop=True)
 
 lc
 

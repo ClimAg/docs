@@ -52,16 +52,166 @@ data_all.index = pd.to_datetime(data_all.index)
 # )
 # data_all_p.resample("Y").mean()
 
+# ## Number of data points
+
+ax = (
+    pd.DataFrame(df_p.count())
+    .sort_values(by=0)
+    .plot.bar(
+        legend=False,
+        figsize=(12, 5),
+        color="lightskyblue",
+        edgecolor="darkslategrey",
+    )
+)
+ax.bar_label(ax.containers[0], padding=2)
+plt.xlabel("")
+plt.ylabel("Number of data points")
+plt.tight_layout()
+plt.show()
+
+# ## Averages
+
+lta_all = pd.DataFrame(df_p.mean(), columns=["All seasons"]).sort_values(
+    by="All seasons"
+)
+
+lta_mam = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 3)
+        | (df_p.index.month == 4)
+        | (df_p.index.month == 5)
+    ].mean(),
+    columns=["MAM"],
+).sort_values(by="MAM")
+
+lta_jja = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 6)
+        | (df_p.index.month == 7)
+        | (df_p.index.month == 8)
+    ].mean(),
+    columns=["JJA"],
+).sort_values(by="JJA")
+
+lta_son = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 9)
+        | (df_p.index.month == 10)
+        | (df_p.index.month == 11)
+    ].mean(),
+    columns=["SON"],
+).sort_values(by="SON")
+
+pd.concat([lta_mam, lta_jja, lta_son, lta_all], axis=1).sort_values(
+    by=["All seasons", "SON", "JJA", "MAM"]
+).plot.bar(
+    figsize=(14, 5),
+    edgecolor="darkslategrey",
+    color=["lightskyblue", "mediumvioletred", "gold", "slategrey"],
+)
+plt.xlabel("")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+plt.tight_layout()
+plt.show()
+
+pd.concat([lta_mam, lta_jja, lta_son, lta_all], axis=1).to_csv(
+    os.path.join("data", "grass_growth", "average_growth.csv")
+)
+
+# ### 2018 averages
+
+a2018_all = pd.DataFrame(
+    df_p.loc["2018"].mean(), columns=["2018"]
+).sort_values(by="2018")
+
+a2018_mam = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 3)
+        | (df_p.index.month == 4)
+        | (df_p.index.month == 5)
+    ]
+    .loc["2018"]
+    .mean(),
+    columns=["2018 (MAM)"],
+).sort_values(by="2018 (MAM)")
+
+a2018_jja = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 6)
+        | (df_p.index.month == 7)
+        | (df_p.index.month == 8)
+    ]
+    .loc["2018"]
+    .mean(),
+    columns=["2018 (JJA)"],
+).sort_values(by="2018 (JJA)")
+
+a2018_son = pd.DataFrame(
+    df_p[
+        (df_p.index.month == 9)
+        | (df_p.index.month == 10)
+        | (df_p.index.month == 11)
+    ]
+    .loc["2018"]
+    .mean(),
+    columns=["2018 (SON)"],
+).sort_values(by="2018 (SON)")
+
+pd.concat([a2018_mam, a2018_jja, a2018_son, a2018_all], axis=1).sort_values(
+    by=["2018", "2018 (SON)", "2018 (JJA)", "2018 (MAM)"]
+).plot.bar(
+    figsize=(14, 5),
+    edgecolor="darkslategrey",
+    color=["lightskyblue", "mediumvioletred", "gold", "slategrey"],
+)
+plt.xlabel("")
+plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
+plt.tight_layout()
+plt.show()
+
+pd.concat([a2018_mam, a2018_jja, a2018_son, a2018_all], axis=1).to_csv(
+    os.path.join("data", "grass_growth", "average_growth_2018.csv")
+)
+
 # ## Weekly time series plots
 
 for county in counties:
+    plt.axhline(
+        y=float(lta_all.loc[county]),
+        linestyle="solid",
+        label="Average",
+        color="darkslategrey",
+        alpha=0.75,
+    )
+    plt.axhline(
+        y=float(lta_mam.loc[county]),
+        linestyle="dotted",
+        label="Average (MAM)",
+        color="darkslategrey",
+        alpha=0.75,
+    )
+    plt.axhline(
+        y=float(lta_jja.loc[county]),
+        linestyle="dashed",
+        label="Average (JJA)",
+        color="darkslategrey",
+        alpha=0.75,
+    )
+    plt.axhline(
+        y=float(lta_son.loc[county]),
+        linestyle="dashdot",
+        label="Average (SON)",
+        color="darkslategrey",
+        alpha=0.75,
+    )
     fig = mera_p["2012":"2019"][county].plot(
         figsize=(12, 4), label="Simulated", color="lightskyblue"
     )
     df_p[county].plot(
         ax=fig.axes, label="Measured", color="crimson", alpha=0.75
     )
-    plt.legend(title=None)
+    plt.legend(title=None, ncols=2, loc="upper right")
     plt.xlabel("")
     plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
     # plt.title(county)
@@ -110,11 +260,12 @@ def get_plot_data(data_m, data_s, county, season=None):
             | (plot_data.index.month == 7)
             | (plot_data.index.month == 8)
         ]
-    # elif season == "MarOct":
-    #     plot_data = plot_data[
-    #         (plot_data.index.month != 1) & (plot_data.index.month != 2) &
-    #         (plot_data.index.month != 11) & (plot_data.index.month != 12)
-    #     ]
+    elif season == "SON":
+        plot_data = plot_data[
+            (plot_data.index.month == 9)
+            | (plot_data.index.month == 10)
+            | (plot_data.index.month == 11)
+        ]
 
     return plot_data
 
@@ -147,8 +298,12 @@ def rmse_by_county(data_m, data_s, counties=counties, season=None):
 def rmse_all(data_m, data_s):
     plot_data = pd.merge(
         pd.merge(
-            rmse_by_county(df_p, mera_p, season="MAM"),
-            rmse_by_county(df_p, mera_p, season="JJA"),
+            pd.merge(
+                rmse_by_county(df_p, mera_p, season="MAM"),
+                rmse_by_county(df_p, mera_p, season="JJA"),
+                on="County",
+            ),
+            rmse_by_county(df_p, mera_p, season="SON"),
             on="County",
         ),
         rmse_by_county(df_p, mera_p, season=None),
@@ -190,16 +345,17 @@ def get_linear_regression(data_m, data_s, county, season=None):
         linewidth=2,
     )
     b, m = results.params
+    r = results.rsquared
     plt.axline(
-        xy1=(0, b),
+        (0, b),
         slope=m,
-        label=f"$y = {m:.2f}x {b:+.2f}$",
+        label=f"$y = {m:.2f}x {b:+.2f}$\n$R^2 = {r:.2f}$",
         color="crimson",
         linewidth=2,
     )
     plt.xlim([-5, 155])
     plt.ylim([-5, 155])
-    plt.legend()
+    plt.legend(loc="upper left")
     # plt.axis("equal")
     plt.xlabel("Measured [kg DM ha⁻¹ day⁻¹]")
     plt.ylabel("Simulated [kg DM ha⁻¹ day⁻¹]")
@@ -209,17 +365,15 @@ def get_linear_regression(data_m, data_s, county, season=None):
 
 # ### RMSE
 
-list("rgb")
-
 rmse_all(df_p, mera_p).plot.bar(
-    figsize=(12, 5),
+    figsize=(14, 5),
     x="County",
     edgecolor="darkslategrey",
-    color=["lightskyblue", "gold", "mediumvioletred"],
+    color=["lightskyblue", "mediumvioletred", "gold", "slategrey"],
 )
-plt.tight_layout()
 plt.xlabel("")
 plt.ylabel("Root-mean-square error")
+plt.tight_layout()
 plt.show()
 
 # ### Linear regression - all counties
@@ -231,6 +385,10 @@ get_linear_regression(df_p, mera_p, county=None, season="MAM")
 # #### JJA
 
 get_linear_regression(df_p, mera_p, county=None, season="JJA")
+
+# #### SON
+
+get_linear_regression(df_p, mera_p, county=None, season="SON")
 
 # #### All seasons
 

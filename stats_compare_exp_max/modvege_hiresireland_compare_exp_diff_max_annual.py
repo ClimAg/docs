@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Annual/overall stats - HiResIreland - Difference maximum - historical and rcp45/rcp85
+# # Annual/overall stats - HiResIreland - Difference in maximum - historical and rcp45/rcp85
 
 # import libraries
 from datetime import datetime, timezone

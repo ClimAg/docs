@@ -18,6 +18,8 @@ import xarray as xr
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
 import importlib
+import cartopy.crs as ccrs
+import seaborn as sns
 
 importlib.reload(cplt)
 
@@ -27,8 +29,9 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 
 # client
 
-# Moorepark met station coords
-LON, LAT = -8.26389, 52.16389
+# met station coords
+# Wexford,4015,ENNISCORTHY (Brownswood),18,297870,135550,1983,(null)
+LON, LAT = -6.56083, 52.46306
 
 # Ireland boundary
 GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
@@ -88,7 +91,6 @@ for var in varlist:
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
-            f" at Moorepark ({LON}, {LAT})"
         ),
     )
 
@@ -101,7 +103,7 @@ for var in varlist:
     data_pivot.plot(
         kind="hist",
         subplots=True,
-        figsize=(10, 18),
+        figsize=(8, 18),
         bins=50,
         sharex=True,
         sharey=True,
@@ -109,8 +111,109 @@ for var in varlist:
         title=(
             datasets["EURO-CORDEX_EC-EARTH_rcp45"][var].attrs["long_name"]
             + f" [{datasets['EURO-CORDEX_EC-EARTH_rcp45'][var].attrs['units']}]"
-            f" at Moorepark ({LON}, {LAT})"
+            # f" at Moorepark ({LON}, {LAT})"
         ),
+    )
+    plt.tight_layout()
+    plt.show()
+
+# ## Multi-model time series
+
+datasets["MÉRA"] = xr.open_dataset(
+    "data/MERA/IE_MERA_FC3hr_3_day.nc", decode_coords="all", chunks="auto"
+)
+
+datasets["MÉRA"] = datasets["MÉRA"].sel(time=slice("1981", "2018"))
+
+datasets["MÉRA"].rio.write_crs(cplt.lambert_conformal, inplace=True)
+
+var_attrs = {}
+for var in varlist:
+    var_attrs[var] = datasets["EURO-CORDEX_CNRM-CM5_historical"][var].attrs
+
+ts = {}
+for key in datasets.keys():
+    ts[key] = cplt.weighted_average(data=datasets[key], averages="year")
+    ts[key].rio.write_crs(datasets[key].rio.crs, inplace=True)
+    for var in varlist:
+        ts[key][var].attrs = var_attrs[var]
+
+for exp, model, data in itertools.product(
+    ["historical", "rcp45", "rcp85"],
+    ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"],
+    ["EURO-CORDEX", "HiResIreland"],
+):
+    # using met station coordinates
+    cds = cplt.rotated_pole_point(
+        data=ts[f"{data}_{model}_{exp}"], lon=LON, lat=LAT
+    )
+
+    ts[f"{data}_{model}_{exp}"] = ts[f"{data}_{model}_{exp}"].sel(
+        {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
+    )
+
+cds = cplt.lambert_conformal.transform_point(
+    x=LON, y=LAT, src_crs=ccrs.PlateCarree()
+)
+
+ts["MÉRA"] = ts["MÉRA"].sel({"x": cds[0], "y": cds[1]}, method="nearest")
+
+for var in varlist:
+    df_1 = pd.DataFrame(
+        {"time": ts["EURO-CORDEX_CNRM-CM5_historical"]["year"]}
+    )
+    df_1.set_index("time", inplace=True)
+    df_2 = df_1.copy()
+
+    for model, data in itertools.product(
+        ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"],
+        ["EURO-CORDEX", "HiResIreland"],
+    ):
+        if data == "HiResIreland":
+            df_2[f"{data}_{model}_historical"] = ts[
+                f"{data}_{model}_historical"
+            ][var]
+        else:
+            df_1[f"{data}_{model}_historical"] = ts[
+                f"{data}_{model}_historical"
+            ][var]
+
+    df_3 = pd.DataFrame({"time": ts["MÉRA"]["year"]})
+    df_3.set_index("time", inplace=True)
+    df_3["MÉRA"] = ts["MÉRA"][var]
+
+    ax = df_1.plot(
+        figsize=(12, 4),
+        legend=False,
+        color="crimson",
+        linewidth=1,
+        linestyle="dotted",
+    )
+    df_2.plot(
+        legend=False,
+        color="dodgerblue",
+        ax=ax,
+        linewidth=1,
+        linestyle="dotted",
+    )
+    df_1.mean(axis=1).plot(
+        color="crimson",
+        label="EURO-CORDEX",
+        legend=True,
+        linewidth=1,
+        marker="o",
+    )
+    df_2.mean(axis=1).plot(
+        color="dodgerblue",
+        label="HiResIreland",
+        legend=True,
+        linewidth=1,
+        marker="o",
+    )
+    df_3.plot(color="darkslategrey", ax=ax, linewidth=1, marker="o")
+    plt.xlabel("")
+    plt.title(
+        f"{ts['MÉRA'][var].attrs['long_name']} [{ts['MÉRA'][var].attrs['units']}]"
     )
     plt.tight_layout()
     plt.show()
@@ -179,10 +282,10 @@ seasonal_data
 
 # using Moorepark met station coordinates
 cds = cplt.rotated_pole_point(
-    data=datasets["EURO-CORDEX_EC-EARTH_rcp45"], lon=LON, lat=LAT
+    data=datasets["EURO-CORDEX_EC-EARTH_historical"], lon=LON, lat=LAT
 )
 
-data_ie = datasets["EURO-CORDEX_EC-EARTH_rcp45"].sel(
+data_ie = datasets["EURO-CORDEX_EC-EARTH_historical"].sel(
     {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
 )
 
@@ -212,7 +315,7 @@ data_ie_df.plot(
 plt.tight_layout()
 plt.show()
 
-data_ie = data_ie.sel(time=slice("1997", "1999"))
+data_ie = data_ie.sel(time=slice("1989", "1991"))
 
 data_ie_df = pd.DataFrame({"time": data_ie["time"]})
 # configure plot title
@@ -240,7 +343,7 @@ plt.show()
 # ### Box plots
 
 data_ie = (
-    datasets["EURO-CORDEX_EC-EARTH_rcp45"]
+    datasets["EURO-CORDEX_EC-EARTH_historical"]
     .sel({"rlon": cds[0], "rlat": cds[1]}, method="nearest")
     .sel(time=slice("1976", "2005"))
 )

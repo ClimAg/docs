@@ -261,7 +261,7 @@ axs = grid_cells.plot(
         "title": "Stocking rate [LU ha⁻¹]",
     },
 )
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)
