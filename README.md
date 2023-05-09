@@ -92,6 +92,16 @@ Windows users should use Conda within Windows Subsystem for Linux (WSL), as some
 - EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_eurocordex_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_eurocordex_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_eurocordex_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_eurocordex_compare_exp_diff_min_annual.ipynb)
 - HiResIreland: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_mean/modvege_hiresireland_compare_exp_diff_mean_annual.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_std/modvege_hiresireland_compare_exp_diff_std_annual.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_max/modvege_hiresireland_compare_exp_diff_max_annual.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_exp_min/modvege_hiresireland_compare_exp_diff_min_annual.ipynb)
 
+#### Ensemble stats
+
+- [Ensemble stats](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/modvege_ensemble_compare_exp_diff.ipynb)
+
+#### Anomalies
+
+- [LTA anomalies](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/modvege_compare_exp_anomaly.ipynb)
+- [Comparison with measured averages - EURO-CORDEX](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/eurocordex_growth_compare_average.ipynb)
+- [Comparison with measured averages - HiResIreland](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats/hiresireland_growth_compare_average.ipynb)
+
 ### Validation
 
 - EURO-CORDEX: [mean](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_mean/modvege_eurocordex_compare_mera_diff_mean.ipynb), [std](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_std/modvege_eurocordex_compare_mera_diff_std.ipynb), [max](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_max/modvege_eurocordex_compare_mera_diff_max.ipynb), [min](https://nbviewer.org/github/ClimAg/jupyter-notebooks/blob/ipynb/stats_compare_mera_min/modvege_eurocordex_compare_mera_diff_min.ipynb)

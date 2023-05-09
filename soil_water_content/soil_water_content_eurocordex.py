@@ -149,7 +149,7 @@ axs = grid_cells.plot(
     linewidth=0.2,
     figsize=(6, 7),
     legend=True,
-    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "TAWC [mm]"},
+    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "WHC [mm]"},
     missing_kwds={
         "color": "darkslategrey",
         "edgecolor": "darkslategrey",
@@ -177,7 +177,7 @@ axs = grid_cells.plot(
     linewidth=0.2,
     figsize=(6, 7),
     legend=True,
-    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "TAWC [mm]"},
+    legend_kwds={"loc": "upper left", "fmt": "{:.2f}", "title": "WHC [mm]"},
     missing_kwds={
         "color": "darkslategrey",
         "edgecolor": "darkslategrey",
