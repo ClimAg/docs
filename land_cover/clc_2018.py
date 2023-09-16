@@ -239,6 +239,8 @@ plt.ylim(landcover.rio.bounds()[2] - 9e3, landcover.rio.bounds()[3] + 9e3)
 
 plt.show()
 
+uniquevals["label"] = uniquevals["label"].str[6:]
+
 img = plt.figure(figsize=(15, 15))
 img = plt.imshow(np.array([[0, len(uniquevals)]]), cmap=col_discrete)
 img.set_visible(False)
