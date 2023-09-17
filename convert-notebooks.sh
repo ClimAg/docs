@@ -14,6 +14,10 @@ done
 # format scripts
 black -l 79 */*.py
 
+# delete existing Python scripts
+rm -r ../draft/nb
+mkdir ../draft/nb
+
 # copy files to temporary directory
 # https://unix.stackexchange.com/a/132601
 cp **/*.py --parents ../draft/nb
