@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Seasonal stats - HiResIreland - Difference in (weighted) mean - historical and observational (MÉRA)
+# # Seasonal stats - EURO-CORDEX - Difference in (weighted) mean - historical and observational (MÉRA)
 #
 # - Weighted means take into account the number of days in each month
+
+import os
+
+os.getcwd()
+
+os.chdir("/run/media/nms/Backup/Documents/Git/ClimAg/ClimAg/")
+os.getcwd()
 
 # import libraries
 from datetime import datetime, timezone
@@ -12,7 +19,7 @@ import importlib
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 
-data = cstats.hist_obs_diff(stat="mean", dataset="HiResIreland")
+data = cstats.hist_obs_diff(stat="mean", dataset="EURO-CORDEX")
 
 importlib.reload(cstats)
 
