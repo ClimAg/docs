@@ -273,7 +273,7 @@ fig = plot_data["bm"].plot.contourf(
     figsize=(9, 4.75),
     levels=[n * 100 for n in range(10)],
     cbar_kwargs={
-        "label": "Difference [kg DM ha⁻¹]",
+        "label": "Farm cover [kg DM ha⁻¹]",
         "aspect": 30,
         "location": "bottom",
         "fraction": 0.085,
@@ -418,7 +418,7 @@ fig = plot_data["bm"].plot.contourf(
     figsize=(9, 4.75),
     levels=[n * 100 for n in range(10)],
     cbar_kwargs={
-        "label": "Difference [kg DM ha⁻¹]",
+        "label": "Farm cover [kg DM ha⁻¹]",
         "aspect": 30,
         "location": "bottom",
         "fraction": 0.085,
