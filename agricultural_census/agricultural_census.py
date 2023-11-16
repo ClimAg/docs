@@ -4,9 +4,10 @@
 # # Agricultural Census data for the Island of Ireland
 
 import os
+
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-import geopandas as gpd
 
 # ## ROI data
 

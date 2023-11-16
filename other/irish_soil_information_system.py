@@ -9,12 +9,14 @@ import json
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
+
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 from matplotlib import ticker
+
 from climag.download_data import download_data
 
 print("Last updated:", datetime.now(tz=timezone.utc))

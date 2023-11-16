@@ -10,8 +10,9 @@
 
 import os
 from zipfile import BadZipFile, ZipFile
-import matplotlib.pyplot as plt
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
 import rioxarray as rxr
 from rasterstats import zonal_stats
 

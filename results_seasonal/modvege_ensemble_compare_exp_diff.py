@@ -5,19 +5,21 @@
 #
 # - Weighted means take into account the number of days in each month
 
-# import libraries
-from datetime import datetime, timezone
-import climag.plot_stats as cstats
-import importlib
-import xarray as xr
-import matplotlib.pyplot as plt
-import climag.plot_configs as cplt
 import glob
+import importlib
 import itertools
 import os
 import sys
-import numpy as np
+# import libraries
+from datetime import datetime, timezone
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
+
+import climag.plot_configs as cplt
+import climag.plot_stats as cstats
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 exp_list = ["historical", "rcp45", "rcp85"]

@@ -6,8 +6,8 @@
 # import libraries
 import importlib
 import os
-
 from datetime import datetime, timezone
+from itertools import product
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -17,7 +17,6 @@ from rasterstats import zonal_stats
 
 import climag.plot_configs as cplt
 import climag.plot_stats as cstats
-from itertools import product
 
 ie_bbox = gpd.read_file(
     os.path.join("data", "boundaries", "boundaries.gpkg"),

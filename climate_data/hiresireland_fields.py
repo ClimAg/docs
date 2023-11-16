@@ -3,6 +3,7 @@
 
 # import libraries
 import os
+
 import xarray as xr
 
 DATA_DIR_BASE = os.path.join("data", "HiResIreland")

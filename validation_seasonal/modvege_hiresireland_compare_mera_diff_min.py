@@ -3,10 +3,11 @@
 
 # # ModVege results - HiResIreland - Difference in min - historical and observational (MÉRA)
 
+import importlib
 # import libraries
 from datetime import datetime, timezone
+
 import climag.plot_stats as cstats
-import importlib
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 

@@ -4,11 +4,13 @@
 # # Create MERA time series for comparison with measurements
 
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
 from rasterstats import zonal_stats
+
 import climag.plot_configs as cplt
 
 # ## Model results

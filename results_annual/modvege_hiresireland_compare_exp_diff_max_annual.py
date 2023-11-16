@@ -3,10 +3,11 @@
 
 # # Annual/overall stats - HiResIreland - Difference in maximum - historical and rcp45/rcp85
 
+import importlib
 # import libraries
 from datetime import datetime, timezone
+
 import climag.plot_stats as cstats
-import importlib
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 

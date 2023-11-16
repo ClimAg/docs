@@ -3,23 +3,24 @@
 
 # # Visualising climate model datasets
 
+import glob
+import importlib
+import itertools
 # import libraries
 import os
-import glob
-import itertools
-import numpy as np
 from datetime import datetime, timezone
+
+import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+import seaborn as sns
 import xarray as xr
 
 # from dask.distributed import Client
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
-import importlib
-import cartopy.crs as ccrs
-import seaborn as sns
 
 importlib.reload(cplt)
 

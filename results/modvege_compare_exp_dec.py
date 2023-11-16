@@ -12,10 +12,12 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+
 import climag.plot_configs as cplt
 import climag.plot_stats as cstats
 

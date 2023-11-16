@@ -7,12 +7,14 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
+
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pooch
 from matplotlib import ticker
+
 import climag.plot_configs as cplt
 from climag.download_data import download_data
 
