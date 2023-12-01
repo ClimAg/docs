@@ -24,10 +24,12 @@ dependencies:
   - mpi  # xesmf dependency
   - matplotlib
   - nc-time-axis
+  - mapclassify
   - seaborn
   - pytest
   - flake8
   - pylint
   - black
+  - black-jupyter
   - jupyterlab
   - qgis
