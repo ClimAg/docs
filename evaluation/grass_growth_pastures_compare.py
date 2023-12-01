@@ -120,44 +120,6 @@ pd.concat([lta_mam, lta_jja, lta_son, lta_all], axis=1).to_csv(
     os.path.join("data", "grass_growth", "average_growth.csv")
 )
 
-ie_counties = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
-    layer="OSi_OSNI_IE_Counties_2157",
-)
-
-ie_counties["COUNTY"] = ie_counties["COUNTY"].str.capitalize()
-
-county_map = ie_counties.merge(
-    lta_all.reset_index(), left_on="COUNTY", right_on="county"
-)
-
-county_map = pd.merge(
-    lta_all.reset_index(), ie_counties, left_on="county", right_on="COUNTY"
-)
-
-ax = county_map.plot(
-    column="All seasons",
-    legend=True,
-    cmap="PRGn_r",
-    scheme="equal_interval",
-    k=8,
-    legend_kwds={
-        "loc": "upper left",
-        "fmt": "{:.2f}",
-        "title": "RMSE [kg DM ha⁻¹ day⁻¹]",
-    },
-    figsize=(7, 7),
-    alpha=0.85,
-)
-county_map.boundary.plot(ax=ax, color="white", linewidth=0.25)
-ax.tick_params(labelbottom=False, labelleft=False)
-for legend_handle in ax.get_legend().legend_handles:
-    legend_handle.set_markeredgewidth(0.2)
-    legend_handle.set_markeredgecolor("darkslategrey")
-plt.axis("equal")
-plt.tight_layout()
-plt.show()
-
 # ### 2018 averages
 
 a2018_all = pd.DataFrame(
@@ -314,7 +276,7 @@ def rmse_by_county(data_m, data_s, counties=counties, season=None):
             ),
         ]
     plot_data = get_plot_data(data_m, data_s, county=None, season=season)
-    rmse.loc[i] = [
+    rmse.loc[i + 1] = [
         "All counties",
         mean_squared_error(
             plot_data["Measured"], plot_data["Simulated"], squared=False
@@ -404,6 +366,41 @@ rmse_all(df_p, mera_p).plot.bar(
 )
 plt.xlabel("")
 plt.ylabel("Root-mean-square error")
+plt.tight_layout()
+plt.show()
+
+ie_counties = gpd.read_file(
+    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    layer="OSi_OSNI_IE_Counties_2157",
+)
+
+ie_counties["COUNTY"] = ie_counties["COUNTY"].str.capitalize()
+
+county_map = ie_counties.merge(
+    rmse_all(df_p, mera_p), left_on="COUNTY", right_on="County"
+)
+
+ax = county_map.plot(
+    column="All seasons",
+    legend=True,
+    cmap="PRGn_r",
+    scheme="equal_interval",
+    k=8,
+    legend_kwds={
+        "loc": "upper left",
+        "fmt": "{:.2f}",
+        "title": "RMSE [kg DM ha⁻¹ day⁻¹]",
+    },
+    figsize=(6, 7),
+    alpha=0.85,
+)
+county_map.boundary.plot(ax=ax, color="white", linewidth=0.3)
+# county_map.boundary.plot(ax=ax, color="darkslategrey", linewidth=0.3)
+ax.tick_params(labelbottom=False, labelleft=False)
+for legend_handle in ax.get_legend().legend_handles:
+    legend_handle.set_markeredgewidth(0.2)
+    legend_handle.set_markeredgecolor("darkslategrey")
+plt.axis("equal")
 plt.tight_layout()
 plt.show()
 
