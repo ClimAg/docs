@@ -13,7 +13,6 @@ import glob
 import os
 from datetime import datetime, timezone
 from itertools import chain
-
 import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -21,7 +20,6 @@ import numpy as np
 import pandas as pd
 import pooch
 import xarray as xr
-
 import climag.plot_configs as cplt
 
 # Moorepark, Fermoy met station coords

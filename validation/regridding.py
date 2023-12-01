@@ -14,13 +14,11 @@
 #   - <https://xesmf.readthedocs.io/en/latest/notebooks/Dataset.html>
 
 import os
-
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import rasterio as rio
 import xarray as xr
 import xesmf as xe
-
 import climag.plot_configs as cplt
 
 

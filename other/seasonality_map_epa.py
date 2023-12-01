@@ -35,7 +35,6 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np

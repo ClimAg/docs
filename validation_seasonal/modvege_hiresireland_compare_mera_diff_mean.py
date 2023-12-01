@@ -12,11 +12,10 @@ os.getcwd()
 os.chdir("/run/media/nms/Backup/Documents/Git/ClimAg/ClimAg/")
 os.getcwd()
 
-import importlib
 # import libraries
 from datetime import datetime, timezone
-
 import climag.plot_stats as cstats
+import importlib
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 

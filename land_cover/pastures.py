@@ -4,7 +4,6 @@
 # # Vector layer to mask out non-pasture areas
 
 import os
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
 

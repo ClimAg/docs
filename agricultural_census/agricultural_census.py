@@ -4,10 +4,9 @@
 # # Agricultural Census data for the Island of Ireland
 
 import os
-
-import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+import geopandas as gpd
 
 # ## ROI data
 
@@ -182,7 +181,7 @@ for i, ax in enumerate(axs.flat):
     )
     # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
     ax.tick_params(labelbottom=False, labelleft=False)
-    for legend_handle in ax.get_legend().legendHandles:
+    for legend_handle in ax.get_legend().legend_handles:
         legend_handle.set_markeredgewidth(0.2)
         legend_handle.set_markeredgecolor("darkslategrey")
 plt.tight_layout()
@@ -240,7 +239,7 @@ for i, ax in enumerate(axs.flat):
     )
     # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
     ax.tick_params(labelbottom=False, labelleft=False)
-    for legend_handle in ax.get_legend().legendHandles:
+    for legend_handle in ax.get_legend().legend_handles:
         legend_handle.set_markeredgewidth(0.2)
         legend_handle.set_markeredgecolor("darkslategrey")
 plt.tight_layout()
@@ -310,7 +309,7 @@ for i, ax in enumerate(axs.flat):
     )
     # ax.ticklabel_format(style="scientific", scilimits=[-4, 4])
     ax.tick_params(labelbottom=False, labelleft=False)
-    for legend_handle in ax.get_legend().legendHandles:
+    for legend_handle in ax.get_legend().legend_handles:
         legend_handle.set_markeredgewidth(0.2)
         legend_handle.set_markeredgecolor("darkslategrey")
 plt.tight_layout()
@@ -342,7 +341,7 @@ axs = data.plot(
     },
 )
 plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)

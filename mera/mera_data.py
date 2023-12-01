@@ -55,7 +55,6 @@
 # import libraries
 import os
 from datetime import date, datetime, timezone
-
 import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.dates as mdates

@@ -3,19 +3,17 @@
 
 # # ModVege results - Moorepark time series distribution
 
-import glob
-import itertools
 # import libraries
 import os
+import glob
+import itertools
+import numpy as np
 from datetime import datetime, timezone
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import xarray as xr
 from dask.distributed import Client
-
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
 

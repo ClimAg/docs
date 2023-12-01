@@ -5,11 +5,10 @@
 #
 # - Weighted means take into account the number of days in each month
 
-import importlib
 # import libraries
 from datetime import datetime, timezone
-
 import climag.plot_stats as cstats
+import importlib
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 

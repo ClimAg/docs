@@ -14,13 +14,11 @@
 import json
 import os
 from datetime import datetime, timezone
-
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 import numpy as np
 import pooch
-
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

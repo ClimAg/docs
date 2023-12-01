@@ -8,9 +8,8 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
-
-import geopandas as gpd
 import matplotlib.pyplot as plt
+import geopandas as gpd
 import pooch
 
 FILE_NAME = "wards-uk-12-2022.zip"

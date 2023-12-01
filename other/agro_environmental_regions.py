@@ -19,11 +19,9 @@
 # import libraries
 import os
 from datetime import datetime, timezone
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -56,7 +54,7 @@ ax = data.plot(
 # ax.yaxis.set_major_formatter(cplt.latitude_tick_format)
 # ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
-for legend_handle in ax.get_legend().legendHandles:
+for legend_handle in ax.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 ax.axes.tick_params(labelbottom=False, labelleft=False)

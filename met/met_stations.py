@@ -5,14 +5,12 @@
 
 import os
 from datetime import datetime, timezone
-
 import geopandas as gpd
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 import pooch
 from matplotlib import ticker
-
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

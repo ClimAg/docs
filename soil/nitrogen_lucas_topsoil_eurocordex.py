@@ -9,7 +9,6 @@
 
 import os
 from zipfile import BadZipFile, ZipFile
-
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import rioxarray as rxr
@@ -156,7 +155,7 @@ axs = grid_cells.plot(
         "label": "No data",
     },
 )
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)
@@ -192,7 +191,7 @@ axs = grid_cells.plot(
         "label": "No data",
     },
 )
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)
@@ -218,7 +217,7 @@ axs = grid_cells.plot(
         "label": "No data",
     },
 )
-for legend_handle in axs.get_legend().legendHandles:
+for legend_handle in axs.get_legend().legend_handles:
     legend_handle.set_markeredgewidth(0.2)
     legend_handle.set_markeredgecolor("darkslategrey")
 axs.tick_params(labelbottom=False, labelleft=False)

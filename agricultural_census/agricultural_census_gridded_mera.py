@@ -6,16 +6,14 @@
 # Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
-import itertools
 # import libraries
 import os
-
+import itertools
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import shapely
 import xarray as xr
-
 import climag.plot_configs as cplt
 
 # ## Open some gridded climate data

@@ -29,7 +29,6 @@ import rioxarray as rxr
 from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
-
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

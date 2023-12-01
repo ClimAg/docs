@@ -7,12 +7,10 @@
 import glob
 import os
 from datetime import datetime, timezone
-
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
-
 import climag.plot_configs as cplt
 
 # directory of processed MÉRA netCDF files
