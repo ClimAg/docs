@@ -71,7 +71,7 @@ plt.ylabel("Number of data points")
 plt.tight_layout()
 plt.show()
 
-# ## Averages
+# ## Measured averages
 
 lta_all = pd.DataFrame(df_p.mean(), columns=["All seasons"]).sort_values(
     by="All seasons"
