@@ -4,21 +4,22 @@
 # # Compare grass growth time series using MERA for each county at a weekly frequency
 
 import os
+
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error
-import geopandas as gpd
 
 df1 = pd.read_csv(
     os.path.join(
-        "data", "grass_growth", "pasturebase", "pasturebase_cleaned.csv"
+        "data", "grass_growth", "PastureBaseIreland", "pasturebase_cleaned.csv"
     )
 )
 df2 = pd.read_csv(
     os.path.join(
-        "data", "grass_growth", "grasscheck", "grasscheck_cleaned.csv"
+        "data", "grass_growth", "GrassCheckNI", "grasscheck_cleaned.csv"
     )
 )
 df = pd.concat([df1, df2])

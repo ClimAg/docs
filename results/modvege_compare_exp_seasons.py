@@ -12,10 +12,12 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+
 import climag.plot_configs as cplt
 import climag.plot_stats as cstats
 
@@ -199,7 +201,7 @@ def plot_diff(data, levels, mask=True, plot_var="gro", cmap="BrBG"):
             y="rlat",
             col="year",
             col_wrap=6,
-            subplot_kws={"projection": cplt.plot_projection},
+            subplot_kws={"projection": cplt.projection_hiresireland},
             transform=cplt.rotated_pole_transform(data),
             xlim=(-1.775, 1.6),
             ylim=(-2.1, 2.1),
@@ -221,10 +223,10 @@ def plot_diff(data, levels, mask=True, plot_var="gro", cmap="BrBG"):
         )
         for axis in fig.axs.flat:
             if mask:
-                mask_layer.to_crs(cplt.plot_projection).plot(
+                mask_layer.to_crs(cplt.projection_hiresireland).plot(
                     ax=axis, color="white", linewidth=0
                 )
-            cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+            cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
                 ax=axis,
                 edgecolor="darkslategrey",
                 color="white",
@@ -266,7 +268,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -284,10 +286,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -313,7 +315,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -331,10 +333,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -360,7 +362,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -378,10 +380,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -413,7 +415,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -431,10 +433,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -460,7 +462,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -478,10 +480,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -507,7 +509,7 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
+    subplot_kws={"projection": cplt.projection_hiresireland},
     transform=cplt.rotated_pole_transform(plot_data),
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
@@ -525,10 +527,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)

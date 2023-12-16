@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import glob
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-import xarray as xr
-from rasterstats import zonal_stats
-import climag.plot_configs as cplt
-import glob
-from shapely.geometry import Point
 import seaborn as sns
 import statsmodels.api as sm
+import xarray as xr
+from rasterstats import zonal_stats
+from shapely.geometry import Point
+
+import climag.plot_configs as cplt
 
 # ## Growth data
 
@@ -49,7 +51,7 @@ pasture = gpd.read_file(
 )
 
 # reproject
-pasture = pasture.to_crs(cplt.lambert_conformal)
+pasture = pasture.to_crs(cplt.projection_lambert_conformal)
 
 # mask out non-pasture areas
 ds_ = ds.rio.clip(pasture["geometry"], all_touched=True)
@@ -60,7 +62,7 @@ out_ = out.rio.clip(pasture["geometry"], all_touched=True)
 # met station coords
 # Wexford,4015,ENNISCORTHY (Brownswood),18,297870,135550,1983,(null)
 point = gpd.GeoSeries(Point(-6.56083, 52.46306), crs=4326).to_crs(
-    cplt.lambert_conformal
+    cplt.projection_lambert_conformal
 )
 
 # extract time series for Enniscorthy

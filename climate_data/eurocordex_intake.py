@@ -14,11 +14,13 @@
 import json
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 import numpy as np
 import pooch
+
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -318,7 +320,7 @@ plot_data = data_var * 60 * 60 * 24  # convert to mm day⁻¹
 cbar_label = data_var.attrs["long_name"] + " [mm day⁻¹]"  # colorbar label
 
 plt.figure(figsize=(7, 7))
-ax = plt.axes(projection=cplt.plot_projection)
+ax = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 plot_data.plot(

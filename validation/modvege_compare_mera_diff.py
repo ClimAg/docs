@@ -12,13 +12,15 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
+import rasterio as rio
 import xarray as xr
+
 import climag.plot_configs as cplt
 import climag.plot_stats as cstats
-import rasterio as rio
 
 model_list = ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]
 dataset_list = ["EURO-CORDEX", "HiResIreland"]
@@ -185,7 +187,7 @@ def generate_stats(dataset):
     mera = mera.mean(dim="year", skipna=True)
 
     # reassign projection
-    mera.rio.write_crs(cplt.lambert_conformal, inplace=True)
+    mera.rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 
     # regrid climate model data
     ds = ds.drop(["lat", "lon"])
@@ -194,7 +196,7 @@ def generate_stats(dataset):
     ds = ds.assign_coords({"x": mera["x"], "y": mera["y"]})
 
     # reassign projection
-    ds.rio.write_crs(cplt.lambert_conformal, inplace=True)
+    ds.rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 
     return ds, mera
 
@@ -216,8 +218,8 @@ fig = ds["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="YlGn",
-    subplot_kws={"projection": cplt.plot_projection},
-    transform=cplt.lambert_conformal,
+    subplot_kws={"projection": cplt.projection_hiresireland},
+    transform=cplt.projection_lambert_conformal,
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
     figsize=(9, 4.75),
@@ -233,28 +235,28 @@ fig = ds["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
 plt.show()
 
-axis = plt.axes(projection=cplt.plot_projection)
+axis = plt.axes(projection=cplt.projection_hiresireland)
 mera["gro"].plot.contourf(
     ax=axis,
     robust=True,
     extend="both",
     cmap="YlGn",
     levels=[0 + 10 * n for n in range(11)],
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
 )
-mask_layer.to_crs(cplt.plot_projection).plot(
+mask_layer.to_crs(cplt.projection_hiresireland).plot(
     ax=axis, color="white", linewidth=0
 )
-cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
     ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
 )
 plt.xlim(-1.775, 1.6),
@@ -277,8 +279,8 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
-    transform=cplt.lambert_conformal,
+    subplot_kws={"projection": cplt.projection_hiresireland},
+    transform=cplt.projection_lambert_conformal,
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
     figsize=(12, 5),
@@ -295,10 +297,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -315,8 +317,8 @@ fig = ds_["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="YlGn",
-    subplot_kws={"projection": cplt.plot_projection},
-    transform=cplt.lambert_conformal,
+    subplot_kws={"projection": cplt.projection_hiresireland},
+    transform=cplt.projection_lambert_conformal,
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
     figsize=(9, 4.75),
@@ -332,10 +334,10 @@ fig = ds_["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
@@ -355,8 +357,8 @@ fig = plot_data["gro"].plot.contourf(
     robust=True,
     extend="both",
     cmap="BrBG",
-    subplot_kws={"projection": cplt.plot_projection},
-    transform=cplt.lambert_conformal,
+    subplot_kws={"projection": cplt.projection_hiresireland},
+    transform=cplt.projection_lambert_conformal,
     xlim=(-1.775, 1.6),
     ylim=(-2.1, 2.1),
     figsize=(12, 5),
@@ -373,10 +375,10 @@ fig = plot_data["gro"].plot.contourf(
     },
 )
 for axis in fig.axs.flat:
-    mask_layer.to_crs(cplt.plot_projection).plot(
+    mask_layer.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, color="white", linewidth=0
     )
-    cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+    cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
         ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)

@@ -7,10 +7,12 @@
 import glob
 import os
 from datetime import datetime, timezone
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
+
 import climag.plot_configs as cplt
 
 # directory of processed MÉRA netCDF files
@@ -91,7 +93,7 @@ ds.rio.write_crs(data_crs, inplace=True)
 LON, LAT = -8.26389, 52.16389
 
 # transform coordinates from lon/lat to Lambert Conformal Conic
-XLON, YLAT = cplt.lambert_conformal.transform_point(
+XLON, YLAT = cplt.projection_lambert_conformal.transform_point(
     x=LON, y=LAT, src_crs=ccrs.PlateCarree()
 )
 
@@ -102,14 +104,14 @@ def plot_map(data, var, cmap="Spectral_r"):
     """
 
     plt.figure(figsize=(9, 7))
-    ax = plt.axes(projection=cplt.lambert_conformal)
+    ax = plt.axes(projection=cplt.projection_lambert_conformal)
     data.isel(time=120)[var].plot.contourf(
         ax=ax,
         robust=True,
         x="x",
         y="y",
         levels=10,
-        transform=cplt.lambert_conformal,
+        transform=cplt.projection_lambert_conformal,
         cmap=cmap,
         cbar_kwargs={
             "label": (

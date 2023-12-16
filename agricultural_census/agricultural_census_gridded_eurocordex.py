@@ -6,14 +6,16 @@
 # Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
+import itertools
 # import libraries
 import os
-import itertools
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import shapely
 import xarray as xr
+
 import climag.plot_configs as cplt
 
 # ## Open some gridded climate data
@@ -72,7 +74,7 @@ len(data_["T"].values.flatten()[np.isfinite(data_["T"].values.flatten())])
 
 plot_transform = cplt.rotated_pole_transform(data_)
 # plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["T"].plot(
@@ -83,7 +85,7 @@ data_["T"].plot(
     robust=True,
     transform=plot_transform,
 )
-grid_cells.to_crs(cplt.plot_projection).boundary.plot(
+grid_cells.to_crs(cplt.projection_hiresireland).boundary.plot(
     ax=axs, color="darkslategrey", linewidth=0.2
 )
 
@@ -130,7 +132,7 @@ grid_cells.head()
 grid_cells.shape
 
 # plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["T"].plot(
@@ -142,11 +144,11 @@ data_["T"].plot(
     transform=plot_transform,
 )
 
-grid_cells.to_crs(cplt.plot_projection).plot(
+grid_cells.to_crs(cplt.projection_hiresireland).plot(
     ax=axs, edgecolor="darkslategrey", facecolor="none", linewidth=0.5
 )
 
-grid_centroids.to_crs(cplt.plot_projection).plot(
+grid_centroids.to_crs(cplt.projection_hiresireland).plot(
     ax=axs, color="darkslategrey", markersize=2.5
 )
 
@@ -226,7 +228,7 @@ grid_cells["sr"].max()
 grid_cells["sr"].min()
 
 plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["T"].plot(
@@ -238,7 +240,7 @@ data_["T"].plot(
     transform=plot_transform,
 )
 
-grid_cells.to_crs(cplt.plot_projection).plot(
+grid_cells.to_crs(cplt.projection_hiresireland).plot(
     ax=axs, edgecolor="darkslategrey", facecolor="none", linewidth=0.5
 )
 

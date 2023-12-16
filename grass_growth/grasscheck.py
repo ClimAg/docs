@@ -18,12 +18,15 @@
 
 import os
 from datetime import datetime, timezone
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 
-DATA_DIR = os.path.join("data", "grass_growth", "grasscheck", "grasscheck.ods")
+DATA_DIR = os.path.join(
+    "data", "grass_growth", "GrassCheckNI", "grasscheck.ods"
+)
 
 grass_ts = pd.read_excel(DATA_DIR, parse_dates=["week"])
 
@@ -50,7 +53,9 @@ grass_ts.head()
 
 grass_ts.shape
 
-DATA_DIR = os.path.join("data", "grass_growth", "grasscheck", "grasscheck.csv")
+DATA_DIR = os.path.join(
+    "data", "grass_growth", "GrassCheckNI", "grasscheck.csv"
+)
 
 # save time series
 grass_ts.to_csv(DATA_DIR, index=False)
@@ -110,14 +115,14 @@ plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 # plt.savefig(
-#     os.path.join("data", "grass_growth", "grasscheck", "boxplot.png")
+#     os.path.join("data", "grass_growth", "GrassCheckNI", "boxplot.png")
 # )
 plt.show()
 
 grass_ts.diff().hist(figsize=(6, 8), bins=50, grid=False)
 plt.tight_layout()
 # plt.savefig(
-#     os.path.join("data", "grass_growth", "grasscheck", "diff_hist.png")
+#     os.path.join("data", "grass_growth", "GrassCheckNI", "diff_hist.png")
 # )
 plt.show()
 
@@ -130,7 +135,7 @@ grass_ts_["weekno"] = grass_ts_.index.isocalendar().week
 grass_ts_.reset_index(inplace=True)
 
 DATA_DIR = os.path.join(
-    "data", "grass_growth", "grasscheck", "grasscheck_cleaned.csv"
+    "data", "grass_growth", "GrassCheckNI", "grasscheck_cleaned.csv"
 )
 
 # save time series
@@ -224,6 +229,6 @@ plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 # plt.savefig(
-#     os.path.join("data", "grass_growth", "grasscheck", "boxplot.png")
+#     os.path.join("data", "grass_growth", "GrassCheckNI", "boxplot.png")
 # )
 plt.show()

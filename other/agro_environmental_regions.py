@@ -19,9 +19,11 @@
 # import libraries
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

@@ -3,23 +3,24 @@
 
 # # Visualising climate model datasets
 
+import glob
+import importlib
+import itertools
 # import libraries
 import os
-import glob
-import itertools
-import numpy as np
 from datetime import datetime, timezone
+
+import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+import seaborn as sns
 import xarray as xr
 
 # from dask.distributed import Client
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
-import importlib
-import cartopy.crs as ccrs
-import seaborn as sns
 
 importlib.reload(cplt)
 
@@ -125,7 +126,7 @@ datasets["MÉRA"] = xr.open_dataset(
 
 datasets["MÉRA"] = datasets["MÉRA"].sel(time=slice("1981", "2018"))
 
-datasets["MÉRA"].rio.write_crs(cplt.lambert_conformal, inplace=True)
+datasets["MÉRA"].rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 
 var_attrs = {}
 for var in varlist:
@@ -152,7 +153,7 @@ for exp, model, data in itertools.product(
         {"rlon": cds[0], "rlat": cds[1]}, method="nearest"
     )
 
-cds = cplt.lambert_conformal.transform_point(
+cds = cplt.projection_lambert_conformal.transform_point(
     x=LON, y=LAT, src_crs=ccrs.PlateCarree()
 )
 

@@ -5,9 +5,10 @@
 
 import os
 from datetime import datetime, timezone
+
+import numpy as np
 import pandas as pd
 import pooch
-import numpy as np
 
 print("Last updated:", datetime.now(tz=timezone.utc))
 

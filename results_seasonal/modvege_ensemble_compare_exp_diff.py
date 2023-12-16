@@ -5,19 +5,21 @@
 #
 # - Weighted means take into account the number of days in each month
 
-# import libraries
-from datetime import datetime, timezone
-import climag.plot_stats as cstats
-import importlib
-import xarray as xr
-import matplotlib.pyplot as plt
-import climag.plot_configs as cplt
 import glob
+import importlib
 import itertools
 import os
 import sys
-import numpy as np
+# import libraries
+from datetime import datetime, timezone
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
+
+import climag.plot_configs as cplt
+import climag.plot_stats as cstats
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 exp_list = ["historical", "rcp45", "rcp85"]
@@ -221,7 +223,7 @@ def plot_diff(data, var, levels):
             extend="both",
             robust=True,
             levels=cstats.colorbar_levels(levels),
-            subplot_kws={"projection": cplt.plot_projection},
+            subplot_kws={"projection": cplt.projection_hiresireland},
             transform=cplt.rotated_pole_transform(data),
             xlim=(-1.775, 1.6),
             ylim=(-2.1, 2.1),
@@ -246,7 +248,7 @@ def plot_diff(data, var, levels):
             extend="both",
             robust=True,
             levels=cstats.colorbar_levels(levels),
-            subplot_kws={"projection": cplt.plot_projection},
+            subplot_kws={"projection": cplt.projection_hiresireland},
             transform=cplt.rotated_pole_transform(data),
             xlim=(-1.775, 1.6),
             ylim=(-2.1, 2.1),
@@ -263,10 +265,10 @@ def plot_diff(data, var, levels):
             },
         )
     for axis in fig.axs.flat:
-        mask.to_crs(cplt.plot_projection).plot(
+        mask.to_crs(cplt.projection_hiresireland).plot(
             ax=axis, color="white", linewidth=0
         )
-        cstats.ie_bbox.to_crs(cplt.plot_projection).plot(
+        cstats.ie_bbox.to_crs(cplt.projection_hiresireland).plot(
             ax=axis, edgecolor="darkslategrey", color="white", linewidth=0.5
         )
     fig.set_titles("{value}", weight="semibold", fontsize=14)

@@ -9,8 +9,9 @@
 # https://esdac.jrc.ec.europa.eu/content/european-soil-database-derived-data
 
 import os
-import matplotlib.pyplot as plt
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
 import rioxarray as rxr
 from rasterstats import zonal_stats
 

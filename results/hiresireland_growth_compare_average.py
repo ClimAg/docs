@@ -6,8 +6,8 @@
 # import libraries
 import importlib
 import os
-
 from datetime import datetime, timezone
+from itertools import product
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -17,7 +17,6 @@ from rasterstats import zonal_stats
 
 import climag.plot_configs as cplt
 import climag.plot_stats as cstats
-from itertools import product
 
 ie_bbox = gpd.read_file(
     os.path.join("data", "boundaries", "boundaries.gpkg"),
@@ -95,7 +94,7 @@ def data_plot(data, var, levels=None, ticks=None):
         x="rlon",
         y="rlat",
         transform=cplt.rotated_pole_transform(data),
-        subplot_kws={"projection": cplt.plot_projection},
+        subplot_kws={"projection": cplt.projection_hiresireland},
         cmap="BrBG",
         col="model",
         row="exp",
@@ -118,7 +117,7 @@ def data_plot(data, var, levels=None, ticks=None):
     for (col, model), (row, exp) in product(
         enumerate(data["model"].values), enumerate(data["exp"].values)
     ):
-        ie_bbox.to_crs(cplt.plot_projection).plot(
+        ie_bbox.to_crs(cplt.projection_hiresireland).plot(
             ax=fig.axs[row][col],
             edgecolor="darkslategrey",
             color="white",

@@ -4,11 +4,13 @@
 # # Create MERA time series for comparison with measurements
 
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
 from rasterstats import zonal_stats
+
 import climag.plot_configs as cplt
 
 # ## Model results
@@ -36,7 +38,7 @@ ds_ = ds.resample(time="W-MON").mean()
 for var in ds_.data_vars:
     ds_[var].attrs = ds[var].attrs
 
-ds_.rio.write_crs(cplt.lambert_conformal, inplace=True)
+ds_.rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 
 # ## County boundaries
 
@@ -89,7 +91,7 @@ stats = {}
 for t in ds_["time"].values:
     stats[str(t)[:10]] = gpd.GeoDataFrame.from_features(
         zonal_stats(
-            vectors=counties.to_crs(cplt.lambert_conformal),
+            vectors=counties.to_crs(cplt.projection_lambert_conformal),
             raster=os.path.join(
                 "data",
                 "ModVege",
@@ -124,13 +126,14 @@ os.makedirs(
 
 # mask out non-pasture areas
 ds_ = ds_.rio.clip(
-    pasture["geometry"].to_crs(cplt.lambert_conformal), all_touched=True
+    pasture["geometry"].to_crs(cplt.projection_lambert_conformal),
+    all_touched=True,
 )
 
 plt.figure(figsize=(7, 7))
-axs = plt.axes(projection=cplt.lambert_conformal)
+axs = plt.axes(projection=cplt.projection_lambert_conformal)
 ds_.isel(time=30)["gro"].plot.contourf(cmap="YlGn", ax=axs)
-pasture.to_crs(cplt.lambert_conformal).boundary.plot(
+pasture.to_crs(cplt.projection_lambert_conformal).boundary.plot(
     linewidth=0.1, ax=axs, color="black"
 )
 plt.tight_layout()
@@ -153,7 +156,7 @@ stats = {}
 for t in ds_["time"].values:
     stats[str(t)[:10]] = gpd.GeoDataFrame.from_features(
         zonal_stats(
-            vectors=counties.to_crs(cplt.lambert_conformal),
+            vectors=counties.to_crs(cplt.projection_lambert_conformal),
             raster=os.path.join(
                 "data",
                 "ModVege",

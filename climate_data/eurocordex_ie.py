@@ -3,17 +3,19 @@
 
 # # Subset EURO-CORDEX data for Ireland
 
+import glob
 # import libraries
 import os
-import glob
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
 import xarray as xr
 from dask.distributed import Client
+
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

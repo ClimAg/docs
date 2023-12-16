@@ -14,11 +14,13 @@
 #   - <https://xesmf.readthedocs.io/en/latest/notebooks/Dataset.html>
 
 import os
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import rasterio as rio
 import xarray as xr
 import xesmf as xe
+
 import climag.plot_configs as cplt
 
 
@@ -28,7 +30,7 @@ def plot_map(data, var, x, y, transform, cmap="Spectral_r", contour=False):
     """
 
     plt.figure(figsize=(9, 7))
-    ax = plt.axes(projection=cplt.plot_projection)
+    ax = plt.axes(projection=cplt.projection_hiresireland)
     if contour:
         data.isel(time=180)[var].plot.contourf(
             ax=ax,
@@ -71,9 +73,9 @@ obs = os.path.join(
 obs = xr.open_dataset(obs, decode_coords="all")
 
 # reassign projection
-obs.rio.write_crs(cplt.lambert_conformal, inplace=True)
+obs.rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 
-plot_map(obs, "gro", "x", "y", cplt.lambert_conformal, "BrBG")
+plot_map(obs, "gro", "x", "y", cplt.projection_lambert_conformal, "BrBG")
 
 # ## Lower resolution climate model dataset - EURO-CORDEX
 
@@ -90,7 +92,7 @@ clim = xr.open_dataset(clim, decode_coords="all")
 
 clim
 
-plot_map(clim, "gro", "rlon", "rlat", cplt.eurocordex_projection, "BrBG")
+plot_map(clim, "gro", "rlon", "rlat", cplt.projection_eurocordex, "BrBG")
 
 # ## xESMF's Regridder
 
@@ -141,13 +143,13 @@ clim2 = clim.drop(["lat", "lon", "time_bnds"])
 clim2["time"] = clim2.indexes["time"].normalize()
 
 # reproject to observational data's CRS
-clim2 = clim2.rio.reproject(cplt.lambert_conformal)
+clim2 = clim2.rio.reproject(cplt.projection_lambert_conformal)
 # interpolate
 clim2 = clim2.interp_like(obs)
 
 clim2
 
-plot_map(clim2, "gro", "x", "y", cplt.lambert_conformal, "BrBG")
+plot_map(clim2, "gro", "x", "y", cplt.projection_lambert_conformal, "BrBG")
 
 # ### Difference
 
@@ -155,9 +157,17 @@ diff = clim2 - obs
 
 diff
 
-plot_map(diff, "gro", "x", "y", cplt.lambert_conformal, "RdBu_r")
+plot_map(diff, "gro", "x", "y", cplt.projection_lambert_conformal, "RdBu_r")
 
-plot_map(diff, "gro", "x", "y", cplt.lambert_conformal, "RdBu_r", contour=True)
+plot_map(
+    diff,
+    "gro",
+    "x",
+    "y",
+    cplt.projection_lambert_conformal,
+    "RdBu_r",
+    contour=True,
+)
 
 # ## Rioxarray's reproject_match
 
@@ -173,7 +183,7 @@ clim2 = clim2.assign_coords({"x": obs["x"], "y": obs["y"]})
 
 clim2
 
-plot_map(clim2, "gro", "x", "y", cplt.lambert_conformal, "BrBG")
+plot_map(clim2, "gro", "x", "y", cplt.projection_lambert_conformal, "BrBG")
 
 # ### Difference
 
@@ -181,6 +191,14 @@ diff = clim2 - obs
 
 diff
 
-plot_map(diff, "gro", "x", "y", cplt.lambert_conformal, "RdBu_r")
+plot_map(diff, "gro", "x", "y", cplt.projection_lambert_conformal, "RdBu_r")
 
-plot_map(diff, "gro", "x", "y", cplt.lambert_conformal, "RdBu_r", contour=True)
+plot_map(
+    diff,
+    "gro",
+    "x",
+    "y",
+    cplt.projection_lambert_conformal,
+    "RdBu_r",
+    contour=True,
+)

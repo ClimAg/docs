@@ -13,6 +13,7 @@ import glob
 import os
 from datetime import datetime, timezone
 from itertools import chain
+
 import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -20,13 +21,14 @@ import numpy as np
 import pandas as pd
 import pooch
 import xarray as xr
+
 import climag.plot_configs as cplt
 
 # Moorepark, Fermoy met station coords
 LON, LAT = -8.26389, 52.16389
 
 # transform coordinates from lon/lat to Lambert Conformal Conic
-XLON, YLAT = cplt.lambert_conformal.transform_point(
+XLON, YLAT = cplt.projection_lambert_conformal.transform_point(
     x=LON, y=LAT, src_crs=ccrs.PlateCarree()
 )
 
@@ -134,7 +136,7 @@ plt.show()
 
 # map
 plt.figure(figsize=(9, 7))
-ax = plt.axes(projection=cplt.lambert_conformal)
+ax = plt.axes(projection=cplt.projection_lambert_conformal)
 data_d.isel(time=90, height=0)[var].plot.contourf(
     ax=ax,
     robust=True,
@@ -142,7 +144,7 @@ data_d.isel(time=90, height=0)[var].plot.contourf(
     x="x",
     y="y",
     levels=10,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
     cbar_kwargs={
         "label": (
             data_d[var].attrs["long_name"]
@@ -192,7 +194,7 @@ data_d.rio.write_crs(data_crs, inplace=True)
 
 # clip to Ireland's boundary to remove NaNs after summing
 data_d = data_d.rio.clip(
-    ie.buffer(1).to_crs(cplt.lambert_conformal), all_touched=True
+    ie.buffer(1).to_crs(cplt.projection_lambert_conformal), all_touched=True
 )
 
 data_d
@@ -229,7 +231,7 @@ plt.show()
 
 # map
 plt.figure(figsize=(9, 7))
-ax = plt.axes(projection=cplt.lambert_conformal)
+ax = plt.axes(projection=cplt.projection_lambert_conformal)
 data_d.isel(time=90, height=0)[var].plot.contourf(
     ax=ax,
     robust=True,
@@ -237,7 +239,7 @@ data_d.isel(time=90, height=0)[var].plot.contourf(
     x="x",
     y="y",
     levels=10,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
     cbar_kwargs={
         "label": (
             data_d[var].attrs["long_name"]
@@ -322,7 +324,7 @@ plt.show()
 
 # map
 plt.figure(figsize=(9, 7))
-ax = plt.axes(projection=cplt.lambert_conformal)
+ax = plt.axes(projection=cplt.projection_lambert_conformal)
 data_d.isel(time=90, height=0)[var].plot.contourf(
     ax=ax,
     robust=True,
@@ -330,7 +332,7 @@ data_d.isel(time=90, height=0)[var].plot.contourf(
     x="x",
     y="y",
     levels=10,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
     cbar_kwargs={
         "label": (
             data_d[var].attrs["long_name"]

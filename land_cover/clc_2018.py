@@ -29,6 +29,7 @@ import rioxarray as rxr
 from dask.distributed import Client, LocalCluster, Lock
 from dask.utils import SerializableLock
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
+
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))
@@ -249,11 +250,11 @@ ticks = list(np.arange(0.5, len(uniquevals) + 0.5, 1))
 cbar = plt.colorbar(ticks=ticks)
 cbar.ax.set_yticklabels(list(uniquevals["label"]))
 
-landcover.rio.reproject(cplt.plot_projection).plot(
+landcover.rio.reproject(cplt.projection_hiresireland).plot(
     add_colorbar=False, cmap=colours
 )
 
-ie.to_crs(cplt.plot_projection).boundary.plot(
+ie.to_crs(cplt.projection_hiresireland).boundary.plot(
     ax=img.axes, edgecolor="darkslategrey"
 )
 
@@ -266,7 +267,7 @@ plt.ylabel("")
 
 plt.axis("equal")
 
-bbox = ie.to_crs(cplt.plot_projection).bounds
+bbox = ie.to_crs(cplt.projection_hiresireland).bounds
 plt.xlim(float(bbox["minx"]) - 0.1, float(bbox["maxx"]) + 0.1)
 plt.ylim(float(bbox["miny"]) - 0.1, float(bbox["maxy"]) + 0.1)
 

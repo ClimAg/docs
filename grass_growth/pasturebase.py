@@ -15,6 +15,7 @@
 
 import os
 from datetime import datetime, timezone
+
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,7 +23,7 @@ import pandas as pd
 from matplotlib.cbook import boxplot_stats
 
 DATA_DIR = os.path.join(
-    "data", "grass_growth", "pasturebase", "GrowthRateAveragebyWeek.csv"
+    "data", "grass_growth", "PastureBaseIreland", "GrowthRateAveragebyWeek.csv"
 )
 
 grass = pd.read_csv(DATA_DIR)
@@ -120,7 +121,7 @@ plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 # plt.savefig(
 #     os.path.join(
-#         "data", "grass_growth", "pasturebase", "boxplot_outliers.png"
+#         "data", "grass_growth", "PastureBaseIreland", "boxplot_outliers.png"
 #     )
 # )
 plt.show()
@@ -230,7 +231,7 @@ plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 # plt.savefig(
 #     os.path.join(
-#         "data", "grass_growth", "pasturebase", "boxplot_outliers.png"
+#         "data", "grass_growth", "PastureBaseIreland", "boxplot_outliers.png"
 #     )
 # )
 plt.show()
@@ -238,7 +239,7 @@ plt.show()
 grass_filter = grass_filter.rename(columns={"variable": "county"})
 grass_filter.to_csv(
     os.path.join(
-        "data", "grass_growth", "pasturebase", "pasturebase_cleaned.csv"
+        "data", "grass_growth", "PastureBaseIreland", "pasturebase_cleaned.csv"
     )
 )
 
@@ -271,14 +272,14 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 # plt.tight_layout()
 # # plt.savefig(
-# #     os.path.join("data", "grass_growth", "pasturebase", "boxplot.png")
+# #     os.path.join("data", "grass_growth", "PastureBaseIreland", "boxplot.png")
 # # )
 # plt.show()
 
 # grass_out.diff().hist(figsize=(15, 18), bins=50, grid=False)
 # plt.tight_layout()
 # plt.savefig(
-#     os.path.join("data", "grass_growth", "pasturebase", "diff_hist.png")
+#     os.path.join("data", "grass_growth", "PastureBaseIreland", "diff_hist.png")
 # )
 # plt.show()
 

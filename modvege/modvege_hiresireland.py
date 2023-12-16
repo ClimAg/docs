@@ -19,14 +19,16 @@
 # [Jouven1]: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 # [Jouven2]: https://doi.org/10.1111/j.1365-2494.2006.00517.x
 
-import os
 import glob
+import os
 from datetime import datetime, timezone
-import pandas as pd
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import pandas as pd
 import xarray as xr
 from dask.distributed import Client
+
 import climag.plot_configs as cplt
 
 print("Last updated:", datetime.now(tz=timezone.utc))

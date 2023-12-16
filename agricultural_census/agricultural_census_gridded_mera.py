@@ -6,14 +6,16 @@
 # Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
+import itertools
 # import libraries
 import os
-import itertools
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import shapely
 import xarray as xr
+
 import climag.plot_configs as cplt
 
 # ## Open some gridded climate data
@@ -45,7 +47,7 @@ for x0 in np.arange(xmin, xmax + cell_size, cell_size):
         y1 = y0 + cell_size
         grid_cells.append(shapely.geometry.box(x0, y0, x1, y1))
 grid_cells = gpd.GeoDataFrame(
-    grid_cells, columns=["geometry"], crs=cplt.lambert_conformal
+    grid_cells, columns=["geometry"], crs=cplt.projection_lambert_conformal
 )
 
 grid_cells.shape
@@ -64,7 +66,7 @@ data_
 len(data_["T"].values.flatten()[np.isfinite(data_["T"].values.flatten())])
 
 plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["T"].plot(
@@ -73,9 +75,9 @@ data_["T"].plot(
     x="x",
     y="y",
     robust=True,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
 )
-grid_cells.to_crs(cplt.plot_projection).boundary.plot(
+grid_cells.to_crs(cplt.projection_hiresireland).boundary.plot(
     ax=axs, color="darkslategrey", linewidth=0.2
 )
 
@@ -105,7 +107,7 @@ for x, y in itertools.product(
 grid_centroids = gpd.GeoDataFrame(
     grid_centroids,
     geometry=gpd.GeoSeries.from_wkt(
-        grid_centroids["wkt"], crs=cplt.lambert_conformal
+        grid_centroids["wkt"], crs=cplt.projection_lambert_conformal
     ),
 )
 
@@ -116,7 +118,7 @@ grid_centroids.shape
 grid_centroids.crs
 
 grid_cells = gpd.sjoin(
-    grid_cells, grid_centroids.to_crs(cplt.lambert_conformal)
+    grid_cells, grid_centroids.to_crs(cplt.projection_lambert_conformal)
 )
 
 grid_cells.drop(columns=["wkt", "index_right"], inplace=True)
@@ -126,7 +128,7 @@ grid_cells.head()
 grid_cells.shape
 
 # plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["T"].plot(
@@ -135,14 +137,14 @@ data_["T"].plot(
     x="x",
     y="y",
     robust=True,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
 )
 
-grid_cells.to_crs(cplt.plot_projection).plot(
+grid_cells.to_crs(cplt.projection_hiresireland).plot(
     ax=axs, edgecolor="darkslategrey", facecolor="none", linewidth=0.05
 )
 
-grid_centroids.to_crs(cplt.plot_projection).plot(
+grid_centroids.to_crs(cplt.projection_hiresireland).plot(
     ax=axs, color="darkslategrey", markersize=0.2
 )
 
@@ -222,7 +224,7 @@ grid_cells["sr"].max()
 grid_cells["sr"].min()
 
 plt.figure(figsize=(9, 7))
-axs = plt.axes(projection=cplt.plot_projection)
+axs = plt.axes(projection=cplt.projection_hiresireland)
 
 # plot data for the variable
 data_["t"].plot(
@@ -231,10 +233,10 @@ data_["t"].plot(
     x="x",
     y="y",
     robust=True,
-    transform=cplt.lambert_conformal,
+    transform=cplt.projection_lambert_conformal,
 )
 
-grid_cells.to_crs(cplt.plot_projection).plot(
+grid_cells.to_crs(cplt.projection_hiresireland).plot(
     column="sr",
     ax=axs,
     edgecolor="darkslategrey",
