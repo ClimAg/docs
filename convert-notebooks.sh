@@ -6,10 +6,10 @@ git checkout ipynb
 # jupyter nbconvert --sanitize-html --to notebook --inplace */*.ipynb
 
 # format notebooks
-black -l 79 */*.ipynb
+# black -l 79 */*.ipynb
 
-# sort imports
-isort */*.ipynb
+# # sort imports
+# isort */*.ipynb
 
 # convert Jupyter Notebooks to Python scripts
 jupyter nbconvert --to script */*.ipynb
