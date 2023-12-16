@@ -3,7 +3,7 @@
 cd jupyter-notebooks
 git checkout ipynb
 
-jupyter nbconvert --sanitize-html --to notebook --inplace */*.ipynb
+# jupyter nbconvert --sanitize-html --to notebook --inplace */*.ipynb
 
 # format notebooks
 black -l 79 */*.ipynb
@@ -23,6 +23,9 @@ done
 
 # format scripts
 black -l 79 */*.py
+
+# sort imports
+isort */*.py
 
 # delete existing Python scripts
 rm -r ../draft/nb
