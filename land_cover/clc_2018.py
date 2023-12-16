@@ -5,7 +5,6 @@
 #
 # <https://land.copernicus.eu/pan-european/corine-land-cover/clc2018>
 
-# import libraries
 import multiprocessing
 import os
 import platform
@@ -32,13 +31,11 @@ from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
 import climag.plot_configs as cplt
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 # define data directories
-DATA_DIR_BASE = os.path.join("data", "land-cover", "clc-2018")
+DATA_DIR_BASE = os.path.join("data", "landcover")
 
 # the ZIP file containing the CLC 2018 data should be moved to this folder
-DATA_DIR = os.path.join(DATA_DIR_BASE, "raw")
+DATA_DIR = os.path.join(DATA_DIR_BASE, "clc-2018")
 
 os.listdir(DATA_DIR)
 
@@ -70,29 +67,33 @@ try:
 except BadZipFile:
     print("There were issues with the file", ZIP_FILE)
 
-DATA_DIR = os.path.join(
-    DATA_DIR_BASE, "raw", "u2018_clc2018_v2020_20u1_raster100m", "DATA"
+FILE_PATH = os.path.join(
+    DATA_DIR,
+    "u2018_clc2018_v2020_20u1_raster100m",
+    "DATA",
+    "U2018_CLC2018_V2020_20u1.tif",
 )
 
-FILE_PATH = os.path.join(DATA_DIR, "U2018_CLC2018_V2020_20u1.tif")
-
 # read the CLC 2018 raster
-# use Dask for parallel computing
-# https://corteva.github.io/rioxarray/stable/examples/dask_read_write.html
-with LocalCluster() as cluster, Client(cluster) as client:
-    landcover = rxr.open_rasterio(
-        FILE_PATH,
-        chunks=True,
-        cache=False,
-        lock=False,
-        # lock=Lock("rio-read", client=client)  # when too many file handles
-        #                                       # open
-    )
-    landcover.rio.to_raster(
-        os.path.join(DATA_DIR_BASE, "dask_multiworker.tif"),
-        tiled=True,
-        lock=Lock("rio", client=client),
-    )
+landcover = rxr.open_rasterio(FILE_PATH, chunks="auto")
+
+# # read the CLC 2018 raster
+# # use Dask for parallel computing
+# # https://corteva.github.io/rioxarray/stable/examples/dask_read_write.html
+# with LocalCluster() as cluster, Client(cluster) as client:
+#     landcover = rxr.open_rasterio(
+#         FILE_PATH,
+#         chunks=True,
+#         cache=False,
+#         lock=False,
+#         # lock=Lock("rio-read", client=client)  # when too many file handles
+#         #                                       # open
+#     )
+#     landcover.rio.to_raster(
+#         os.path.join(DATA_DIR_BASE, "dask_multiworker.tif"),
+#         tiled=True,
+#         lock=Lock("rio", client=client),
+#     )
 
 landcover
 
@@ -103,7 +104,7 @@ landcover.rio.bounds()
 landcover.rio.crs
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # convert the boundary's CRS to match the CLC raster's CRS
@@ -144,8 +145,7 @@ uniquevals
 # read the QGIS style file containing the legend entries
 tree = ET.parse(
     os.path.join(
-        DATA_DIR_BASE,
-        "raw",
+        DATA_DIR,
         "u2018_clc2018_v2020_20u1_raster100m",
         "Legend",
         "clc_legend_qgis_raster.qml",
@@ -294,14 +294,23 @@ lc.rio.to_raster(
     tiled=True,
 )
 
-# vectorised (done in QGIS)
-pasture = gpd.read_file(
-    os.path.join(DATA_DIR_BASE, "clc-2018-pasture.gpkg"), layer="dissolved"
-)
+lc
 
-pasture
+# vectorised
+pasture = lc.to_dataframe(name="lc").reset_index().dropna()
+
+pasture = gpd.GeoDataFrame(
+    geometry=gpd.GeoSeries(gpd.points_from_xy(pasture.x, pasture.y))
+    .buffer(50)
+    .envelope,
+    crs=lc.rio.crs,
+).dissolve()
 
 fig = pasture.plot()
 fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.tight_layout()
 plt.show()
+
+pasture.to_file(
+    os.path.join(DATA_DIR_BASE, "clc-2018-pasture.gpkg"), layer="dissolved"
+)

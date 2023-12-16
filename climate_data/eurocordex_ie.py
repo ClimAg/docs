@@ -34,7 +34,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 LON, LAT = -8.26389, 52.16389
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 ie_bbox = gpd.read_file(
     GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF"

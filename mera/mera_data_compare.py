@@ -33,7 +33,7 @@ XLON, YLAT = cplt.projection_lambert_conformal.transform_point(
 )
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # directory of processed MÉRA netCDF files

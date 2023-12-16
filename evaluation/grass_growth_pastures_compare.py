@@ -371,7 +371,7 @@ plt.tight_layout()
 plt.show()
 
 ie_counties = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="OSi_OSNI_IE_Counties_2157",
 )
 

@@ -7,7 +7,6 @@
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
 import itertools
-# import libraries
 import os
 
 import geopandas as gpd

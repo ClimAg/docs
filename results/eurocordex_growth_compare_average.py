@@ -19,7 +19,7 @@ import climag.plot_configs as cplt
 import climag.plot_stats as cstats
 
 ie_bbox = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="ne_10m_land_2157_IE_BBOX_DIFF",
 )
 
@@ -32,7 +32,7 @@ data
 data_crs = data.rio.crs
 
 counties = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="OSi_OSNI_IE_Counties_2157",
 )
 counties["COUNTY"] = counties["COUNTY"].str.title()

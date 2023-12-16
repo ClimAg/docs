@@ -26,8 +26,8 @@ DATA_DIR = os.path.join("data", "soil")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries.gpkg")
-ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_Ireland_ITM")
+GPKG_BOUNDARY = os.path.join("data", "boundary", "boundaries_all.gpkg")
+ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # ## Soil associations
 

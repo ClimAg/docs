@@ -69,7 +69,7 @@ import xarray as xr
 LON, LAT = -8.26389, 52.16389
 
 # Ireland boundary (derived from NUTS 2021)
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 DATA_DIR = os.path.join("data", "MERA", "sample")

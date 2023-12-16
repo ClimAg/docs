@@ -203,7 +203,7 @@ def generate_stats(dataset):
 
 # mask out non-pasture areas
 mask_layer = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="CLC_2018_MASK_PASTURE_2157_IE",
 )
 

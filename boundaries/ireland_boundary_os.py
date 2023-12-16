@@ -3,7 +3,6 @@
 
 # # Boundaries from Ordnance Survey Ireland / Northern Ireland
 
-# import libraries
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
@@ -16,14 +15,11 @@ import pooch
 from matplotlib import ticker
 
 import climag.plot_configs as cplt
-from climag.download_data import download_data
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 # base data download directory
 DATA_DIR = os.path.join("data", "boundaries")
 
-GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries_all.gpkg")
 
 # ##  Counties - OSi National Statutory Boundaries - 2019
 #
@@ -75,21 +71,12 @@ base = osi.plot(
     linewidth=0.4,
 )
 
-# base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-# base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-# base.yaxis.set_major_locator(ticker.MultipleLocator(1))
-
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.title("Counties of the Republic of Ireland")
 plt.text(650000, 505000, "© Ordnance Survey Ireland")
 
 plt.tight_layout()
 plt.show()
-
-osi.to_file(
-    os.path.join(SUB_DIR, "osi_national_statutory_boundaries.gpkg"),
-    layer="OSi_IE_counties_2019",
-)
 
 # ## OSNI Open Data - Largescale Boundaries - County Boundaries
 #
@@ -143,21 +130,12 @@ base = osni.plot(
     linewidth=0.4,
 )
 
-# base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-# base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-# base.yaxis.set_major_locator(ticker.MultipleLocator(1))
-
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.title("Counties of Northern Ireland")
 plt.text(312000, 305000, "© Ordnance Survey Northern Ireland")
 
 plt.tight_layout()
 plt.show()
-
-osni.to_file(
-    os.path.join(SUB_DIR, "osni_largescale_boundaries.gpkg"),
-    layer="OSNI_IE_counties",
-)
 
 # ## County boundaries - Island of Ireland
 
@@ -186,9 +164,9 @@ osni_counties["PROVINCE"] = "Ulster"
 osni_counties
 
 # reproject to Irish Transverse Mercator
-osi_counties = osi_counties.to_crs(2157)
+osi_counties = osi_counties.to_crs(cplt.ITM_EPSG)
 
-osni_counties = osni_counties.to_crs(2157)
+osni_counties = osni_counties.to_crs(cplt.ITM_EPSG)
 
 # remove overlapping areas in OSi layer
 osi_counties = osi_counties.overlay(osni_counties, how="difference")
@@ -218,11 +196,6 @@ base = ie_counties.plot(
     alpha=0.45,
 )
 
-# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-# base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
-
-# ie_counties.centroid.plot(ax=base, color="darkslategrey", markersize=5)
-
 map_labels = zip(
     zip(ie_counties.centroid.x, ie_counties.centroid.y), ie_counties["COUNTY"]
 )
@@ -234,8 +207,7 @@ plt.title("Counties of Ireland")
 plt.text(
     612500,
     502500,
-    str(ie_counties.crs).upper()
-    + "\n© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland",
+    "© Ordnance Survey Ireland\n© Ordnance Survey Northern Ireland",
 )
 
 plt.show()
@@ -243,8 +215,3 @@ plt.show()
 ie_counties.crs
 
 ie_counties.to_file(GPKG_BOUNDARY, layer="OSi_OSNI_IE_Counties_2157")
-
-# reproject to EPSG:4326
-ie_counties = ie_counties.to_crs(4326)
-
-ie_counties.to_file(GPKG_BOUNDARY, layer="OSi_OSNI_IE_Counties_4326")

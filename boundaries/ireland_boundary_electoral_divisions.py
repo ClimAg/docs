@@ -11,6 +11,8 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pooch
 
+import climag.plot_configs as cplt
+
 URL = (
     "https://opendata.arcgis.com/api/v3/datasets/"
     "429c839036934413bb740bea190f2596_0/downloads/data?"
@@ -50,12 +52,11 @@ data.crs
 
 base = data.plot(color="navajowhite", figsize=(7.5, 7.5))
 data.boundary.plot(ax=base, color="darkslategrey", linewidth=0.2)
-# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.tight_layout()
 plt.show()
 
 data.to_file(
-    os.path.join(SUB_DIR, "osi_national_statutory_boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="OSi_IE_electoral_divisions_2019",
 )

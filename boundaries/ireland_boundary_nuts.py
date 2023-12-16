@@ -5,7 +5,6 @@
 #
 # <https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts>
 
-# import libraries
 import os
 from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
@@ -16,8 +15,6 @@ import pooch
 from matplotlib import ticker
 
 import climag.plot_configs as cplt
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 # base data download directory
 SUB_DIR = os.path.join("data", "boundaries", "NUTS2021")
@@ -31,7 +28,7 @@ KNOWN_HASH = None
 FILE_NAME = "ref-nuts-2021-01m.shp.zip"
 
 # file name for the GeoPackage where the boundary vector layers will be saved
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 
 DATA_DIR_TEMP = os.path.join(SUB_DIR, "temp")
 
@@ -116,10 +113,7 @@ base = nuts1.plot(
     edgecolor="darkslategrey",
     linewidth=0.4,
 )
-
-base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-base.yaxis.set_major_locator(ticker.MultipleLocator(1))
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("NUTS1 Regions of Ireland")
 plt.text(-8.75, 51.275, "© EuroGeographics for the administrative boundaries")
@@ -146,10 +140,7 @@ base = nuts2.plot(
     edgecolor="darkslategrey",
     linewidth=0.4,
 )
-
-base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-base.yaxis.set_major_locator(ticker.MultipleLocator(1))
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("NUTS2 Regions of Ireland")
 plt.text(-8.75, 51.275, "© EuroGeographics for the administrative boundaries")
@@ -174,10 +165,7 @@ base = nuts3.plot(
     edgecolor="darkslategrey",
     linewidth=0.4,
 )
-
-base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-base.yaxis.set_major_locator(ticker.MultipleLocator(1))
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("NUTS3 Regions of Ireland")
 plt.text(-8.75, 51.275, "© EuroGeographics for the administrative boundaries")
@@ -186,24 +174,11 @@ plt.show()
 
 # ## Island of Ireland boundary
 
-ie = nuts1.copy()
-
-ie = ie.dissolve(by="LEVL_CODE", as_index=False)
+ie = nuts1.dissolve()
 
 ie
 
 ie = ie[["geometry"]]
-
-ie = ie.assign(NAME="Ireland")
-
-DESCRIPTION = (
-    "Boundary for the Island of Ireland generated using NUTS 2021 Level 1 "
-    "boundaries"
-)
-
-ie = ie.assign(DESCRIPTION=DESCRIPTION)
-
-ie
 
 base = ie.plot(
     color="navajowhite",
@@ -211,17 +186,12 @@ base = ie.plot(
     edgecolor="darkslategrey",
     linewidth=0.4,
 )
-
-base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-base.yaxis.set_major_locator(ticker.MultipleLocator(1))
+plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("Boundary of the Island of Ireland")
 plt.text(-8.75, 51.275, "© EuroGeographics for the administrative boundaries")
 plt.tight_layout()
 plt.show()
-
-ie.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_IE")
 
 # ## Island of Ireland boundary in Irish transverse mercator
 #
@@ -231,7 +201,7 @@ ie.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_4326_IE")
 #
 # See <https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems>
 
-ie.to_crs(2157, inplace=True)
+ie = ie.to_crs(cplt.ITM_EPSG)
 
 ie
 
@@ -242,18 +212,13 @@ base = ie.plot(
     linewidth=0.4,
 )
 
-# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
-# base.xaxis.set_major_locator(ticker.MultipleLocator(1e5))
 plt.tick_params(labelbottom=False, labelleft=False)
 
-plt.title("Boundary of Ireland")
-# plt.xlabel("Easting (m)")
-# plt.ylabel("Northing (m)")
+plt.title("Boundary of Ireland derived from NUTS data")
 plt.text(
     550000,
     505000,
-    str(ie.crs).upper()
-    + "\n© EuroGeographics for the administrative boundaries",
+    "© EuroGeographics for the administrative boundaries",
 )
 plt.tight_layout()
 plt.show()
@@ -262,9 +227,7 @@ ie.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
 # ## Bounding box
 
-ie_bound = gpd.GeoDataFrame(geometry=ie.envelope.buffer(100000))
-
-ie_bound["DESCRIPTION"] = "Ireland bounding box"
+ie_bound = gpd.GeoDataFrame(geometry=ie.envelope.buffer(100000).envelope)
 
 ie_bound
 
@@ -275,10 +238,9 @@ plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("Boundary of Ireland")
 plt.text(
-    550000,
+    540000,
     505000,
-    str(ie.crs).upper()
-    + "\n© EuroGeographics for the administrative boundaries",
+    "© EuroGeographics for the administrative boundaries",
 )
 plt.tight_layout()
 plt.show()
@@ -286,8 +248,6 @@ plt.show()
 ie_bound.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX")
 
 ie_bound = ie_bound.overlay(ie, how="difference")
-
-ie_bound["DESCRIPTION"] = "Ireland bounding box difference"
 
 ie_bound
 
@@ -298,10 +258,9 @@ plt.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("Boundary of Ireland")
 plt.text(
-    550000,
+    540000,
     505000,
-    str(ie.crs).upper()
-    + "\n© EuroGeographics for the administrative boundaries",
+    "© EuroGeographics for the administrative boundaries",
 )
 plt.tight_layout()
 plt.show()

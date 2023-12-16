@@ -12,10 +12,8 @@ import pandas as pd
 # ## ROI data
 
 bound_ie = gpd.read_file(
-    os.path.join(
-        "data", "boundaries", "OSi", "osi_national_statutory_boundaries.gpkg"
-    ),
-    layer="electoral-divisions-2019",
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
+    layer="OSi_IE_electoral_divisions_2019",
 )
 
 bound_ie.head()
@@ -191,8 +189,8 @@ plt.show()
 # ## NI data
 
 bound_ni = gpd.read_file(
-    os.path.join("data", "boundaries", "ONS", "ons_geography.gpkg"),
-    layer="ni_wards_12_2022_2157",
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
+    layer="ONS_NI_wards_12_2022_2157",
 )
 
 bound_ni.head()

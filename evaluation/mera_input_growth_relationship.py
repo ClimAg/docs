@@ -46,7 +46,7 @@ ds = xr.open_dataset(
 # Corine land cover 2018
 # pasture only - vectorised (done in QGIS)
 pasture = gpd.read_file(
-    os.path.join("data", "land-cover", "clc-2018", "clc-2018-pasture.gpkg"),
+    os.path.join("data", "landcover", "clc-2018", "clc-2018-pasture.gpkg"),
     layer="dissolved",
 )
 

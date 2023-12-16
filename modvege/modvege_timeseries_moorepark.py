@@ -30,7 +30,7 @@ client
 LON, LAT = -6.56083, 52.46306
 
 # Ireland boundary
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 ie_bbox = gpd.read_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
 
 BASE_DIR = os.path.join("data", "ModVege", "EURO-CORDEX")

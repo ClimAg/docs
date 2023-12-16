@@ -43,7 +43,7 @@ ds_.rio.write_crs(cplt.projection_lambert_conformal, inplace=True)
 # ## County boundaries
 
 counties = gpd.read_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="OSi_OSNI_IE_Counties_2157",
 )
 
@@ -59,7 +59,7 @@ plt.show()
 # Corine land cover 2018
 # pasture only - vectorised (done in QGIS)
 pasture = gpd.read_file(
-    os.path.join("data", "land-cover", "clc-2018", "clc-2018-pasture.gpkg"),
+    os.path.join("data", "landcover", "clc-2018", "clc-2018-pasture.gpkg"),
     layer="dissolved",
 )
 

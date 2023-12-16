@@ -13,6 +13,8 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pooch
 
+import climag.plot_configs as cplt
+
 FILE_NAME = "wards-uk-12-2022.zip"
 URL = (
     "https://opendata.arcgis.com/api/v3/datasets/"
@@ -51,24 +53,18 @@ data.head()
 
 data.crs
 
-data.to_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
-    layer="ONS_NI_wards_12_2022_27700",
-)
-
 # reproject to Irish Transverse Mercator
-data.to_crs(2157, inplace=True)
+data.to_crs(cplt.ITM_EPSG, inplace=True)
 
 data.crs
 
 base = data.plot(color="navajowhite", figsize=(7, 7))
 data.boundary.plot(ax=base, color="darkslategrey", linewidth=0.2)
-# plt.ticklabel_format(style="scientific", scilimits=[-4, 4])
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.tight_layout()
 plt.show()
 
 data.to_file(
-    os.path.join("data", "boundaries", "boundaries.gpkg"),
+    os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="ONS_NI_wards_12_2022_2157",
 )

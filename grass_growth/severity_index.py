@@ -60,9 +60,4 @@ ax.tick_params(axis="x", labelrotation=90)
 ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
 sns.despine()
 plt.tight_layout()
-plt.savefig(
-    os.path.join("jupyter-notebooks", "graphics", "severity_index.jpg"),
-    format="jpg",
-)
-# plt.close()
 plt.show()

@@ -5,7 +5,6 @@
 #
 # <https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/>
 
-# import libraries
 import os
 from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
@@ -17,8 +16,6 @@ from matplotlib import ticker
 
 import climag.plot_configs as cplt
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 # base data download directory
 SUB_DIR = os.path.join("data", "boundaries", "NaturalEarth")
 os.makedirs(SUB_DIR, exist_ok=True)
@@ -28,7 +25,7 @@ KNOWN_HASH = None
 FILE_NAME = "ne_10m_land.zip"
 
 # file name for the GeoPackage where the boundary vector layers will be saved
-GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries.gpkg")
+GPKG_BOUNDARY = os.path.join("data", "boundaries", "boundaries_all.gpkg")
 
 DATA_DIR_TEMP = os.path.join(SUB_DIR, "temp")
 
@@ -65,14 +62,16 @@ plt.show()
 # crop Ireland's boundary
 ie = gpd.read_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE")
 
-data_cropped = data.clip(ie.buffer(12500).to_crs(4326))
-
-data_cropped
+data_cropped = data.to_crs(cplt.ITM_EPSG).overlay(
+    gpd.GeoDataFrame(geometry=ie.buffer(12500))
+)
 
 # dissolve features
-data_cropped["name"] = "Ireland"
+data_cropped = data_cropped.dissolve()
 
-data_cropped = data_cropped.dissolve(by="name", as_index=False)
+data_cropped = data_cropped[["geometry"]]
+
+data_cropped
 
 data_cropped.plot(
     figsize=(8, 8),
@@ -83,17 +82,12 @@ data_cropped.plot(
 plt.tick_params(labelbottom=False, labelleft=False)
 plt.show()
 
-data_cropped.to_file(GPKG_BOUNDARY, layer="ne_10m_land_4326_IE")
-
-# Irish Transverse Mercator
-data_cropped.to_crs(2157, inplace=True)
-
-data_cropped
-
 data_cropped.to_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE")
 
 # bounding box
-ie_bound = gpd.GeoDataFrame(geometry=data_cropped.envelope.buffer(100000))
+ie_bound = gpd.GeoDataFrame(
+    geometry=data_cropped.envelope.buffer(100000).envelope
+)
 
 ie_bound
 
