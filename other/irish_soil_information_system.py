@@ -19,8 +19,6 @@ from matplotlib import ticker
 
 from climag.download_data import download_data
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 DATA_DIR = os.path.join("data", "soil")
 
 os.makedirs(DATA_DIR, exist_ok=True)

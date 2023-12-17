@@ -12,8 +12,6 @@ from datetime import datetime, timezone
 import matplotlib.pyplot as plt
 import pandas as pd
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 DATA_DIR = os.path.join("data", "grass-growth", "grass10", "grass10.ods")
 
 grass = pd.read_excel(DATA_DIR, parse_dates=["week"])

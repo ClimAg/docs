@@ -27,8 +27,6 @@ import pandas as pd
 
 from climag.modvege_run import run_modvege
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 DATA_DIR = os.path.join("data", "ModVege")
 
 # define the name of the input params file

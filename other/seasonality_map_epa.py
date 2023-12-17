@@ -31,7 +31,6 @@
 #   https://www.epa.ie/publications/research/climate-change/climate-change-impacts-on-phenology-implications-for-terrestrial-ecosystems.php
 #   (Accessed 19 August 2022).
 
-# import libraries
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
@@ -40,8 +39,6 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 from dask.distributed import Client
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 client = Client(n_workers=3, threads_per_worker=4, memory_limit="2GB")
 

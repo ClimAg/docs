@@ -4,7 +4,6 @@
 # # Seasonal stats - HiResIreland - Difference in (unbiased) standard deviation - historical and rcp45/rcp85
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -69,5 +68,3 @@ for season in season_list:
         levels=cstats.colorbar_levels(15),
         ticks=cstats.colorbar_ticks(15),
     )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

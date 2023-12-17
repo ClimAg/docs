@@ -5,7 +5,6 @@
 #
 # - Weighted means take into account the number of days in each month
 
-# import libraries
 import glob
 import importlib
 import itertools

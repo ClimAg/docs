@@ -4,7 +4,6 @@
 # # Subset EURO-CORDEX data for Ireland
 
 import glob
-# import libraries
 import os
 from datetime import datetime, timezone
 
@@ -17,8 +16,6 @@ import xarray as xr
 from dask.distributed import Client
 
 import climag.plot_configs as cplt
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 

@@ -6,7 +6,6 @@
 import glob
 import importlib
 import itertools
-# import libraries
 import os
 from datetime import datetime, timezone
 
@@ -23,12 +22,6 @@ import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
 
 importlib.reload(cplt)
-
-print("Last updated:", datetime.now(tz=timezone.utc))
-
-# client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
-
-# client
 
 # met station coords
 # Wexford,4015,ENNISCORTHY (Brownswood),18,297870,135550,1983,(null)

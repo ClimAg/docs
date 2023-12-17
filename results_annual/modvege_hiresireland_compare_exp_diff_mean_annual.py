@@ -6,7 +6,6 @@
 # - Weighted means take into account the number of days in each month
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -78,5 +77,3 @@ cstats.plot_all(
     levels=cstats.colorbar_levels(750),
     ticks=cstats.colorbar_ticks(750),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

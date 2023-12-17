@@ -4,7 +4,6 @@
 # # Annual/overall stats - EURO-CORDEX - Difference in (unbiased) standard deviation - historical and rcp45/rcp85
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -74,5 +73,3 @@ cstats.plot_all(
     levels=cstats.colorbar_levels(450),
     ticks=cstats.colorbar_ticks(450),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

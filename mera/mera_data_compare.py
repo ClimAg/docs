@@ -8,7 +8,6 @@
 # Conversion table for accumulated variables:
 # <https://confluence.ecmwf.int/pages/viewpage.action?pageId=197702790>
 
-# import libraries
 import glob
 import os
 from datetime import datetime, timezone
@@ -353,5 +352,3 @@ ax.coastlines(resolution="10m", color="darkslategrey", linewidth=0.75)
 ax.set_title(str(data_d.isel(time=90, height=0)["time"].values))
 plt.tight_layout()
 plt.show()
-
-print("Last updated:", datetime.now(tz=timezone.utc))

@@ -4,7 +4,6 @@
 # # Seasonal stats - EURO-CORDEX - Difference in minimum - historical and rcp45/rcp85
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -69,5 +68,3 @@ for season in season_list:
         levels=cstats.colorbar_levels(45),
         ticks=cstats.colorbar_ticks(45),
     )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

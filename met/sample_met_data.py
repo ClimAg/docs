@@ -12,8 +12,6 @@ from datetime import datetime, timezone
 import pandas as pd
 import pooch
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 DATA_DRIVE = "data"
 URL = "https://cli.fusio.net/cli/climate_data/webdata/dly2275.csv"
 SUB_DIR = os.path.join(DATA_DRIVE, "met", "MetEireann")

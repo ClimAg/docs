@@ -3,7 +3,6 @@
 
 # # Compare climate model dataset simulated values with measured averages - EURO-CORDEX
 
-# import libraries
 import importlib
 import os
 from datetime import datetime, timezone

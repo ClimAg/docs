@@ -16,7 +16,6 @@
 #
 # [DOI]: https://doi.org/10.1016/j.agrformet.2003.09.010
 
-# import libraries
 import os
 from datetime import datetime, timezone
 
@@ -25,8 +24,6 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 
 import climag.plot_configs as cplt
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 # define data path
 DATA_DIR = os.path.join(

@@ -52,7 +52,6 @@
 #   - netcdf4
 #   - cfgrib
 
-# import libraries
 import os
 from datetime import date, datetime, timezone
 
@@ -297,5 +296,3 @@ plt.ylabel("Temperature [°C]")
 plt.title(f"MERA_FC3hr, lon={LON}, lat={LAT}")
 plt.tight_layout()
 plt.show()
-
-print("Last updated:", datetime.now(tz=timezone.utc))

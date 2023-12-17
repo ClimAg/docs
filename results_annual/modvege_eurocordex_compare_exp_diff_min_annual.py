@@ -4,7 +4,6 @@
 # # Annual/overall stats - EURO-CORDEX - Difference in minimum - historical and rcp45/rcp85
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -64,5 +63,3 @@ cstats.plot_all(
     levels=cstats.colorbar_levels(1500),
     ticks=cstats.colorbar_ticks(1500),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

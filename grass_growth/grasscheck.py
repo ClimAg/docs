@@ -22,8 +22,6 @@ from datetime import datetime, timezone
 import matplotlib.pyplot as plt
 import pandas as pd
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 DATA_DIR = os.path.join(
     "data", "grass_growth", "GrassCheckNI", "grasscheck.ods"
 )
@@ -114,16 +112,10 @@ grass_ts.plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(
-#     os.path.join("data", "grass_growth", "GrassCheckNI", "boxplot.png")
-# )
 plt.show()
 
 grass_ts.diff().hist(figsize=(6, 8), bins=50, grid=False)
 plt.tight_layout()
-# plt.savefig(
-#     os.path.join("data", "grass_growth", "GrassCheckNI", "diff_hist.png")
-# )
 plt.show()
 
 grass_ts_ = grass_ts.melt(ignore_index=False).rename(
@@ -228,7 +220,4 @@ grass_out[[f"{county}_mn" for county in counties]].plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(
-#     os.path.join("data", "grass_growth", "GrassCheckNI", "boxplot.png")
-# )
 plt.show()

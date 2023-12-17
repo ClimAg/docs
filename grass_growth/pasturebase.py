@@ -119,11 +119,6 @@ grass_ts.plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(
-#     os.path.join(
-#         "data", "grass_growth", "PastureBaseIreland", "boxplot_outliers.png"
-#     )
-# )
 plt.show()
 
 # ## Time series
@@ -229,11 +224,6 @@ grass_piv.plot.box(
 plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
-# plt.savefig(
-#     os.path.join(
-#         "data", "grass_growth", "PastureBaseIreland", "boxplot_outliers.png"
-#     )
-# )
 plt.show()
 
 grass_filter = grass_filter.rename(columns={"variable": "county"})
@@ -242,8 +232,6 @@ grass_filter.to_csv(
         "data", "grass_growth", "PastureBaseIreland", "pasturebase_cleaned.csv"
     )
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 ### Using boxplot stats
 
@@ -271,16 +259,10 @@ print("Last updated:", datetime.now(tz=timezone.utc))
 # plt.xticks(rotation="vertical")
 # plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 # plt.tight_layout()
-# # plt.savefig(
-# #     os.path.join("data", "grass_growth", "PastureBaseIreland", "boxplot.png")
-# # )
 # plt.show()
 
 # grass_out.diff().hist(figsize=(15, 18), bins=50, grid=False)
 # plt.tight_layout()
-# plt.savefig(
-#     os.path.join("data", "grass_growth", "PastureBaseIreland", "diff_hist.png")
-# )
 # plt.show()
 
 ### Filtering outliers using 3-week moving average

@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - EURO-CORDEX - Difference in min - historical and observational (MÉRA)
+# # Seasonal stats - EURO-CORDEX - Difference in maximum - historical and observational (MÉRA)
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 
-data = cstats.hist_obs_diff(stat="min", dataset="EURO-CORDEX")
+data = cstats.hist_obs_diff(stat="max", dataset="EURO-CORDEX")
 
 importlib.reload(cstats)
 
@@ -22,8 +21,8 @@ for season in season_list:
         data=data["MERA_s_diff"],
         var="gro",
         season=season,
-        levels=cstats.colorbar_levels(15),
-        ticks=cstats.colorbar_ticks(15),
+        levels=cstats.colorbar_levels(100),
+        ticks=cstats.colorbar_ticks(100),
     )
 
 # ## Potential growth (daily)
@@ -33,8 +32,8 @@ for season in season_list:
         data=data["MERA_s_diff"],
         var="pgro",
         season=season,
-        levels=cstats.colorbar_levels(32),
-        ticks=cstats.colorbar_ticks(32),
+        levels=cstats.colorbar_levels(150),
+        ticks=cstats.colorbar_ticks(150),
     )
 
 # ## Total ingestion (daily)
@@ -44,8 +43,8 @@ for season in season_list:
         data=data["MERA_s_diff"],
         var="c_bm",
         season=season,
-        levels=cstats.colorbar_levels(22.5),
-        ticks=cstats.colorbar_ticks(22.5),
+        levels=cstats.colorbar_levels(12.5),
+        ticks=cstats.colorbar_ticks(12.5),
     )
 
 # ## Standing biomass (cumulative)
@@ -55,8 +54,8 @@ for season in season_list:
         data=data["MERA_s_diff"],
         var="bm",
         season=season,
-        levels=cstats.colorbar_levels(1250),
-        ticks=cstats.colorbar_ticks(1250),
+        levels=cstats.colorbar_levels(3000),
+        ticks=cstats.colorbar_ticks(3000),
     )
 
 # ## Defoliation (senescence + abscission) (daily)
@@ -66,8 +65,8 @@ for season in season_list:
         data=data["MERA_s_diff"],
         var="sen_abs",
         season=season,
-        levels=cstats.colorbar_levels(30),
-        ticks=cstats.colorbar_ticks(30),
+        levels=cstats.colorbar_levels(150),
+        ticks=cstats.colorbar_ticks(150),
     )
 
 # ## Total biomass consumption (ingested + harvested) (yearly total)
@@ -76,8 +75,6 @@ cstats.plot_obs_diff_all(
     data=data["MERA_c_diff"],
     var="c_bm_all",
     season=None,
-    levels=cstats.colorbar_levels(3200),
-    ticks=cstats.colorbar_ticks(3200),
+    levels=cstats.colorbar_levels(4000),
+    ticks=cstats.colorbar_ticks(4000),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

@@ -15,8 +15,6 @@ from matplotlib import ticker
 
 import climag.plot_configs as cplt
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 # ## Met Éireann stations
 #
 # - Station details can be found here:
@@ -184,9 +182,6 @@ stations_ni.to_crs(ie.crs).plot(
     ax=base, color="crimson", markersize=5, label="Met Office"
 )
 
-# base.xaxis.set_major_formatter(cplt.longitude_tick_format)
-# base.yaxis.set_major_formatter(cplt.latitude_tick_format)
-# base.yaxis.set_major_locator(ticker.MultipleLocator(1))
 base.tick_params(labelbottom=False, labelleft=False)
 
 plt.title("Meteorological stations in the Island of Ireland")

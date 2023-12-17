@@ -5,7 +5,6 @@
 
 import glob
 import itertools
-# import libraries
 import os
 from datetime import datetime, timezone
 
@@ -18,8 +17,6 @@ from dask.distributed import Client
 
 import climag.plot_configs as cplt
 import climag.plot_facet_maps as cfacet
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 client = Client(n_workers=2, threads_per_worker=4, memory_limit="3GB")
 

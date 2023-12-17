@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# # Severity index
+
 import os
 
 import geopandas as gpd

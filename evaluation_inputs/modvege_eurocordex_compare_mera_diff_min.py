@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # ModVege results - HiResIreland - Difference in min - historical and observational (MÉRA)
+# # ModVege results - EURO-CORDEX - Difference in min - historical and observational (MÉRA)
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 
-data = cstats.hist_obs_diff(stat="min", dataset="HiResIreland")
+data = cstats.hist_obs_diff(stat="min", dataset="EURO-CORDEX")
 
 importlib.reload(cstats)
 
@@ -79,5 +78,3 @@ cstats.plot_obs_diff_all(
     levels=cstats.colorbar_levels(3200),
     ticks=cstats.colorbar_ticks(3200),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

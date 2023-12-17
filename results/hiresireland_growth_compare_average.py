@@ -3,7 +3,6 @@
 
 # # Compare climate model dataset simulated values with measured averages - HiResIreland
 
-# import libraries
 import importlib
 import os
 from datetime import datetime, timezone

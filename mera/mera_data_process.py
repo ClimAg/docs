@@ -3,7 +3,6 @@
 
 # # Met Éireann Reanalysis - create input data for ModVege
 
-# import libraries
 import glob
 import os
 from datetime import datetime, timezone
@@ -250,5 +249,3 @@ plt.plot(ds_interp["time"], ds_interp["T"])
 plt.title(f"{ds['T'].attrs['long_name']} [{ds['T'].attrs['units']}]")
 plt.tight_layout()
 plt.show()
-
-print("Last updated:", datetime.now(tz=timezone.utc))

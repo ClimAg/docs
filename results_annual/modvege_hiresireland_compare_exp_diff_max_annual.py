@@ -4,7 +4,6 @@
 # # Annual/overall stats - HiResIreland - Difference in maximum - historical and rcp45/rcp85
 
 import importlib
-# import libraries
 from datetime import datetime, timezone
 
 import climag.plot_stats as cstats
@@ -70,5 +69,3 @@ cstats.plot_all(
     levels=cstats.colorbar_levels(900),
     ticks=cstats.colorbar_ticks(900),
 )
-
-print("Last updated:", datetime.now(tz=timezone.utc))

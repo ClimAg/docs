@@ -3,7 +3,6 @@
 
 # # Met Éireann Reanalysis - dealing with missing data
 
-# import libraries
 import glob
 import os
 from datetime import datetime, timezone

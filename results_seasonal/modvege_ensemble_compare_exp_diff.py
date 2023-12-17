@@ -10,7 +10,6 @@ import importlib
 import itertools
 import os
 import sys
-# import libraries
 from datetime import datetime, timezone
 
 import geopandas as gpd

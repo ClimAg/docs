@@ -10,7 +10,6 @@
 # - <https://gallery.pangeo.io/repos/pangeo-data/pangeo-tutorial-gallery/intake.html>
 # - <https://intake.readthedocs.io/>
 
-# import libraries
 import json
 import os
 from datetime import datetime, timezone
@@ -22,8 +21,6 @@ import numpy as np
 import pooch
 
 import climag.plot_configs as cplt
-
-print("Last updated:", datetime.now(tz=timezone.utc))
 
 DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX")
 

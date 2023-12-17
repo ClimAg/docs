@@ -5,7 +5,6 @@
 #
 # Derive evapotranspiration using the FAO Penman-Monteith equation
 
-# import libraries
 import glob
 import os
 from datetime import datetime, timezone
@@ -420,5 +419,3 @@ eto.rio.write_crs(data_crs, inplace=True)
 plot_map(eto, "PET", "BrBG_r")
 
 plot_ts(eto, "PET")
-
-print("Last updated:", datetime.now(tz=timezone.utc))

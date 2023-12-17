@@ -10,8 +10,6 @@ import numpy as np
 import pandas as pd
 import pooch
 
-print("Last updated:", datetime.now(tz=timezone.utc))
-
 # DATA_DRIVE = "/run/media/nms/Elements"
 DATA_DRIVE = "data"
 
