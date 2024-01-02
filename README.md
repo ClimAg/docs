@@ -1,28 +1,46 @@
-# jupyter-notebooks
+# ClimAg docs
 
-Jupyter notebooks for the [ClimAg](https://www.ucc.ie/en/eel/projects/climag/) research project
+[![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/en/latest/?badge=latest)
 
-This research was funded by the Environmental Protection Agency (EPA), Ireland
-project "ClimAg: Multifactorial causes of fodder crises in Ireland and risks
-due to climate change" under the Climate Change Research Programme grant
-number 2018-CCRP-MS.50.
+Documentation and Jupyter notebooks for the ClimAg research project.
+Available at: <https://climag.readthedocs.io/>.
 
-## Python environment
+ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/).
 
-Create a Conda environment:
+## Installation
+
+This project uses Conda with Python 3.10.
+Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. CDO) are unavailable for Windows.
+
+Create a virtual environment and install all requirements:
 
 ```sh
 conda env create
+```
+
+Activate the virtual environment:
+
+```sh
 conda activate ClimAg
 ```
 
-To update the environment:
+To run tests:
+
+```sh
+python -m pytest
+```
+
+To generate a coverage report with the tests:
+
+```sh
+python -m coverage run -m pytest && coverage report -m
+```
+
+To update the virtual environment:
 
 ```sh
 conda env update --name ClimAg --file environment.yml
 ```
-
-Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. cdo) are unavailable for Windows.
 
 ## Licence
 
