@@ -21,6 +21,12 @@ cat -s $f > $f.txt
 mv $f.txt $f
 done
 
+# format scripts
+black -l 79 **/*.py
+
+# sort imports
+isort **/*.py
+
 # delete existing Python scripts
 rm -r ../draft/nb
 mkdir ../draft/nb
@@ -30,9 +36,3 @@ mkdir ../draft/nb
 cp **/*.py --parents ../draft/nb
 
 cd ..
-
-# format scripts
-black -l 79 **/*.py
-
-# sort imports
-isort **/*.py
