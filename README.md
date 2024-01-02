@@ -1,6 +1,9 @@
-# jupyter-notebooks
+# ClimAg docs
 
-Jupyter notebooks for the [ClimAg](https://www.ucc.ie/en/eel/projects/climag/) research project
+[![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/en/latest/?badge=latest)
+
+Documentation and Jupyter notebooks for the ClimAg research project.
+Available at: <https://climag.readthedocs.io/>
 
 This research was funded by the Environmental Protection Agency (EPA), Ireland
 project "ClimAg: Multifactorial causes of fodder crises in Ireland and risks

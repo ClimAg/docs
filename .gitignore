@@ -137,3 +137,7 @@ draft/
 *.jpeg
 *.ipynb
 graphics/
+_build/
+_static/
+_templates/
+*.rst

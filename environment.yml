@@ -33,3 +33,5 @@ dependencies:
   - black-jupyter
   - jupyterlab
   - qgis
+  - pydata-sphinx-theme
+  - myst-nb
