@@ -44,6 +44,7 @@ exclude_patterns = [
     "climate_data",
     "evaluation",
     "evaluation_inputs",
+    "grass_growth",
     "land_cover",
     "mera",
     "met",

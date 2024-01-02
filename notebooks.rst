@@ -6,7 +6,6 @@ Notebooks
    :maxdepth: 2
    :caption: Contents:
 
-   agricultural_census/*
-   boundaries/*
-   grass_growth/*
-   soil/*
+   boundaries/boundaries
+   agricultural_census/agricultural_census
+   soil/soil
