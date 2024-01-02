@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd jupyter-notebooks
+cd docs
 git checkout ipynb
 
 # jupyter nbconvert --sanitize-html --to notebook --inplace */*.ipynb
