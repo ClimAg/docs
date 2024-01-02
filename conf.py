@@ -39,6 +39,18 @@ exclude_patterns = [
     ".gitignore",
     "README.md",
     "LICENCE.txt",
+    "graphics",
+    "other",
+    "climate_data",
+    "evaluation",
+    "evaluation_inputs",
+    "land_cover",
+    "mera",
+    "met",
+    "modvege",
+    "results",
+    "results_annual",
+    "results_seasonal",
 ]
 
 # -- Options for HTML output -------------------------------------------------

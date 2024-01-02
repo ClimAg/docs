@@ -10,7 +10,7 @@ Welcome to ClimAg's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   notebooks
 
 Indices and tables
 ==================
