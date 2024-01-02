@@ -138,3 +138,5 @@ draft/
 *.jpeg
 *.py
 graphics/
+!conf.py
+_build/
