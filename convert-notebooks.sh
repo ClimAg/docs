@@ -1,4 +1,4 @@
-cd jupyter-notebooks
+cd docs
 
 git checkout main
 
@@ -8,4 +8,4 @@ rm */*.py
 cd ../draft/nb/
 
 # https://stackoverflow.com/a/63841503
-cp **/*.py --parents ../../jupyter-notebooks
+cp **/*.py --parents ../../docs
