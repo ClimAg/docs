@@ -5,8 +5,8 @@ Boundaries
    :maxdepth: 1
    :caption: Contents:
 
-   nuts_ireland
-   ordnance_survey
-   naturalearth
-   roi_electoral_divisions
-   ni_wards
+   boundaries_nuts_ireland
+   boundaries_ordnance_survey
+   boundaries_naturalearth
+   boundaries_roi_electoral_divisions
+   boundaries_ni_wards
