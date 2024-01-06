@@ -33,7 +33,7 @@ People
 Links
 -----
 
-- `GitHub organisation <https://github.com/ClimAg>`_
+- GitHub: https://github.com/ClimAg
 - `Landing page <https://www.ucc.ie/en/eel/projects/climag/>`_
 - `Twitter <https://twitter.com/climatt_project>`_
 - `Bibliography <https://www.zotero.org/groups/4706660/climag/library>`_

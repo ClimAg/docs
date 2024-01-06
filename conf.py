@@ -17,7 +17,10 @@ author = "Nithiya Streethran"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autodoc", "myst_nb"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "myst_nb",
+]
 
 # disable sorting of functions by alphabetical order
 autodoc_member_order = "bysource"
@@ -25,7 +28,8 @@ autodoc_member_order = "bysource"
 # do not execute Jupyter notebooks
 nb_execution_mode = "off"
 
-templates_path = ["_templates"]
+# templates_path = ["_templates"]
+
 exclude_patterns = [
     "_build",
     "Thumbs.db",
@@ -39,6 +43,8 @@ exclude_patterns = [
     ".gitignore",
     "README.md",
     "LICENCE.txt",
+    "requirements.txt",
+    ".readthedocs.yaml",
     "graphics",
     "other",
     "climate_data",
@@ -58,7 +64,8 @@ exclude_patterns = [
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "pydata_sphinx_theme"
-html_static_path = ["_static"]
+
+# html_static_path = ["_static"]
 
 html_theme_options = {
     "icon_links": [
