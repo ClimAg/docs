@@ -128,15 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-## Other
 draft/
-.vscode/
 *test/
 *.access*
 *.png
 *.jpg
 *.jpeg
-*.py
 graphics/
-!conf.py
 _build/

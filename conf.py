@@ -45,6 +45,7 @@ exclude_patterns = [
     "LICENCE.txt",
     "requirements.txt",
     ".readthedocs.yaml",
+    "methods",
     "graphics",
     "other",
     "climate_data",
