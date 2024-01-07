@@ -13,3 +13,5 @@ ModVege has four compartments:
    :caption: Contents:
 
    data/input_parameters
+   data/input_meteorology
+   data/variables_time_series

@@ -1,8 +1,22 @@
 Input parameters
 ================
 
+See Tables 2 and 3 in [#Jouven]_ for estimates of the input
+parameters. Temperate grasses have been classified into four groups based
+on their functional traits. The four groups have been parameterised for
+the Auvergne region in France, which has a temperate climate.
+
+Functional group A is relevant to Ireland: Species found in fertile sites,
+adapted to frequent defoliation **perennial ryegrass** (*Lolium perenne*);
+has high specific leaf area, high digestibility, short leaf lifespan,
+early reproductive growth and flowering.
+
+The nutritional index (NI) is site-specific.
+
 Variables
 ---------
+
+These vary spatially.
 
 .. csv-table::
    :header: Variable, Description, Units
@@ -19,6 +33,10 @@ Variables
    ni; Nitrogen nutritional index
    whc; Soil water-holding capacity (:math:`WHC`); mm
    sr; Stocking rate
+   st_h1; Sum of temperatures at the beginning of the harvest; °C d
+   st_g2; Sum of temperatures at the end of the grazing season; °C d
+   st_1; Sum of temperatures at the beginning of the reproductive period; °C d
+   st_2; Sum of temperatures at the end of the reproductive period; °C d
 
 Constants
 ---------
@@ -55,3 +73,12 @@ Constants
    omd_dv; Organic matter digestibility for the dead vegetative compartment (OMD_DV); 0.45
    omd_dr; Organic matter digestibility for the dead reproductive compartment (OMD_DR); 0.40
    i_bm_lu; Maximum biomass ingestion per livestock unit; 13; kg DM LU⁻¹
+
+References
+----------
+
+.. [#Jouven] Jouven, M., Carrère, P., and Baumont, R. (2006). ‘Model
+   predicting dynamics of biomass, structure and digestibility of herbage in
+   managed permanent pastures. 1. Model description’, Grass and Forage
+   Science, 61(2), pp. 112–124.
+   https://doi.org/10.1111/j.1365-2494.2006.00515.x.
