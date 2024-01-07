@@ -10,4 +10,4 @@ Notebooks
    land_cover/land_cover
    agricultural_census/agricultural_census
    soil/soil
-   met/met_data
+   climate_data/climate_data
