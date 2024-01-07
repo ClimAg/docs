@@ -50,7 +50,6 @@ exclude_patterns = [
     "other",
     "evaluation",
     "evaluation_inputs",
-    "grass_growth",
     "modvege",
     "results",
     "results_annual",
