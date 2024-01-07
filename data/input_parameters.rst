@@ -1,6 +1,9 @@
 Input parameters
 ================
 
+.. note::
+   This page is still being worked on, so there may be some incomplete items.
+
 See Tables 2 and 3 in [#Jouven]_ for estimates of the input
 parameters. Temperate grasses have been classified into four groups based
 on their functional traits. The four groups have been parameterised for

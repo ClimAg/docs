@@ -1,6 +1,10 @@
 Methods
 =======
 
+.. note::
+   Coming soon. For now, please see the source code available at:
+   https://github.com/ClimAg/ClimAg.
+
 .. .. toctree::
 ..    :maxdepth: 1
 ..    :caption: Contents:

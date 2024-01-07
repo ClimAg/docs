@@ -1,6 +1,9 @@
 Time series variables
 =====================
 
+.. note::
+   This page is still being worked on, so there may be some incomplete items.
+
 .. csv-table::
    :header: Variable, Description, Units
    :delim: ;
