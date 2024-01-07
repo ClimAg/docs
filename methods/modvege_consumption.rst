@@ -1,5 +1,5 @@
-`climag.modvege_consumption`
-============================
+climag.modvege_consumption
+==========================
 
 .. automodule:: climag.modvege_consumption
    :members:

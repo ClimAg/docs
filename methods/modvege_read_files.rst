@@ -1,5 +1,5 @@
-`climag.modvege_read_files`
-===========================
+climag.modvege_read_files
+=========================
 
 .. automodule:: climag.modvege_read_files
    :members:
