@@ -12,3 +12,4 @@ Notebooks
    grass_growth/grass_growth
    agricultural_census/agricultural_census
    soil/soil
+   evaluation/evaluation

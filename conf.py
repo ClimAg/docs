@@ -18,12 +18,12 @@ author = "Nithiya Streethran"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc",
     "myst_nb",
 ]
 
 # disable sorting of functions by alphabetical order
-autodoc_member_order = "bysource"
+# autodoc_member_order = "bysource"
 
 # do not execute Jupyter notebooks
 nb_execution_mode = "off"
@@ -46,10 +46,7 @@ exclude_patterns = [
     "requirements.txt",
     ".readthedocs.yaml",
     "methods",
-    "graphics",
     "other",
-    "evaluation",
-    "evaluation_inputs",
     "modvege",
     "results",
     "results_annual",
