@@ -52,6 +52,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   data
    methods
    notebooks
 
