@@ -51,7 +51,6 @@ exclude_patterns = [
     "evaluation",
     "evaluation_inputs",
     "grass_growth",
-    "land_cover",
     "mera",
     "modvege",
     "results",
