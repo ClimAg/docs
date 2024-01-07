@@ -7,7 +7,7 @@ Notebooks
    :caption: Contents:
 
    boundaries/boundaries
-   agricultural_census/agricultural_census
    land_cover/land_cover
+   agricultural_census/agricultural_census
    soil/soil
    met/met_data
