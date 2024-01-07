@@ -3,14 +3,6 @@
 cd docs
 git checkout ipynb
 
-# jupyter nbconvert --sanitize-html --to notebook --inplace */*.ipynb
-
-# format notebooks
-black -l 79 */*.ipynb
-
-# sort imports
-isort */*.ipynb
-
 # convert Jupyter Notebooks to Python scripts
 jupyter nbconvert --to script */*.ipynb
 
@@ -20,19 +12,3 @@ do sed -i -e '/^# In\[/d' $f
 cat -s $f > $f.txt
 mv $f.txt $f
 done
-
-# format scripts
-black -l 79 **/*.py
-
-# sort imports
-isort **/*.py
-
-# delete existing Python scripts
-rm -r ../draft/nb
-mkdir ../draft/nb
-
-# copy files to temporary directory
-# https://unix.stackexchange.com/a/132601
-cp **/*.py --parents ../draft/nb
-
-cd ..
