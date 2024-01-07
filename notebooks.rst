@@ -12,4 +12,5 @@ Notebooks
    grass_growth/grass_growth
    agricultural_census/agricultural_census
    soil/soil
+   modvege/modvege_results
    evaluation/evaluation
