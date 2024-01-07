@@ -9,3 +9,4 @@ Notebooks
    boundaries/boundaries
    agricultural_census/agricultural_census
    soil/soil
+   met/met_data
