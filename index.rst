@@ -53,6 +53,7 @@ Contents
    :maxdepth: 2
 
    data
+   methods
    notebooks
 
 Indices and tables
