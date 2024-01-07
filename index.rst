@@ -52,6 +52,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   methods
    notebooks
 
 Indices and tables
