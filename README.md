@@ -1,6 +1,6 @@
 # ClimAg docs
 
-[![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/?badge=latest)
 
 Documentation and Jupyter notebooks for the ClimAg research project.
 Available at: <https://climag.readthedocs.io/>.
