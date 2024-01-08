@@ -47,10 +47,6 @@ exclude_patterns = [
     ".readthedocs.yaml",
     "methods",
     "other",
-    "modvege",
-    "results",
-    "results_annual",
-    "results_seasonal",
 ]
 
 # -- Options for HTML output -------------------------------------------------
