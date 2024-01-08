@@ -1,6 +1,5 @@
 #!/bin/sh
 
-cd docs
 git checkout ipynb
 
 # convert Jupyter Notebooks to Python scripts
