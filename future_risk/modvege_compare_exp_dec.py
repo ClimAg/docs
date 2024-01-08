@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Grass cover compared to baseline - December
-# 
+#
 # - Weighted means take into account the number of days in each month
 
 import glob
@@ -10,16 +10,19 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+
 import climag.climag as cplt
 from climag import climag_plot
 
 exp_list = ["historical", "rcp45", "rcp85"]
 model_list = ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]
 dataset_list = ["EURO-CORDEX", "HiResIreland"]
+
 
 def keep_minimal_vars(data):
     """
@@ -56,6 +59,7 @@ def keep_minimal_vars(data):
 
     return data
 
+
 def combine_datasets(dataset_dict, dataset_crs):
     dataset = xr.combine_by_coords(
         dataset_dict.values(), combine_attrs="override"
@@ -63,6 +67,7 @@ def combine_datasets(dataset_dict, dataset_crs):
     dataset.rio.write_crs(dataset_crs, inplace=True)
 
     return dataset
+
 
 def mean_wgt(ds, months):
     ds_m = ds.sel(time=ds["time"].dt.month.isin(months))
@@ -82,6 +87,7 @@ def mean_wgt(ds, months):
     ds_m = (ds_m * weights).groupby("time.year").sum(dim="time")
 
     return ds_m
+
 
 def reduce_dataset(dataset):
     ds = {}
@@ -175,6 +181,7 @@ def reduce_dataset(dataset):
         ds_son,
         ds_son_lta,
     )  # ds_jja, ds_mam
+
 
 # mask out non-pasture areas
 mask_layer = gpd.read_file(
@@ -471,4 +478,3 @@ for axis in fig.axs.flat:
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
 plt.show()
-

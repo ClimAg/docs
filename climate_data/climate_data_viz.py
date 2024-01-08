@@ -3,19 +3,20 @@
 
 # # Visualising climate model datasets
 
-import os
 import glob
 import itertools
-import numpy as np
+import os
 from datetime import datetime, timezone
+
+import cartopy.crs as ccrs
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+import seaborn as sns
 import xarray as xr
 
 import climag.climag as cplt
-import cartopy.crs as ccrs
-import seaborn as sns
 from climag import climag_plot
 
 # met station coords
@@ -206,4 +207,3 @@ for var in varlist:
     )
     plt.tight_layout()
     plt.show()
-

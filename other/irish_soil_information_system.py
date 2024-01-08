@@ -2,19 +2,21 @@
 # coding: utf-8
 
 # # Irish soil information system
-# 
+#
 # <http://gis.teagasc.ie/soils/index.php>
 
 import json
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
+
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 from matplotlib import ticker
+
 from climag.modvege_read_files import download_data
 
 DATA_DIR = os.path.join("data", "soil")
@@ -325,4 +327,3 @@ plt.show()
 soil_map_merged.to_file(
     os.path.join(DATA_DIR, "soil.gpkg"), layer="soil_nitrogen_assoc_max"
 )
-

@@ -4,9 +4,10 @@
 # # Agricultural census data for the Island of Ireland
 
 import os
+
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-import geopandas as gpd
 
 # ## ROI data
 
@@ -350,4 +351,3 @@ data.to_file(
     os.path.join("data", "agricultural_census", "agricultural_census.gpkg"),
     layer="stocking_rate",
 )
-

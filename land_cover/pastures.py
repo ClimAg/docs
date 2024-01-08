@@ -4,6 +4,7 @@
 # # Vector layer to mask out non-pasture areas
 
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 
@@ -34,4 +35,3 @@ ie_.to_file(
     os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="CLC_2018_MASK_PASTURE_2157_IE",
 )
-

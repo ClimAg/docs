@@ -3,18 +3,19 @@
 
 # # Subset EURO-CORDEX data for Ireland
 
-import os
 import glob
+import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
-import xarray as xr
-from climag import climag
+import pandas as pd
 import seaborn as sns
-from climag import climag_plot
+import xarray as xr
+
+from climag import climag, climag_plot
 
 DATA_DIR_BASE = os.path.join("/run/media/nms/MyPassport/EURO-CORDEX")
 
@@ -372,4 +373,3 @@ for ax, var in zip(axs.flat, data_ie.data_vars):
     ax.set(yticklabels=[])
 plt.tight_layout()
 plt.show()
-

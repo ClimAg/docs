@@ -2,20 +2,20 @@
 # coding: utf-8
 
 # # CORINE land cover 2018 data
-# 
+#
 # <https://land.copernicus.eu/pan-european/corine-land-cover/clc2018>
 
 import os
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
-
-import xml.etree.ElementTree as ET
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import rioxarray as rxr
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
+
 import climag.climag as cplt
 
 # define data directories
@@ -283,4 +283,3 @@ plt.show()
 pasture.to_file(
     os.path.join(DATA_DIR_BASE, "clc-2018-pasture.gpkg"), layer="dissolved"
 )
-

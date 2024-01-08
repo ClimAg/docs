@@ -2,26 +2,29 @@
 # coding: utf-8
 
 # # Ensemble stats - Difference in (weighted) mean - historical and rcp45/rcp85
-# 
+#
 # - Weighted means take into account the number of days in each month
 
-from datetime import datetime, timezone
-from climag import climag_plot
-import xarray as xr
-import matplotlib.pyplot as plt
-import climag.climag as cplt
 import glob
 import itertools
 import os
 import sys
-import numpy as np
+from datetime import datetime, timezone
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
+
+import climag.climag as cplt
+from climag import climag_plot
 
 season_list = ["DJF", "MAM", "JJA", "SON"]
 exp_list = ["historical", "rcp45", "rcp85"]
 model_list = ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]
 dataset_list = ["EURO-CORDEX", "HiResIreland"]
 stat_list = ["mean", "std", "max", "min"]
+
 
 def keep_minimal_vars(data):
     """
@@ -58,6 +61,7 @@ def keep_minimal_vars(data):
 
     return data
 
+
 def combine_datasets(dataset_dict, dataset_crs):
     dataset = xr.combine_by_coords(
         dataset_dict.values(), combine_attrs="override"
@@ -65,6 +69,7 @@ def combine_datasets(dataset_dict, dataset_crs):
     dataset.rio.write_crs(dataset_crs, inplace=True)
 
     return dataset
+
 
 def generate_stats(dataset, stat, var):
     ds = {}
@@ -195,11 +200,13 @@ def generate_stats(dataset, stat, var):
 
     return ds
 
+
 # mask out non-pasture areas
 mask = gpd.read_file(
     os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="CLC_2018_MASK_PASTURE_2157_IE",
 )
+
 
 def plot_diff(data, var, levels):
     if var == "gro":
@@ -263,6 +270,7 @@ def plot_diff(data, var, levels):
     fig.set_titles("{value}", weight="semibold", fontsize=14)
     plt.show()
 
+
 def calculate_diff(data):
     data_out = xr.combine_by_coords(
         [
@@ -275,6 +283,7 @@ def calculate_diff(data):
         ]
     )
     return data_out
+
 
 # ## Mean growth
 
@@ -301,4 +310,3 @@ hiresireland = generate_stats("HiResIreland", "mean", "prod")
 hiresireland_diff = calculate_diff(hiresireland)
 
 plot_diff(hiresireland_diff, "prod", 450)
-

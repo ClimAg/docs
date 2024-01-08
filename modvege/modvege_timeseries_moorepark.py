@@ -3,15 +3,17 @@
 
 # # ModVege results - Moorepark time series distribution
 
-import os
 import glob
 import itertools
-import numpy as np
+import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import xarray as xr
+
 import climag.climag_plot as cplt
 
 # met station coords
@@ -115,4 +117,3 @@ for var in varlist:
     )
     plt.tight_layout()
     plt.show()
-

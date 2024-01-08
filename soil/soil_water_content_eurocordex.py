@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Soil water-holding capacity - gridded for EURO-CORDEX
-# 
+#
 # European soil database derived data - total available water content (TAWC)
 # for the topsoil [mm] (European Commission, n.d.; Hiederer, 2013a;
 # Hiederer, 2013b):
@@ -10,8 +10,9 @@
 
 import os
 from zipfile import BadZipFile, ZipFile
-import matplotlib.pyplot as plt
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
 import rioxarray as rxr
 from rasterstats import zonal_stats
 
@@ -199,4 +200,3 @@ grid_cells.head()
 grid_cells.to_file(
     os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
 )
-

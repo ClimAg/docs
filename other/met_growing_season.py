@@ -5,15 +5,16 @@
 
 import os
 from datetime import datetime, timezone
+
+import numpy as np
 import pandas as pd
 import pooch
-import numpy as np
 
 # DATA_DRIVE = "/run/media/nms/Elements"
 DATA_DRIVE = "data"
 
 # ## Valentia Observatory, Co. Kerry
-# 
+#
 # <https://data.gov.ie/dataset/valentia-observatory-daily-data>
 
 URL = "https://cli.fusio.net/cli/climate_data/webdata/dly2275.csv"
@@ -89,7 +90,7 @@ np.mean(st_1_list)
 np.mean(st_2_list)
 
 # ## Shannon Airport, Co. Clare
-# 
+#
 # <https://data.gov.ie/dataset/shannon-airport-daily-data>
 
 URL = "https://cli.fusio.net/cli/climate_data/webdata/dly518.csv"
@@ -162,7 +163,7 @@ np.mean(st_1_list)
 np.mean(st_2_list)
 
 # ## Rosslare, Co. Wexford
-# 
+#
 # <https://data.gov.ie/dataset/rosslare-daily-data>
 
 URL = "https://cli.fusio.net/cli/climate_data/webdatac/dly2615.csv"
@@ -239,4 +240,3 @@ st_2_list
 np.mean(st_1_list)
 
 np.mean(st_2_list)
-

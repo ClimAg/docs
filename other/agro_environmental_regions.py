@@ -2,25 +2,27 @@
 # coding: utf-8
 
 # # Agro-environmental regions in Ireland
-# 
+#
 # Agro-environmental regions described in Holden and Brereton (2004) derived
 # from February rainfall data
-# 
+#
 # A screenshot of the map in the paper was taken and georeferenced into vector
 # data
-# 
+#
 # Holden, N. M. and Brereton, A. J. (2004). 'Definition of agroclimatic regions
 # in Ireland using hydro-thermal and crop yield data', Agricultural and Forest
 # Meteorology, vol. 122, no. 3, pp. 175-191. DOI:
 # [10.1016/j.agrformet.2003.09.010][DOI].
-# 
+#
 # [DOI]: https://doi.org/10.1016/j.agrformet.2003.09.010
 
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib import ticker
+
 import climag.plot_configs as cplt
 
 # define data path
@@ -61,4 +63,3 @@ data.boundary.plot(ax=ax, color="darkslategrey", linewidth=0.5)
 plt.text(-7, 51.3, "Holden and Brereton (2004)")
 plt.title("Agro-environmental regions in Ireland")
 plt.show()
-

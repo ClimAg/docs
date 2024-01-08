@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Grass growth anomalies - autumn growth
-# 
+#
 # - Weighted means take into account the number of days in each month
 
 import glob
@@ -11,10 +11,12 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+
 import climag.climag as cplt
 from climag import climag_plot
 
@@ -23,6 +25,7 @@ model_list = ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]
 dataset_list = ["EURO-CORDEX", "HiResIreland"]
 
 importlib.reload(cstats)
+
 
 def keep_minimal_vars(data):
     """
@@ -58,6 +61,7 @@ def keep_minimal_vars(data):
 
     return data
 
+
 def combine_datasets(dataset_dict, dataset_crs):
     dataset = xr.combine_by_coords(
         dataset_dict.values(), combine_attrs="override"
@@ -65,6 +69,7 @@ def combine_datasets(dataset_dict, dataset_crs):
     dataset.rio.write_crs(dataset_crs, inplace=True)
 
     return dataset
+
 
 def mean_wgt(ds, months):
     ds_m = ds.sel(time=ds["time"].dt.month.isin(months))
@@ -84,6 +89,7 @@ def mean_wgt(ds, months):
     ds_m = (ds_m * weights).groupby("time.year").sum(dim="time")
 
     return ds_m
+
 
 def reduce_dataset(dataset):
     ds = {}
@@ -185,6 +191,7 @@ def reduce_dataset(dataset):
         ds_son_lta,
     )  # ds_jja, ds_mam
 
+
 def plot_diff(data, levels, mask=True, plot_var="gro", cmap="BrBG"):
     for exp in list(data["exp"].values):
         print(exp)
@@ -230,6 +237,7 @@ def plot_diff(data, levels, mask=True, plot_var="gro", cmap="BrBG"):
             )
         fig.set_titles("{value}", weight="semibold", fontsize=14)
         plt.show()
+
 
 # mask out non-pasture areas
 mask_layer = gpd.read_file(
@@ -421,4 +429,3 @@ for axis in fig.axs.flat:
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
 plt.show()
-

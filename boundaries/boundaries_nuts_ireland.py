@@ -2,16 +2,18 @@
 # coding: utf-8
 
 # # NUTS (Nomenclature of territorial units for statistics) boundaries for Ireland
-# 
+#
 # <https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts>
 
 import os
 from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pooch
 from matplotlib import ticker
+
 import climag.climag as cplt
 
 # base data download directory
@@ -192,11 +194,11 @@ plt.tight_layout()
 plt.show()
 
 # ## Island of Ireland boundary in Irish transverse mercator
-# 
+#
 # Useful for plotting
-# 
+#
 # EPSG:2157
-# 
+#
 # See <https://www.gov.uk/government/publications/uk-geospatial-data-standards-register/national-geospatial-data-standards-register#standards-for-coordinate-reference-systems>
 
 ie = ie.to_crs(cplt.ITM_EPSG)
@@ -264,4 +266,3 @@ plt.tight_layout()
 plt.show()
 
 ie_bound.to_file(GPKG_BOUNDARY, layer="NUTS_RG_01M_2021_2157_IE_BBOX_DIFF")
-

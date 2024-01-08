@@ -4,12 +4,13 @@
 # # Compare grass growth time series using MERA for each county at a weekly frequency
 
 import os
+
+import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import statsmodels.api as sm
 from sklearn.metrics import mean_squared_error
-import geopandas as gpd
 
 df1 = pd.read_csv(
     os.path.join(
@@ -212,6 +213,7 @@ for county in counties:
 
 # ## Stats
 
+
 def get_plot_data(data_m, data_s, county, season=None):
     if county is None:
         plot_data = (
@@ -259,6 +261,7 @@ def get_plot_data(data_m, data_s, county, season=None):
 
     return plot_data
 
+
 def rmse_by_county(data_m, data_s, counties=counties, season=None):
     if season:
         col_name = season
@@ -283,6 +286,7 @@ def rmse_by_county(data_m, data_s, counties=counties, season=None):
     # rmse.sort_values(by=[col_name], inplace=True)
     return rmse
 
+
 def rmse_all(data_m, data_s):
     plot_data = pd.merge(
         pd.merge(
@@ -299,6 +303,7 @@ def rmse_all(data_m, data_s):
     )
     plot_data.sort_values(by="All seasons", inplace=True)
     return plot_data
+
 
 def get_linear_regression(data_m, data_s, county, season=None):
     plot_data = get_plot_data(data_m, data_s, county, season)
@@ -348,6 +353,7 @@ def get_linear_regression(data_m, data_s, county, season=None):
     plt.ylabel("Simulated [kg DM ha⁻¹ day⁻¹]")
     plt.tight_layout()
     plt.show()
+
 
 # ### RMSE
 
@@ -419,6 +425,7 @@ get_linear_regression(df_p, mera_p, county=None)
 
 # ## Box plots
 
+
 def box_plots(counties, season):
     for county in counties:
         plot_data = data_all[(data_all["county"] == county)]
@@ -468,6 +475,7 @@ def box_plots(counties, season):
         print(county)
         plt.show()
 
+
 # ### MAM growth grouped by year
 
 box_plots(["Wexford"], "MAM")
@@ -475,4 +483,3 @@ box_plots(["Wexford"], "MAM")
 # ### JJA growth grouped by year
 
 box_plots(["Wexford"], "JJA")
-

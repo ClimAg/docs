@@ -2,17 +2,19 @@
 # coding: utf-8
 
 # # Gridding agricultural census data - EURO-CORDEX
-# 
+#
 # Gridding based on
 # <https://james-brennan.github.io/posts/fast_gridding_geopandas/>
 
-import os
 import itertools
+import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import shapely
 import xarray as xr
+
 import climag.climag as cplt
 
 # ## Open some gridded climate data
@@ -308,4 +310,3 @@ plt.show()
 grid_cells.to_file(
     os.path.join("data", "ModVege", "params.gpkg"), layer="eurocordex"
 )
-

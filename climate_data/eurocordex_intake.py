@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # intake-esm
-# 
+#
 # - <https://data-infrastructure-services.gitlab-pages.dkrz.de/tutorials-and-use-cases>
 # - <https://gitlab.dkrz.de/data-infrastructure-services/intake-esm/>
 # - <https://intake-esm.readthedocs.io/>
@@ -13,13 +13,15 @@
 import json
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import intake
 import matplotlib.pyplot as plt
 import numpy as np
 import pooch
-import climag.climag as cplt
 import seaborn as sns
+
+import climag.climag as cplt
 
 DATA_DIR_BASE = os.path.join("data", "EURO-CORDEX")
 
@@ -349,4 +351,3 @@ ax.gridlines(
 )
 
 plt.show()
-

@@ -2,21 +2,21 @@
 # coding: utf-8
 
 # # Seasonality map of Ireland
-# 
+#
 # MODIS-EVI-derived Irish landcover seasonality dataset for 2006
-# 
+#
 # Rory Scarrott (1), Brian O'Connor (1, 2), Ned Dwyer (1), and Fiona Cawkwell
 # (2)
-# 
+#
 # (1) Coastal and Marine Research Centre, University College Cork
 # (2) Department of Geography, University College Cork
-# 
+#
 # This research was funded by the Irish Environmental Protection Agency under
 # grant agreement 2007-CCRP-2.4.
-# 
+#
 # This work is licenced under a Creative Commons Attribution 4.0 International
 # Licence
-# 
+#
 # - Scarrott, R. G., O'Connor, B., Dwyer, N. and Cawkwell, F. (2010).
 #   'MODIS-EVI-derived Irish landcover seasonality dataset for 2006',
 #   Environmental Protection Agency project 2007-CCRP-2.4,
@@ -34,6 +34,7 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -166,4 +167,3 @@ fig = data.to_crs(2157).plot(
 fig.axes.tick_params(labelbottom=False, labelleft=False)
 plt.title("Cluster groupings of the MODIS-EVI-derived seasonality dataset")
 plt.show()
-

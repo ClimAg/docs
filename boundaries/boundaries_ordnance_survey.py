@@ -6,12 +6,14 @@
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
+
 import geopandas as gpd
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pooch
 from matplotlib import ticker
+
 import climag.climag as cplt
 
 # base data download directory
@@ -20,7 +22,7 @@ DATA_DIR = os.path.join("data", "boundaries")
 GPKG_BOUNDARY = os.path.join(DATA_DIR, "boundaries_all.gpkg")
 
 # ##  Counties - OSi National Statutory Boundaries - 2019
-# 
+#
 # <https://data-osi.opendata.arcgis.com/datasets/osi::counties-osi-national-statutory-boundaries-2019/about>
 
 SUB_DIR = os.path.join(DATA_DIR, "OSi")
@@ -77,7 +79,7 @@ plt.tight_layout()
 plt.show()
 
 # ## OSNI Open Data - Largescale Boundaries - County Boundaries
-# 
+#
 # <https://www.opendatani.gov.uk/dataset/osni-open-data-largescale-boundaries-county-boundaries1>
 
 SUB_DIR = os.path.join(DATA_DIR, "OSNI")
@@ -213,4 +215,3 @@ plt.show()
 ie_counties.crs
 
 ie_counties.to_file(GPKG_BOUNDARY, layer="OSi_OSNI_IE_Counties_2157")
-

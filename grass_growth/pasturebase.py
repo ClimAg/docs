@@ -2,19 +2,20 @@
 # coding: utf-8
 
 # # PastureBase Ireland
-# 
+#
 # <https://pasturebase.teagasc.ie>
-# 
+#
 # Hanrahan, L., Geoghegan, A., O'Donovan, M., Griffith, V., Ruelle, E.,
 # Wallace, M. and Shalloo, L. (2017). 'PastureBase Ireland: A grassland
 # decision support system and national database',
 # *Computers and Electronics in Agriculture*, vol. 136, pp. 193-201.
 # DOI: [10.1016/j.compag.2017.01.029][Hanrahan].
-# 
+#
 # [Hanrahan]: https://doi.org/10.1016/j.compag.2017.01.029
 
 import os
 from datetime import datetime, timezone
+
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -357,4 +358,3 @@ grass_filter.to_csv(
 #     plt.xlabel("")
 #     plt.tight_layout()
 #     plt.show()
-

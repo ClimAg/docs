@@ -4,14 +4,15 @@
 # # Severity index
 
 import os
-import matplotlib.pyplot as plt
+
 import geopandas as gpd
-import seaborn as sns
 import matplotlib as mpl
-import pandas as pd
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-from sklearn.metrics import mean_squared_error
 import numpy as np
+import pandas as pd
+import seaborn as sns
+from sklearn.metrics import mean_squared_error
 
 data = {
     1946: np.nan,
@@ -62,4 +63,3 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
 sns.despine()
 plt.tight_layout()
 plt.show()
-

@@ -4,11 +4,13 @@
 # # Create MERA time series for comparison with measurements
 
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
 from rasterstats import zonal_stats
+
 import climag.climag as cplt
 
 # ## Model results
@@ -168,4 +170,3 @@ all_data.to_csv(
     os.path.join("data", "ModVege", "growth", "MERA_growth_week_pasture.csv"),
     index=False,
 )
-

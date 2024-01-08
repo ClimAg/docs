@@ -7,14 +7,16 @@ import glob
 import itertools
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
+import seaborn as sns
 import xarray as xr
+
 from climag import climag
 from climag import climag_plot as cplt
-import seaborn as sns
 
 DATA_DIR_BASE = os.path.join("/run/media/nms/MyPassport/HiResIreland")
 
@@ -577,4 +579,3 @@ plt.plot(data_ie["time"], data_ie["T"], linewidth=1)
 plt.title(f"{data_ie['T'].attrs['long_name']} [{data_ie['T'].attrs['units']}]")
 plt.tight_layout()
 plt.show()
-

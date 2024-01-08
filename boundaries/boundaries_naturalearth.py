@@ -2,16 +2,18 @@
 # coding: utf-8
 
 # # Natural Earth 10 m land polygon for Ireland
-# 
+#
 # <https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/>
 
 import os
 from datetime import datetime, timezone
 from zipfile import BadZipFile, ZipFile
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pooch
 from matplotlib import ticker
+
 import climag.climag as cplt
 
 # base data download directory
@@ -119,4 +121,3 @@ plt.tight_layout()
 plt.show()
 
 ie_bound.to_file(GPKG_BOUNDARY, layer="ne_10m_land_2157_IE_BBOX_DIFF")
-

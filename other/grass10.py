@@ -2,12 +2,13 @@
 # coding: utf-8
 
 # # Grass10
-# 
+#
 # Data taken from Teagasc Grass10 newsletters
 # <https://www.teagasc.ie/crops/grassland/grass10/>
 
 import os
 from datetime import datetime, timezone
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -101,4 +102,3 @@ ax = grass_ts.plot(
 grass_ts.plot("week", "AFC_drystock", ax=ax, label="Drystock")
 ax.set_xlabel("")
 plt.show()
-

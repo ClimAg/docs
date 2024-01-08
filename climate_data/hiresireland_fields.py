@@ -4,6 +4,7 @@
 # # HiResIreland data fields
 
 import os
+
 import xarray as xr
 
 DATA_DIR_BASE = os.path.join("data", "HiResIreland")
@@ -14,4 +15,3 @@ data = xr.open_dataset(
 )
 
 data
-

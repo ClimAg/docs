@@ -5,11 +5,12 @@
 
 import os
 from datetime import datetime, timezone
+
 import pandas as pd
 import pooch
 
 # ## Farms with Livestock
-# 
+#
 # <https://data.cso.ie/table/AVA42>
 
 URL = (
@@ -86,7 +87,7 @@ coa.drop(columns=["Type of Livestock_x", "Type of Livestock_y"], inplace=True)
 coa.head()
 
 # ## Land Utilisation
-# 
+#
 # <https://data.cso.ie/table/AVA44>
 
 URL = (
@@ -155,4 +156,3 @@ data.index[data.isnull().any(axis=1)]
 
 # save as a CSV file
 data.to_csv(os.path.join(SUB_DIR, "COA_2020.csv"), index=False)
-

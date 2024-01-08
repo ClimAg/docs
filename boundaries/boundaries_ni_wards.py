@@ -2,15 +2,17 @@
 # coding: utf-8
 
 # # Northern Ireland electoral wards
-# 
+#
 # Downloaded from ONS Geography
 
 import os
 from datetime import datetime, timezone
 from zipfile import ZipFile
-import matplotlib.pyplot as plt
+
 import geopandas as gpd
+import matplotlib.pyplot as plt
 import pooch
+
 import climag.climag as cplt
 
 FILE_NAME = "wards-uk-12-2022.zip"
@@ -66,4 +68,3 @@ data.to_file(
     os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="ONS_NI_wards_12_2022_2157",
 )
-

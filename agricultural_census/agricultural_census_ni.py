@@ -5,6 +5,7 @@
 
 import os
 from datetime import datetime, timezone
+
 import pandas as pd
 import pooch
 
@@ -75,4 +76,3 @@ coa.index[coa.isnull().any(axis=1)]
 
 # save as a CSV file
 coa.to_csv(os.path.join(SUB_DIR, "daera_agricultural_census.csv"), index=False)
-

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Grass growth anomalies
-# 
+#
 # - Weighted means take into account the number of days in each month
 
 import glob
@@ -11,10 +11,12 @@ import itertools
 import os
 import sys
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
+
 import climag.climag as cplt
 from climag import climag_plot
 
@@ -23,6 +25,7 @@ model_list = ["CNRM-CM5", "EC-EARTH", "HadGEM2-ES", "MPI-ESM-LR"]
 dataset_list = ["EURO-CORDEX", "HiResIreland"]
 
 importlib.reload(cstats)
+
 
 def keep_minimal_vars(data):
     """
@@ -59,6 +62,7 @@ def keep_minimal_vars(data):
 
     return data
 
+
 def combine_datasets(dataset_dict, dataset_crs):
     dataset = xr.combine_by_coords(
         dataset_dict.values(), combine_attrs="override"
@@ -66,6 +70,7 @@ def combine_datasets(dataset_dict, dataset_crs):
     dataset.rio.write_crs(dataset_crs, inplace=True)
 
     return dataset
+
 
 def generate_stats(dataset):
     ds = {}
@@ -156,11 +161,13 @@ def generate_stats(dataset):
 
     return ds, ds_lta
 
+
 # mask out non-pasture areas
 mask_layer = gpd.read_file(
     os.path.join("data", "boundaries", "boundaries_all.gpkg"),
     layer="CLC_2018_MASK_PASTURE_2157_IE",
 )
+
 
 def plot_diff(data, levels, mask=True):
     for exp in list(data["exp"].values):
@@ -207,6 +214,7 @@ def plot_diff(data, levels, mask=True):
             )
         fig.set_titles("{value}", weight="semibold", fontsize=14)
         plt.show()
+
 
 # ## Anomalies per year
 
@@ -357,4 +365,3 @@ for axis in fig.axs.flat:
     )
 fig.set_titles("{value}", weight="semibold", fontsize=14)
 plt.show()
-

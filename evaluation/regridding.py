@@ -2,9 +2,9 @@
 # coding: utf-8
 
 # # Regridding datasets
-# 
+#
 # Options:
-# 
+#
 # - Interpolating using Xarray
 #   - <https://docs.xarray.dev/en/stable/user-guide/interpolation.html>
 # - Reproject match using Rioxarray
@@ -14,12 +14,15 @@
 #   - <https://xesmf.readthedocs.io/en/latest/notebooks/Dataset.html>
 
 import os
+
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import rasterio as rio
 import xarray as xr
 import xesmf as xe
+
 import climag.climag as cplt
+
 
 def plot_map(data, var, x, y, transform, cmap="Spectral_r", contour=False):
     """
@@ -59,6 +62,7 @@ def plot_map(data, var, x, y, transform, cmap="Spectral_r", contour=False):
     ax.set_title(str(data.isel(time=180)["time"].values))
     plt.tight_layout()
     plt.show()
+
 
 # ## Higher resolution observational dataset - MERA
 
@@ -198,4 +202,3 @@ plot_map(
     "RdBu_r",
     contour=True,
 )
-

@@ -2,9 +2,9 @@
 # coding: utf-8
 
 # # GrassCheck NI
-# 
+#
 # <https://agrisearch.org/grasscheck>
-# 
+#
 # Huson, K. M., Lively, F. O., Aubry, A., Takahashi, T., Gordon, A. and
 # McDonnell, D. A. (2020).
 # 'GrassCheck: monitoring grass growth and maximizing grass utilisation on UK
@@ -18,6 +18,7 @@
 
 import os
 from datetime import datetime, timezone
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -220,4 +221,3 @@ plt.xticks(rotation="vertical")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 plt.show()
-

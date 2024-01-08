@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # ModVege grass growth model (Jouven et al. 2006) with EURO-CORDEX data
-# 
+#
 # - Jouven, M., Carrère, P., and Baumont, R. (2006a). 'Model predicting
 #   dynamics of biomass, structure and digestibility of herbage in managed
 #   permanent pastures. 1. Model description', *Grass and Forage Science*,
@@ -15,18 +15,20 @@
 #   [10.1111/j.1365-2494.2006.00517.x][Jouven2].
 # - Agri4cast (2023). ‘ModVege’. Available at:
 #   <https://code.europa.eu/agri4cast/modvege> (Accessed: 28 August 2023).
-# 
+#
 # [Jouven1]: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 # [Jouven2]: https://doi.org/10.1111/j.1365-2494.2006.00517.x
 
 import glob
 import os
 from datetime import datetime, timezone
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xarray as xr
+
 import climag.plot_configs as cplt
 from climag import climag_plot
 
@@ -169,4 +171,3 @@ plt.xlabel("")
 plt.ylabel("Grass growth [kg DM ha⁻¹ day⁻¹]")
 plt.tight_layout()
 plt.show()
-

@@ -2,12 +2,13 @@
 # coding: utf-8
 
 # # Nitrogen nutritional index - gridded for HiResIreland
-# 
+#
 # Soil chemical properties based on LUCAS topsoil data (Ballabio et al., 2019;
 # European Commission, n.d.; Panagos et al., 2022; Panagos et al., 2012):
 # https://esdac.jrc.ec.europa.eu/content/chemical-properties-european-scale-based-lucas-topsoil-data
 
 import os
+
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import rioxarray as rxr
@@ -209,4 +210,3 @@ grid_cells.drop(columns=["mean", "count"], inplace=True)
 grid_cells.to_file(
     os.path.join("data", "ModVege", "params.gpkg"), layer="hiresireland"
 )
-
