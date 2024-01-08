@@ -1,11 +1,13 @@
-cd docs
+#!/bin/sh
 
-git checkout main
+git checkout ipynb
 
-# delete existing Python scripts
-rm */*.py
+# convert Jupyter Notebooks to Python scripts
+jupyter nbconvert --to script */*.ipynb
 
-cd ../draft/nb/
-
-# https://stackoverflow.com/a/63841503
-cp **/*.py --parents ../../docs
+# remove "# In []" and multiple blank lines
+for f in */*.py;
+do sed -i -e '/^# In\[/d' $f
+cat -s $f > $f.txt
+mv $f.txt $f
+done
