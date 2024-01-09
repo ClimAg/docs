@@ -3,14 +3,21 @@
 [![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/?badge=latest)
 
 Documentation and Jupyter notebooks for the ClimAg research project.
-Available at: <https://climag.readthedocs.io/>.
+Available at: <https://climag.readthedocs.io>.
 
 ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/).
 
 ## Installation
 
-This project uses Conda with Python 3.10.
-Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. CDO) are unavailable for Windows.
+This project uses [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) with [Python](https://www.python.org/) 3.10.
+Windows users should use Conda within [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), as some packages (e.g. [CDO](https://code.mpimet.mpg.de/projects/cdo)) are unavailable for Windows.
+
+Clone the ClimAg repository including submodules:
+
+```sh
+git clone --recurse-submodules https://github.com/ClimAg/ClimAg.git
+cd ClimAg
+```
 
 Create a virtual environment and install all requirements:
 
@@ -33,13 +40,13 @@ python -m pytest
 To generate a coverage report with the tests:
 
 ```sh
-python -m coverage run -m pytest && coverage report -m
+coverage run -m pytest && coverage report -m
 ```
 
 To update the virtual environment:
 
 ```sh
-conda env update --name ClimAg --file environment.yml
+conda env update
 ```
 
 ## Licence
