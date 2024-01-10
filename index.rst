@@ -8,10 +8,8 @@ ClimAg: Multifactorial causes of fodder crises in Ireland and risks due to clima
 
 .. image:: https://raw.githubusercontent.com/ClimAg/.github/main/images/logos.png
 
-Project
--------
-
-ClimAg is a three-year research project funded by the `Environmental Protection Agency (EPA) <https://www.epa.ie/>`_ under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the `Higher Education Authority (HEA) <https://hea.ie/>`_.
+About
+-----
 
 ClimAg is examining past fodder crises such as the 2018 dry summer and placing them in the context of long-term climate change.
 
@@ -39,8 +37,10 @@ Links
 - `Bibliography <https://www.zotero.org/groups/4706660/climag/library>`_
 - `Documentation <https://climag.readthedocs.io/>`_
 
-Credits
--------
+Acknowledgements
+----------------
+
+ClimAg is a three-year research project funded by the `Environmental Protection Agency (EPA) <https://www.epa.ie/>`_ under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the `Higher Education Authority (HEA) <https://hea.ie/>`_.
 
 The Python implementation of the `ModVege <https://code.europa.eu/agri4cast/modvege>`_ pasture model adapted for use in this project was translated from Java to Python by Y. Chemin.
 This Python implementation was originally published as public domain software on GitHub under the `Unlicence license <https://github.com/ClimAg/modvege>`_.

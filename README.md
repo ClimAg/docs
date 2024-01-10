@@ -5,12 +5,12 @@
 Documentation and Jupyter notebooks for the ClimAg research project.
 Available at: <https://climag.readthedocs.io>.
 
-ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/).
-
 ## Installation
 
 This project uses [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) with [Python](https://www.python.org/) 3.10.
-Windows users should use Conda within [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), as some packages (e.g. [CDO](https://code.mpimet.mpg.de/projects/cdo)) are unavailable for Windows.
+
+> [!NOTE]
+> Windows users should use Conda within [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), as some packages (e.g. [CDO](https://code.mpimet.mpg.de/projects/cdo)) are unavailable for Windows.
 
 Clone the ClimAg repository including submodules:
 
@@ -65,7 +65,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-## Credits
+## Acknowledgements
+
+ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/).
 
 The Python implementation of the [ModVege](https://code.europa.eu/agri4cast/modvege) pasture model adapted for use in this project was translated from Java to Python by Y. Chemin.
 This Python implementation was originally published as public domain software on GitHub under the [Unlicence license](https://github.com/ClimAg/modvege).
