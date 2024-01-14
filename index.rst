@@ -28,15 +28,6 @@ People
 * `Prof. Astrid Wingler <https://research.ucc.ie/profiles/D026/astridwingler>`_ (School of Biological, Earth and Environmental Sciences)
 * `Nithiya Streethran <https://research.ucc.ie/profiles/D012/nstreethran>`_
 
-Links
------
-
-- GitHub: https://github.com/ClimAg
-- `Landing page <https://www.ucc.ie/en/eel/projects/climag/>`_
-- `Twitter <https://twitter.com/climatt_project>`_
-- `Bibliography <https://www.zotero.org/groups/4706660/climag/library>`_
-- `Documentation <https://climag.readthedocs.io/>`_
-
 Acknowledgements
 ----------------
 
@@ -46,6 +37,15 @@ The Python implementation of the `ModVege <https://code.europa.eu/agri4cast/modv
 This Python implementation was originally published as public domain software on GitHub under the `Unlicence license <https://github.com/ClimAg/modvege>`_.
 The Java model was provided by R. Martin of INRAE UREP Clermont-Ferrand for the original Python implementation.
 The original ModVege pasture model was developed by `Jouven et al. <https://doi.org/10.1111/j.1365-2494.2006.00515.x>`_
+
+Links
+-----
+
+- GitHub: https://github.com/ClimAg
+- `Landing page <https://www.ucc.ie/en/eel/projects/climag/>`_
+- `Twitter <https://twitter.com/climatt_project>`_
+- `Bibliography <https://www.zotero.org/groups/4706660/climag/library>`_
+- `Documentation <https://climag.readthedocs.io/>`_
 
 Contents
 --------
