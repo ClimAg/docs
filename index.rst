@@ -20,8 +20,8 @@ ClimAg seeks to identify the multifactorial drivers of fodder crises by:
 
 This research project was carried out at the `Environmental Research Institute (ERI) <https://eri.ucc.ie>`_, `University College Cork (UCC) <https://www.ucc.ie>`_ between 2019 and 2023.
 
-People
-------
+Team
+----
 
 * `Dr. Paul Leahy <https://research.ucc.ie/profiles/D012/paulleahy>`_ (School of Engineering and Architecture)
 * `Dr. Kieran Hickey <https://research.ucc.ie/profiles/A010/kieranhickey>`_ (Department of Geography)
@@ -43,7 +43,7 @@ Links
 
 - GitHub: https://github.com/ClimAg
 - `Landing page <https://www.ucc.ie/en/eel/projects/climag/>`_
-- `Twitter <https://twitter.com/climatt_project>`_
+- `X <https://x.com/climatt_project>`_
 - `Bibliography <https://www.zotero.org/groups/4706660/climag/library>`_
 - `Documentation <https://climag.readthedocs.io/>`_
 
