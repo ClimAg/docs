@@ -20,6 +20,7 @@ author = "Nithiya Streethran"
 extensions = [
     # "sphinx.ext.autodoc",
     "myst_nb",
+    # "sphinx.ext.githubpages",
 ]
 
 # disable sorting of functions by alphabetical order
