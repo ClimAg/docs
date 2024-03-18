@@ -41,9 +41,11 @@ References
 A full list of references is available here:
 https://www.zotero.org/groups/4706660/climag/library
 
+Contents
+--------
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    parameters/input_parameters
    parameters/input_meteorology

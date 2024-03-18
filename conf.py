@@ -20,21 +20,7 @@ author = "Nithiya Streethran"
 extensions = [
     "sphinx.ext.autodoc",
     "myst_nb",
-    "sphinx.ext.intersphinx",
 ]
-
-# https://docs.readthedocs.io/en/stable/guides/intersphinx.html
-# We recommend adding the following config value.
-# Sphinx defaults to automatically resolve *unresolved* labels using all your Intersphinx mappings.
-# This behavior has unintended side-effects, namely that documentations local references can
-# suddenly resolve to an external location.
-# See also:
-# https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#confval-intersphinx_disabled_reftypes
-intersphinx_disabled_reftypes = ["*"]
-
-intersphinx_mapping = {
-    "climag": ("https://climag.readthedocs.io/", "objects.inv"),
-}
 
 # disable sorting of functions by alphabetical order
 autodoc_member_order = "bysource"
