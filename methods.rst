@@ -10,11 +10,10 @@ Methods
    :maxdepth: 1
    :caption: Contents:
 
+   methods/modvege_read_files
    methods/modvege_lib
    methods/modvege_consumption
-
+   methods/modvege
+   methods/modvege_run
 
    .. methods/climag
-   .. methods/modvege_read_files
-   .. methods/modvege
-   .. methods/modvege_run
