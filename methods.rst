@@ -2,7 +2,8 @@ Methods
 =======
 
 .. note::
-   Coming soon. For now, please see the source code available at:
+   These pages are still being worked on, so there may be some incomplete items.
+   See also the source code available at:
    https://github.com/ClimAg/ClimAg.
 
 
