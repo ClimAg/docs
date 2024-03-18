@@ -1,5 +1,5 @@
-Data
-====
+Parameters
+==========
 
 .. note::
    This page is still being worked on, so there may be some incomplete items.
@@ -15,6 +15,6 @@ ModVege has four compartments:
    :maxdepth: 2
    :caption: Contents:
 
-   data/input_parameters
-   data/input_meteorology
-   data/variables_time_series
+   parameters/input_parameters
+   parameters/input_meteorology
+   parameters/variables_time_series
