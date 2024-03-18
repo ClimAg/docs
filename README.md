@@ -14,61 +14,6 @@ This Python implementation was originally published as public domain software on
 The Java model was provided by R. Martin of [INRAE](https://www.inrae.fr/en) UREP Clermont-Ferrand for the original Python implementation.
 The original ModVege pasture model was developed by [Jouven et al.](https://doi.org/10.1111/j.1365-2494.2006.00515.x).
 
-## Installation
-
-This project uses [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) with [Python](https://www.python.org/) 3.10.
-
-> [!NOTE]
-> Windows users should use Conda within [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), as some packages (e.g. [CDO](https://code.mpimet.mpg.de/projects/cdo)) are unavailable for Windows.
-
-Clone the ClimAg repository including submodules:
-
-```sh
-git clone --recurse-submodules https://github.com/ClimAg/ClimAg.git
-```
-
-Navigate to the directory of the cloned repository:
-
-```sh
-cd ClimAg
-```
-
-Create a virtual environment and install all requirements:
-
-```sh
-conda env create
-```
-
-Activate the virtual environment:
-
-```sh
-conda activate ClimAg
-```
-
-To run tests:
-
-```sh
-python -m pytest --cov
-```
-
-To update the virtual environment:
-
-```sh
-conda env update
-```
-
-To build the documentation locally:
-
-```sh
-cd docs && make html
-```
-
-To clean build the documentation locally:
-
-```sh
-cd docs && make clean html
-```
-
 ## Licence
 
 Copyright 2022-2024 N. Streethran
