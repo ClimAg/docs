@@ -3,14 +3,35 @@
 [![Documentation Status](https://readthedocs.org/projects/climag/badge/?version=latest)](https://climag.readthedocs.io/?badge=latest)
 
 Documentation and Jupyter notebooks for the ClimAg research project.
-Available at: <https://climag.readthedocs.io/>.
+Available at: <https://climag.readthedocs.io>.
+
+## Acknowledgements
 
 ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/).
 
+The Python implementation of the [ModVege](https://code.europa.eu/agri4cast/modvege) pasture model adapted for use in this project was translated from Java to Python by Y. Chemin of [JRC Ispra](https://joint-research-centre.ec.europa.eu/jrc-sites-across-europe/jrc-ispra-italy_en).
+This Python implementation was originally published as public domain software on GitHub under the [Unlicence license](https://github.com/ClimAg/modvege).
+The Java model was provided by R. Martin of [INRAE](https://www.inrae.fr/en) UREP Clermont-Ferrand for the original Python implementation.
+The original ModVege pasture model was developed by [Jouven et al.](https://doi.org/10.1111/j.1365-2494.2006.00515.x).
+
 ## Installation
 
-This project uses Conda with Python 3.10.
-Windows users should use Conda within Windows Subsystem for Linux (WSL), as some packages (e.g. CDO) are unavailable for Windows.
+This project uses [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) with [Python](https://www.python.org/) 3.10.
+
+> [!NOTE]
+> Windows users should use Conda within [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), as some packages (e.g. [CDO](https://code.mpimet.mpg.de/projects/cdo)) are unavailable for Windows.
+
+Clone the ClimAg repository including submodules:
+
+```sh
+git clone --recurse-submodules https://github.com/ClimAg/ClimAg.git
+```
+
+Navigate to the directory of the cloned repository:
+
+```sh
+cd ClimAg
+```
 
 Create a virtual environment and install all requirements:
 
@@ -27,19 +48,25 @@ conda activate ClimAg
 To run tests:
 
 ```sh
-python -m pytest
-```
-
-To generate a coverage report with the tests:
-
-```sh
-python -m coverage run -m pytest && coverage report -m
+python -m pytest --cov
 ```
 
 To update the virtual environment:
 
 ```sh
-conda env update --name ClimAg --file environment.yml
+conda env update
+```
+
+To build the documentation locally:
+
+```sh
+cd doc && make html && cd ../docs && cp ../doc/_build/html/objects.inv . && make html
+```
+
+To clean build the documentation locally:
+
+```sh
+cd doc && make clean html && cd ../docs && cp ../doc/_build/html/objects.inv . && make clean html
 ```
 
 ## Licence
