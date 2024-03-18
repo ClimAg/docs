@@ -53,7 +53,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   parameters
+   model
    methods
    notebooks
 

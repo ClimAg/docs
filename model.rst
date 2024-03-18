@@ -1,5 +1,5 @@
-Parameters
-==========
+Model
+=====
 
 .. note::
    This page is still being worked on, so there may be some incomplete items.
@@ -47,6 +47,6 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   parameters/input_parameters
-   parameters/input_meteorology
-   parameters/variables_time_series
+   model/input_parameters
+   model/input_meteorology
+   model/variables_time_series
