@@ -1,5 +1,5 @@
 climag.climag
 =============
 
-.. automodule:: climag.climag
-   :members:
+.. .. automodule:: climag.climag
+..    :members:
