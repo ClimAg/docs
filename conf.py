@@ -20,6 +20,7 @@ author = "Nithiya Streethran"
 extensions = [
     "sphinx.ext.autodoc",
     "myst_nb",
+    "sphinx.ext.viewcode",
 ]
 
 # disable sorting of functions by alphabetical order
@@ -27,6 +28,8 @@ autodoc_member_order = "bysource"
 
 # do not execute Jupyter notebooks
 nb_execution_mode = "off"
+
+viewcode_line_numbers = True
 
 # templates_path = ["_templates"]
 
