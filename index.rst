@@ -50,6 +50,11 @@ This Python implementation was originally published as public domain software on
 The Java model was provided by R. Martin of `INRAE <https://www.inrae.fr/en>`_ UREP Clermont-Ferrand for the original Python implementation.
 The original ModVege pasture model was developed by |jouven|_
 
+Licence
+-------
+
+Code is licensed under the `Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>`_.
+
 Links
 -----
 
