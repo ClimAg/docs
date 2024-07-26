@@ -19,8 +19,14 @@ author = "Nithiya Streethran"
 
 extensions = [
     "sphinx.ext.autodoc",
-    "myst_nb",
     "sphinx.ext.viewcode",
+    "myst_nb",
+]
+
+# https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+myst_enable_extensions = [
+    "amsmath",
+    "dollarmath",
 ]
 
 # disable sorting of functions by alphabetical order
