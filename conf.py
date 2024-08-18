@@ -55,6 +55,7 @@ exclude_patterns = [
     "requirements.txt",
     ".readthedocs.yaml",
     "other",
+    "results",
 ]
 
 # -- Options for HTML output -------------------------------------------------
