@@ -19,7 +19,14 @@ author = "Nithiya Streethran"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
     "myst_nb",
+]
+
+# https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+myst_enable_extensions = [
+    "amsmath",
+    "dollarmath",
 ]
 
 # disable sorting of functions by alphabetical order
@@ -27,6 +34,8 @@ autodoc_member_order = "bysource"
 
 # do not execute Jupyter notebooks
 nb_execution_mode = "off"
+
+viewcode_line_numbers = True
 
 # templates_path = ["_templates"]
 
@@ -46,6 +55,7 @@ exclude_patterns = [
     "requirements.txt",
     ".readthedocs.yaml",
     "other",
+    "results",
 ]
 
 # -- Options for HTML output -------------------------------------------------
@@ -61,7 +71,7 @@ html_theme_options = {
             # Label for this link
             "name": "GitHub",
             # URL where the link will redirect
-            "url": "https://github.com/ClimAg",  # required
+            "url": "https://github.com/ClimAg/ClimAg",  # required
             # Icon class (if 'type': 'fontawesome'), or path to local image
             # (if 'type': 'local')
             "icon": "fa-brands fa-github",
