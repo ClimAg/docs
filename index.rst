@@ -28,14 +28,30 @@ Team
 * `Prof. Astrid Wingler <https://research.ucc.ie/profiles/D026/astridwingler>`_ (School of Biological, Earth & Environmental Sciences)
 * `Nithiya Streethran <https://research.ucc.ie/profiles/D012/nstreethran>`_
 
-Publications
-------------
-
-Poster
+Alumni
 ++++++
 
-#. Nolan, C. G., Leahy, P. G., Hickey, K., and Wingler, A. (2021) ‘Risk of Drought-Related “Fodder Crises” in Irish Agriculture under mid-21st Century Climatic Conditions’. *Irish National Hydrology Conference*, Athlone, November. Available at: https://hydrologyireland.ie/wp-content/uploads/2021/12/03-Paul-Leahy-NHC_ClimAg_A0_Poster_Leahy.pdf (Accessed: 3 June 2022).
+* Eva Kling (Intern, Polytech Montpellier)
+* Cathal Nolan (Researcher, Department of Geography)
+
+Research Outputs
+----------------
+
+Journal Articles
+++++++++++++++++
+
+#. Wingler, A., Streethran, N., Hickey, K., and Leahy, P. (2024) ‘Multifactorial drivers of fodder crises in Irish temperate pastures and risks due to climate change’. *Biology and Environment: Proceedings of the Royal Irish Academy*.
+
+Talks
++++++
+
+#. Leahy, P., Streethran, N., Hickey, K., and Wingler, A. (2024). ‘Grass production and fodder deficits in Ireland under projected mid-century climatic conditions’. The 3rd International Symposium on Climate-Resilient Agri-Environmental Systems, Dublin, 26 June. Available at: https://doi.org/10.13140/RG.2.2.19287.48809.
+
+Posters
++++++++
+
 #. Leahy, P. G., Streethran, N., Hickey, K., and Wingler, A. (2022) ‘Increased severity and frequency of fodder production deficits under future climate conditions in Ireland’. *International Symposium on Climate-Resilient Agri-Environmental Systems*, Dublin, 29 August. Available at: https://www.iscraes.org/wp-content/uploads/2023/01/Paul-Leahy-Poster-grassland-poster-ISCRAES-2022.pdf (Accessed: 27 March 2023).
+#. Nolan, C. G., Leahy, P. G., Hickey, K., and Wingler, A. (2021) ‘Risk of Drought-Related “Fodder Crises” in Irish Agriculture under mid-21st Century Climatic Conditions’. *Irish National Hydrology Conference*, Athlone, November. Available at: https://hydrologyireland.ie/wp-content/uploads/2021/12/03-Paul-Leahy-NHC_ClimAg_A0_Poster_Leahy.pdf (Accessed: 3 June 2022).
 
 Acknowledgements
 ----------------
@@ -43,7 +59,10 @@ Acknowledgements
 .. _jouven: https://doi.org/10.1111/j.1365-2494.2006.00515.x
 .. |jouven| replace:: Jouven *et al.*
 
-ClimAg is a three-year research project funded by the `Environmental Protection Agency (EPA) <https://www.epa.ie/>`_ under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the `Higher Education Authority (HEA) <https://hea.ie/>`_.
+ClimAg is a three-year research project funded by the `Environmental Protection Agency (EPA) <https://www.epa.ie/>`_ (Ireland) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the `Higher Education Authority (HEA) <https://hea.ie/>`_ (Ireland).
+
+The authors acknowledge the inputs of the ClimAg project steering committee members throughout the project.
+The authors thank Eoin Whelan (`Met Éireann <https://www.met.ie/>`_, Dublin, Ireland), Paul Nolan (`Irish Centre for High-End Computing <https://www.ichec.ie/>`_, Dublin, Ireland), and Elodie Ruelle (`Teagasc <https://www.teagasc.ie/animals/dairy/moorepark/>`_, Moorepark, Ireland) for providing datasets used in this study.
 
 The Python implementation of the `ModVege <https://code.europa.eu/agri4cast/modvege>`_ pasture model adapted for use in this project was translated from Java to Python by Y. Chemin of `JRC Ispra <https://joint-research-centre.ec.europa.eu/jrc-sites-across-europe/jrc-ispra-italy_en>`_.
 This Python implementation was originally published as public domain software on GitHub under the `Unlicence license <https://github.com/ClimAg/modvege>`_.
@@ -58,8 +77,9 @@ Code is licensed under the `Apache License, Version 2.0 <https://www.apache.org/
 Links
 -----
 
-- GitHub organisation: https://github.com/ClimAg
 - `Landing page <https://www.ucc.ie/en/eel/projects/climag/>`_
+- GitHub: https://github.com/ClimAg
+- `Documentation <https://climag.readthedocs.io/>`_
 - `X <https://x.com/climatt_project>`_
 - `Zotero library <https://www.zotero.org/groups/4706660/climag/library>`_
 
