@@ -45,7 +45,7 @@ Reports
 Journal Articles
 ++++++++++++++++
 
-#. Wingler, A., Streethran, N., Hickey, K., and Leahy, P. (2024). ‘Multifactorial drivers of fodder crises in Irish temperate pastures and risks due to climate change’, *Biology and Environment: Proceedings of the Royal Irish Academy*.
+#. Wingler, A., Streethran, N., Hickey, K., and Leahy, P. (2024). ‘Multifactorial drivers of fodder crises in Irish temperate pastures and risks due to climate change’, *Biology and Environment: Proceedings of the Royal Irish Academy*, 124(2), pp. 1–12.
 
 Talks
 +++++
