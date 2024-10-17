@@ -37,21 +37,26 @@ Alumni
 Research Outputs
 ----------------
 
+Reports
++++++++
+
+#. Streethran, N., Hickey, K., Wingler, A., and Leahy, P. (2024). *ClimAg: Multifactorial Causes of Fodder Crises in Ireland and Risks due to Climate Change*. Johnstown Castle: Environmental Protection Agency (EPA Research Report, 464). Available at: https://www.epa.ie/publications/research/climate-change/research-464 (Accessed: 17 October 2024).
+
 Journal Articles
 ++++++++++++++++
 
-#. Wingler, A., Streethran, N., Hickey, K., and Leahy, P. (2024) ‘Multifactorial drivers of fodder crises in Irish temperate pastures and risks due to climate change’. *Biology and Environment: Proceedings of the Royal Irish Academy*.
+#. Wingler, A., Streethran, N., Hickey, K., and Leahy, P. (2024). ‘Multifactorial drivers of fodder crises in Irish temperate pastures and risks due to climate change’, *Biology and Environment: Proceedings of the Royal Irish Academy*.
 
 Talks
 +++++
 
-#. Leahy, P., Streethran, N., Hickey, K., and Wingler, A. (2024). ‘Grass production and fodder deficits in Ireland under projected mid-century climatic conditions’. The 3rd International Symposium on Climate-Resilient Agri-Environmental Systems, Dublin, 26 June. Available at: https://doi.org/10.13140/RG.2.2.19287.48809.
+#. Leahy, P., Streethran, N., Hickey, K., and Wingler, A. (2024). ‘Grass production and fodder deficits in Ireland under projected mid-century climatic conditions’. *The 3rd International Symposium on Climate-Resilient Agri-Environmental Systems*, Dublin, 26 June. Available at: https://doi.org/10.13140/RG.2.2.19287.48809.
 
 Posters
 +++++++
 
-#. Leahy, P. G., Streethran, N., Hickey, K., and Wingler, A. (2022) ‘Increased severity and frequency of fodder production deficits under future climate conditions in Ireland’. *International Symposium on Climate-Resilient Agri-Environmental Systems*, Dublin, 29 August. Available at: https://www.iscraes.org/wp-content/uploads/2023/01/Paul-Leahy-Poster-grassland-poster-ISCRAES-2022.pdf (Accessed: 27 March 2023).
-#. Nolan, C. G., Leahy, P. G., Hickey, K., and Wingler, A. (2021) ‘Risk of Drought-Related “Fodder Crises” in Irish Agriculture under mid-21st Century Climatic Conditions’. *Irish National Hydrology Conference*, Athlone, November. Available at: https://hydrologyireland.ie/wp-content/uploads/2021/12/03-Paul-Leahy-NHC_ClimAg_A0_Poster_Leahy.pdf (Accessed: 3 June 2022).
+#. Leahy, P. G., Streethran, N., Hickey, K., and Wingler, A. (2022). ‘Increased severity and frequency of fodder production deficits under future climate conditions in Ireland’. *The 2nd International Symposium on Climate-Resilient Agri-Environmental Systems*, Dublin, 29 August. Available at: https://www.iscraes.org/wp-content/uploads/2023/01/Paul-Leahy-Poster-grassland-poster-ISCRAES-2022.pdf (Accessed: 27 March 2023).
+#. Nolan, C. G., Leahy, P. G., Hickey, K., and Wingler, A. (2021). ‘Risk of Drought-Related “Fodder Crises” in Irish Agriculture under mid-21st Century Climatic Conditions’. *Irish National Hydrology Conference*, Athlone, November. Available at: https://hydrologyireland.ie/wp-content/uploads/2021/12/03-Paul-Leahy-NHC_ClimAg_A0_Poster_Leahy.pdf (Accessed: 3 June 2022).
 
 Acknowledgements
 ----------------
