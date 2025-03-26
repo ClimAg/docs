@@ -11,7 +11,7 @@ sys.path.append("..")
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "ClimAg"
-copyright = "2022-2024, Nithiya Streethran"
+copyright = "2022-2025, Nithiya Streethran"
 author = "Nithiya Streethran"
 
 # -- General configuration ---------------------------------------------------
