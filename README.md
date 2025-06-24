@@ -7,7 +7,7 @@ Available at: [climag.readthedocs.io](https://climag.readthedocs.io/).
 
 ## Acknowledgements
 
-ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA)](https://www.epa.ie/) (Ireland) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority](https://hea.ie/) (Ireland).
+ClimAg is a three-year research project funded by the [Environmental Protection Agency (EPA) Ireland](https://www.epa.ie/) under the Climate Change Research Programme grant number 2018-CCRP-MS.50, with additional funding provided under the COVID-19 research support scheme of the [Higher Education Authority (HEA) Ireland](https://hea.ie/).
 
 ## Licence
 
