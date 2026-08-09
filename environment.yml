@@ -27,10 +27,7 @@ dependencies:
   - mapclassify
   - seaborn
   - pytest
-  - flake8
-  - pylint
-  - black
-  - black-jupyter
+  - ruff
   - jupyterlab
   - qgis
   - pydata-sphinx-theme

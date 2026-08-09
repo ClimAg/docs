@@ -11,7 +11,7 @@ ClimAg is a three-year research project funded by the [Environmental Protection 
 
 ## Licence
 
-Copyright 2022-2024 N. Streethran
+Copyright 2022-2026 N. Streethran
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
