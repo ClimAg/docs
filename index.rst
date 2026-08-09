@@ -18,14 +18,14 @@ ClimAg seeks to identify the multifactorial drivers of fodder crises by:
 * developing a detailed understanding of the multiple interlinked drivers of previous fodder crises affecting the Irish agricultural sector
 * combining datasets from 21st century climate simulations with grass growth models to predict the frequency and severity of fodder crisis events under future climate change scenarios
 
-This research project was carried out at the `Environmental Research Institute (ERI) <https://eri.ucc.ie>`_, `University College Cork (UCC) <https://www.ucc.ie>`_ between 2019 and 2023.
+This research project was carried out at the `Environmental Research Institute (ERI) <https://www.ucc.ie/en/sustainability-institute/>`_, `University College Cork (UCC) <https://www.ucc.ie>`_ between 2019 and 2023.
 
 Team
 ----
 
 * `Dr. Paul Leahy <https://www.paulleahy.eu/>`_ (School of Engineering & Architecture)
 * `Dr. Kieran Hickey <https://www.researchgate.net/profile/Kieran-Hickey>`_ (Department of Geography)
-* `Prof. Astrid Wingler <https://research.ucc.ie/profiles/astrid.wingler@ucc.ie>`_ (School of Biological, Earth & Environmental Sciences)
+* `Prof. Astrid Wingler <https://research.ucc.ie/en/persons/astrid-wingler/>`_ (School of Biological, Earth & Environmental Sciences)
 * `Nithiya Streethran <https://nithiya.gitlab.io/>`_
 
 Alumni
