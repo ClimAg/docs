@@ -23,10 +23,10 @@ This research project was carried out at the `Environmental Research Institute (
 Team
 ----
 
-* `Dr. Paul Leahy <https://research.ucc.ie/profiles/paul.leahy@ucc.ie>`_ (School of Engineering & Architecture)
-* `Dr. Kieran Hickey <https://research.ucc.ie/profiles/kieran.hickey@ucc.ie>`_ (Department of Geography)
+* `Dr. Paul Leahy <https://www.paulleahy.eu/>`_ (School of Engineering & Architecture)
+* `Dr. Kieran Hickey <https://www.researchgate.net/profile/Kieran-Hickey>`_ (Department of Geography)
 * `Prof. Astrid Wingler <https://research.ucc.ie/profiles/astrid.wingler@ucc.ie>`_ (School of Biological, Earth & Environmental Sciences)
-* `Nithiya Streethran <https://github.com/nmstreethran>`_
+* `Nithiya Streethran <https://nithiya.gitlab.io/>`_
 
 Alumni
 ++++++
@@ -63,6 +63,7 @@ Licence
 -------
 
 Code is licensed under the `Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>`_.
+Copyright 2022-2026 N. Streethran.
 
 Links
 -----
